@@ -3,10 +3,6 @@
 
 int main()
 {
-    printf("Hola mundo!\n");
-    printf("Pruebawe");
-    printf("Pruebawe2424");
-    printf("aaa");
-    printf("Lo modifique yo");
+    printf("#E########\n#..#P....#\n#..####..#\n#F..#....#\n#V#......#\n#..#####.#\n#...#....#\n#...#F#..#\n#F.......#\n########S#");
     return 0;
 }
