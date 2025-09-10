@@ -52,6 +52,7 @@ void mostrarMat(char**mat, int fil, int col) {
 
 int crearLaberinto(char**mat, int fil, int col) {
     int cantVecinos;
+    int r;
     tPila p;
     Celdas act = {1,1};
     Celdas vecinos[4];
@@ -65,7 +66,7 @@ int crearLaberinto(char**mat, int fil, int col) {
         cantVecinos = buscarVecinos(mat, fil, col, &act, vecinos);
         if (cantVecinos) {
             apilar(&p, &act, sizeof(Celdas));
-            int r = rand() % cantVecinos;
+            r = rand() % cantVecinos;
             pared.fil = act.fil + vecinos[r].fil / 2;
             pared.col = act.col + vecinos[r].col / 2;
             mat[pared.fil][pared.col] = CAMINO;
@@ -74,6 +75,8 @@ int crearLaberinto(char**mat, int fil, int col) {
             apilar(&p, &vecinos[r], sizeof(Celdas));
         }
     }
+    mat[act.fil-1][act.col] = ENTRADA;
+    mat[vecinos[r].fil][vecinos[r].col]= SALIDA ;
     vaciarPila(&p);
     return 0;
 }

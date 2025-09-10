@@ -2,6 +2,8 @@
 #define FUNCIONES_H_INCLUDED
 #define VISITADO '.'
 #define CAMINO '.'
+#define ENTRADA 'E'
+#define SALIDA 'S'
 
 typedef struct {
     int fil;
