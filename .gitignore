@@ -42,6 +42,10 @@
 *.idb
 *.pdb
 
+# Archivos de C
+*.layout
+*.depend
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd

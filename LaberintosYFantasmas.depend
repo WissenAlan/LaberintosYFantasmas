@@ -5,10 +5,10 @@
 	<stdlib.h>
 	<string.h>
 
-1757520359 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\estructuras\coladin.h
+1757521078 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\estructuras\coladin.h
 	"estructuras.h"
 
-1757520359 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\estructuras\estructuras.h
+1757521121 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\estructuras\estructuras.h
 
 1757520359 source:e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\estructuras\piladin.c
 	"pilaDin.h"
@@ -16,16 +16,14 @@
 	<stdlib.h>
 	<string.h>
 
-1757520359 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\estructuras\piladin.h
+1757521083 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\estructuras\piladin.h
 	"estructuras.h"
 
-1757520805 source:e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\main.c
-	<stdio.h>
-	<stdlib.h>
+1757522770 source:e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\main.c
 	<unistd.h>
-	"mapa.h"
+	"main.h"
 
-1757520359 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\mapa.h
+1757524325 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\mapa.h
 
 1757520681 source:e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\mapa.c
 	"mapa.h"
@@ -73,4 +71,9 @@
 	<stdlib.h>
 	<time.h>
 	"estructuras/pilaDin.h"
+
+1757520632 e:\documetos\unlam\segundo\algoritmosyestructuradedatos\recursante\laberintosyfantasmas\main.h
+	<stdio.h>
+	<stdlib.h>
+	"mapa.h"
 
