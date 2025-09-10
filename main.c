@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "../estructuras/pila.h"
+
 
 int main() {
     int cont = 0;
