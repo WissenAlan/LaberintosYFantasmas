@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "../LaberintosYFantasmas/estructuras/pilaDin.h"
+#include "../estructuras/pilaDin.h"
 
 char**crearMatriz(int filas, int columnas) {
     char**mat = (char**)malloc(filas * sizeof(char*));
