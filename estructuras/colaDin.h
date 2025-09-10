@@ -1,11 +1,7 @@
 #ifndef COLADIN_H_INCLUDED
 #define COLADIN_H_INCLUDED
 #include "estructuras.h"
-#define TODO_OK 0
-#define COLA_LLENA 1
-#define COLA_VACIA 2
-#define SIN_MEM 3
-#define MIN(X,Y) ((X)>(Y)?(X):(Y))
+
 
 typedef struct
 {

@@ -19,13 +19,19 @@
 				<Option compiler="gcc-mingw64" />
 			</Target>
 		</Build>
+		<Unit filename="estructuras/colaDin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="estructuras/colaDin.h" />
+		<Unit filename="estructuras/estructuras.h" />
+		<Unit filename="estructuras/pilaDin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="estructuras/pilaDin.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="main2.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="main2.h" />
+		<Unit filename="main.h" />
 		<Unit filename="mapa.c">
 			<Option compilerVar="CC" />
 		</Unit>

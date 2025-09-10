@@ -2,12 +2,6 @@
 #define PILADIN_H_INCLUDED
 #include "estructuras.h"
 
-#define TODO_OK 0
-#define PILA_LLENA 1
-#define PILA_VACIA 2
-#define SIN_MEM 3
-#define MIN(X,Y) ((X)>(Y)?(X):(Y))
-
 typedef tNodo* tPila;
 
 void crearPila(tPila*pila);
