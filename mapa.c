@@ -57,11 +57,11 @@ int crearLaberinto(char**mat, int fil, int col) {
     Celdas vecinos[4];
     Celdas pared;
     srand(time(NULL));
-    mat[1][1] = VISITADO;
     crearPila(&p);
     apilar(&p, &act, sizeof(Celdas));
     while (pilaVacia(&p) == TODO_OK) {
         desapilar(&p, &act, sizeof(Celdas));
+        mat[act.fil][act.col] = VISITADO;
         cantVecinos = buscarVecinos(mat, fil, col, &act, vecinos);
         if (cantVecinos) {
             apilar(&p, &act, sizeof(Celdas));
@@ -69,6 +69,8 @@ int crearLaberinto(char**mat, int fil, int col) {
             pared.fil = act.fil + vecinos[r].fil / 2;
             pared.col = act.col + vecinos[r].col / 2;
             mat[pared.fil][pared.col] = CAMINO;
+            vecinos[r].col +=act.col;
+            vecinos[r].fil +=act.fil;
             apilar(&p, &vecinos[r], sizeof(Celdas));
         }
     }

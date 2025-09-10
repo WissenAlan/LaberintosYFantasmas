@@ -1,7 +1,7 @@
 #ifndef FUNCIONES_H_INCLUDED
 #define FUNCIONES_H_INCLUDED
 #define VISITADO '.'
-#define CAMINO '|'
+#define CAMINO '.'
 
 typedef struct {
     int fil;
