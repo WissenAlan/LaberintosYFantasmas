@@ -50,7 +50,7 @@ void mostrarMat(char**mat, int fil, int col) {
     }
 }
 
-int crearLaberinto(char**mat, int fil, int col,struct player *pla) {
+int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
     int cantVecinos;
     int r;
     tPila p;
@@ -62,25 +62,28 @@ int crearLaberinto(char**mat, int fil, int col,struct player *pla) {
     apilar(&p, &act, sizeof(Celdas));
     while (pilaVacia(&p) == TODO_OK) {
         desapilar(&p, &act, sizeof(Celdas));
-        mat[act.fil][act.col] = VISITADO;
-        cantVecinos = buscarVecinos(mat, fil, col, &act, vecinos);
+        m->mat[act.fil][act.col] = VISITADO;
+        cantVecinos = buscarVecinos(m->mat, fil, col, &act, vecinos);
         if (cantVecinos) {
             apilar(&p, &act, sizeof(Celdas));
             r = rand() % cantVecinos;
             pared.fil = act.fil + vecinos[r].fil / 2;
             pared.col = act.col + vecinos[r].col / 2;
-            mat[pared.fil][pared.col] = CAMINO;
-            mat[pared.fil][pared.col] = CAMINO;
+            m->mat[pared.fil][pared.col] = CAMINO;
+            m->mat[pared.fil][pared.col] = CAMINO;
             vecinos[r].col +=act.col;
             vecinos[r].fil +=act.fil;
             apilar(&p, &vecinos[r], sizeof(Celdas));
         }
     }
-    mat[act.fil-1][act.col] = ENTRADA;
-    mat[act.fil][act.col] = JUGADOR;
+    m->mat[act.fil-1][act.col] = ENTRADA;
+    m->mat[act.fil][act.col] = JUGADOR;
     pla->posx=act.fil;
     pla->posy=act.col;
-    mat[fil-1][vecinos[r].col]= SALIDA ;
+    m->mat[fil-1][vecinos[r].col]= SALIDA ;
+    m->posxS=fil- 1;
+    m->posyS=vecinos[r].col;
+    m->exit=false;
     vaciarPila(&p);
     return 0;
 }
@@ -104,4 +107,12 @@ int buscarVecinos(char**mat,int fil, int col,Celdas*act,Celdas*vecinos)
     }
     return cant;
 }
+void checkend(struct mapaL *m,struct player *p)
+{
+    if(p->posx == m->posxS && p->posy == m->posyS)
+    {
+        m->exit=true;
+    }
+}
+
 

@@ -5,7 +5,7 @@ void moverjugador(char**mat,char movimiento,struct player *p)
     {
         move_up(mat,p);
     }
-    if(movimiento == 's'  && mat[p->posx +1][p->posy] != '#' && mat[p->posx+1][p->posy] != 'S')
+    if(movimiento == 's'  && mat[p->posx +1][p->posy] != '#')
     {
         move_down(mat,p);
     }
@@ -122,3 +122,4 @@ int state(char **mat,int trypos,struct player *p)
     }
     return reward;
 }
+

@@ -1,25 +1,27 @@
 #include <unistd.h>
 #include "main.h"
-
+#include "mapa.h"
 
 int main() {
     int cont = 0;
     char tecla='w';
     char**mat;
     struct player p;
-    mat = crearMatriz(21,21);
-    if(!mat)
+    struct mapaL m;
+    m.mat = crearMatriz(21,21);
+    if(!m.mat)
         return -1;
-    llenarMat(mat,21,21);
-    crearLaberinto(mat,21,21,&p);
-    while(tecla != 'l')
+    llenarMat(m.mat,21,21);
+    crearLaberinto(&m,21,21,&p);
+    while(m.exit != true)
     {
-        mostrarMat(mat,21,21);
-        //tecla= getch();
-        //moverjugador(mat,tecla,&p);
-        ai(mat,&p);
+        mostrarMat(m.mat,21,21);
+        tecla= getch();
+        moverjugador(m.mat,tecla,&p);
+        //ai(m.mat,&p);
+        checkend(&m,&p);
         system("cls");
     }
-    eliminarMatriz(mat,21,21);
+    eliminarMatriz(m.mat,21,21);
     return 0;
 }

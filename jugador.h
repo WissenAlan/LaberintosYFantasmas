@@ -1,6 +1,7 @@
 #ifndef JUGADOR_H_INCLUDED
 #define JUGADOR_H_INCLUDED
 #include "main.h"
+#include "mapa.h"
 struct player
 {
     unsigned posx;

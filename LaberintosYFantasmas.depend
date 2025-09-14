@@ -97,22 +97,24 @@
 1757818304 c:\users\haziel\desktop\tp\laberintosyfantasmas\estructuras\piladin.h
 	"estructuras.h"
 
-1757877506 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\main.c
+1757886089 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\main.c
 	<unistd.h>
 	"main.h"
+	"mapa.h"
 
-1757870717 c:\users\haziel\desktop\tp\laberintosyfantasmas\main.h
+1757885607 c:\users\haziel\desktop\tp\laberintosyfantasmas\main.h
 	<stdio.h>
 	<stdlib.h>
 	<conio.h>
 	<string.h>
+	<stdbool.h>
 	"mapa.h"
 	"jugador.h"
 
-1757870607 c:\users\haziel\desktop\tp\laberintosyfantasmas\mapa.h
+1757885992 c:\users\haziel\desktop\tp\laberintosyfantasmas\mapa.h
 	"jugador.h"
 
-1757870633 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\mapa.c
+1757889228 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\mapa.c
 	"mapa.h"
 	<string.h>
 	<stdio.h>
@@ -120,9 +122,10 @@
 	<time.h>
 	"estructuras/pilaDin.h"
 
-1757879386 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.c
+1757889190 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.c
 	"jugador.h"
 
-1757878901 c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.h
+1757885976 c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.h
 	"main.h"
+	"mapa.h"
 

@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "mapa.h"
 #include "jugador.h"
-
 
 #endif // MAIN_H_INCLUDED
