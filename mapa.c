@@ -50,7 +50,7 @@ void mostrarMat(char**mat, int fil, int col) {
     }
 }
 
-int crearLaberinto(char**mat, int fil, int col) {
+int crearLaberinto(char**mat, int fil, int col,struct player *pla) {
     int cantVecinos;
     int r;
     tPila p;
@@ -70,13 +70,17 @@ int crearLaberinto(char**mat, int fil, int col) {
             pared.fil = act.fil + vecinos[r].fil / 2;
             pared.col = act.col + vecinos[r].col / 2;
             mat[pared.fil][pared.col] = CAMINO;
+            mat[pared.fil][pared.col] = CAMINO;
             vecinos[r].col +=act.col;
             vecinos[r].fil +=act.fil;
             apilar(&p, &vecinos[r], sizeof(Celdas));
         }
     }
     mat[act.fil-1][act.col] = ENTRADA;
-    mat[vecinos[r].fil][vecinos[r].col]= SALIDA ;
+    mat[act.fil][act.col] = JUGADOR;
+    pla->posx=act.fil;
+    pla->posy=act.col;
+    mat[fil-1][vecinos[r].col]= SALIDA ;
     vaciarPila(&p);
     return 0;
 }
@@ -100,3 +104,4 @@ int buscarVecinos(char**mat,int fil, int col,Celdas*act,Celdas*vecinos)
     }
     return cant;
 }
+

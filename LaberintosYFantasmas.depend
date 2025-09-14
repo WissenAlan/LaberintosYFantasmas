@@ -77,3 +77,52 @@
 	<stdlib.h>
 	"mapa.h"
 
+1757818304 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\estructuras\coladin.c
+	"colaDin.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1757818304 c:\users\haziel\desktop\tp\laberintosyfantasmas\estructuras\coladin.h
+	"estructuras.h"
+
+1757818304 c:\users\haziel\desktop\tp\laberintosyfantasmas\estructuras\estructuras.h
+
+1757818304 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\estructuras\piladin.c
+	"pilaDin.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1757818304 c:\users\haziel\desktop\tp\laberintosyfantasmas\estructuras\piladin.h
+	"estructuras.h"
+
+1757871570 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\main.c
+	<unistd.h>
+	"main.h"
+
+1757870717 c:\users\haziel\desktop\tp\laberintosyfantasmas\main.h
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+	<string.h>
+	"mapa.h"
+	"jugador.h"
+
+1757870607 c:\users\haziel\desktop\tp\laberintosyfantasmas\mapa.h
+	"jugador.h"
+
+1757870633 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\mapa.c
+	"mapa.h"
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"estructuras/pilaDin.h"
+
+1757871668 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.c
+	"jugador.h"
+
+1757870861 c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.h
+	"main.h"
+
