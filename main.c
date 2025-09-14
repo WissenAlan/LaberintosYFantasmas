@@ -15,8 +15,9 @@ int main() {
     while(tecla != 'l')
     {
         mostrarMat(mat,21,21);
-        tecla= getch();
-        moverjugador(mat,tecla,&p.posx,&p.posy);
+        //tecla= getch();
+        //moverjugador(mat,tecla,&p);
+        ai(mat,&p);
         system("cls");
     }
     eliminarMatriz(mat,21,21);

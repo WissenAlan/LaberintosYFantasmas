@@ -97,7 +97,7 @@
 1757818304 c:\users\haziel\desktop\tp\laberintosyfantasmas\estructuras\piladin.h
 	"estructuras.h"
 
-1757871570 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\main.c
+1757877506 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\main.c
 	<unistd.h>
 	"main.h"
 
@@ -120,9 +120,9 @@
 	<time.h>
 	"estructuras/pilaDin.h"
 
-1757871668 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.c
+1757879386 source:c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.c
 	"jugador.h"
 
-1757870861 c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.h
+1757878901 c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.h
 	"main.h"
 
