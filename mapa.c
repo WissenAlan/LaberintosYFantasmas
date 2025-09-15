@@ -76,6 +76,15 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
             apilar(&p, &vecinos[r], sizeof(Celdas));
         }
     }
+    for (int i = 0; i < fil; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
+            m->mat[i][j] = CAMINO_FINAL;
+        }
+    }
+
     m->mat[act.fil-1][act.col] = ENTRADA;
     m->mat[act.fil][act.col] = JUGADOR;
     pla->posx=act.fil;

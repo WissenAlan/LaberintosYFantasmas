@@ -2,6 +2,7 @@
 #define FUNCIONES_H_INCLUDED
 #define VISITADO '.'
 #define CAMINO '.'
+#define CAMINO_FINAL ' '
 #define ENTRADA 'E'
 #define SALIDA 'S'
 #define JUGADOR 'P'
@@ -25,4 +26,5 @@ void eliminarMatriz(char**mat,int filas,int columnas);
 int crearLaberinto(struct mapaL *m, int fil, int col,struct player *p);
 int buscarVecinos(char**mat,int fil, int col,Celdas*act,Celdas*vecinos);
 void checkend(struct mapaL *m,struct player *p);
+
 #endif // FUNCIONES_H_INCLUDED

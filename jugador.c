@@ -20,7 +20,7 @@ void moverjugador(char**mat,char movimiento,struct player *p)
 }
 void move_up(char**mat,struct player * p)
 {
-    mat[p->posx][p->posy]= CAMINO;
+    mat[p->posx][p->posy]= CAMINO_FINAL;
     p->last_x=p->posx;
     p->last_y=p->posy;
     p->posx--;
@@ -28,7 +28,7 @@ void move_up(char**mat,struct player * p)
 }
 void move_down(char**mat,struct player * p)
 {
-    mat[p->posx][p->posy]= CAMINO;
+    mat[p->posx][p->posy]= CAMINO_FINAL;
     p->last_x=p->posx;
     p->last_y=p->posy;
     p->posx++;
@@ -36,7 +36,7 @@ void move_down(char**mat,struct player * p)
 }
 void move_left(char**mat,struct player * p)
 {
-    mat[p->posx][p->posy]= CAMINO;
+    mat[p->posx][p->posy]= CAMINO_FINAL;
     p->last_x=p->posx;
     p->last_y=p->posy;
     p->posy--;
@@ -44,7 +44,7 @@ void move_left(char**mat,struct player * p)
 }
 void move_right(char**mat,struct player * p)
 {
-    mat[p->posx][p->posy]= CAMINO;
+    mat[p->posx][p->posy]= CAMINO_FINAL;
     p->last_x=p->posx;
     p->last_y=p->posy;
     p->posy++;

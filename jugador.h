@@ -9,6 +9,7 @@ struct player
     unsigned last_x;
     unsigned last_y;
 };
+
 void moverjugador(char**mat,char movimiento,struct player *p);
 void move_up(char**mat,struct player * p);
 void move_down(char**mat,struct player * p);
