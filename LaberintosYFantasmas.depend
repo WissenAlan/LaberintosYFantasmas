@@ -53,7 +53,7 @@
 1757522350 c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\estructuras\piladin.h
 	"estructuras.h"
 
-1758157480 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\main.c
+1758159311 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\main.c
 	<unistd.h>
 	"main.h"
 	"mapa.h"
@@ -70,7 +70,7 @@
 1758157698 c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\mapa.h
 	"jugador.h"
 
-1758157680 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\mapa.c
+1758159161 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\mapa.c
 	"mapa.h"
 	<string.h>
 	<stdio.h>

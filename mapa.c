@@ -29,8 +29,8 @@ void eliminarMatriz(char**mat,int filas,int columnas)
 }
 
 void llenarMat(char**mat, int fil, int col) {
-//    char cosa1 = ' ';
-//    char cosa2 = '#';
+    char cosa1 = ' ';
+    char cosa2 = '#';
 //    for (int x = 0; x < fil; x++) {
 //        for (int y = 0; y < col; y++) {
 //            if (x != fil && y != col && x % 2 == 1 && y % 2 == 1)
@@ -144,6 +144,34 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
         }
     }
 
+    for (int i = 0; i < fil; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
+            m->mat[i][j] = CAMINO_FINAL;
+        }
+    }
+
+    act.col = 1;
+    act.fil = 1;
+    apilar(&p, &act, sizeof(Celdas));
+    while (pilaVacia(&p) == TODO_OK) {
+        desapilar(&p, &act, sizeof(Celdas));
+        m->mat[act.fil][act.col] = VISITADO;
+        cantVecinos = buscarVecinos(m->mat, fil, col, &act, vecinos);
+        if (cantVecinos) {
+            apilar(&p, &act, sizeof(Celdas));
+            r = rand() % cantVecinos;
+            pared.fil = act.fil + vecinos[r].fil / 2;
+            pared.col = act.col + vecinos[r].col / 2;
+            m->mat[pared.fil][pared.col] = CAMINO;
+            m->mat[pared.fil][pared.col] = CAMINO;
+            vecinos[r].col +=act.col;
+            vecinos[r].fil +=act.fil;
+            apilar(&p, &vecinos[r], sizeof(Celdas));
+        }
+    }
 
     for (int i = 0; i < fil; i++)
     {
