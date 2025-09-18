@@ -1,4 +1,5 @@
 #include <unistd.h>
+#define TAM 11
 #include "main.h"
 #include "mapa.h"
 
@@ -8,20 +9,20 @@ int main() {
     char**mat;
     struct player p;
     struct mapaL m;
-    m.mat = crearMatriz(21,21);
+    m.mat = crearMatriz(TAM,TAM);
     if(!m.mat)
         return -1;
-    llenarMat(m.mat,21,21);
-    crearLaberinto(&m,21,21,&p);
+    llenarMat(m.mat,TAM,TAM);
+    crearLaberinto(&m,TAM,TAM,&p);
     while(m.exit != true)
     {
-        mostrarMat(m.mat,21,21);
+        mostrarMat(m.mat,TAM,TAM);
         tecla= getch();
         moverjugador(m.mat,tecla,&p);
         //ai(m.mat,&p);
         checkend(&m,&p);
         system("cls");
     }
-    eliminarMatriz(m.mat,21,21);
+    eliminarMatriz(m.mat,TAM,TAM);
     return 0;
 }

@@ -1,12 +1,20 @@
 #ifndef FUNCIONES_H_INCLUDED
 #define FUNCIONES_H_INCLUDED
+
+#include "jugador.h"
+
+#define ESPACIADO 2
+#define ESPACIO_CELDA ESPACIADO + 1
+#define SALTO (ESPACIADO + 1) * 2 + 1
+
+#define PARED '#'
 #define VISITADO '.'
 #define CAMINO '.'
 #define CAMINO_FINAL ' '
 #define ENTRADA 'E'
 #define SALIDA 'S'
 #define JUGADOR 'P'
-#include "jugador.h"
+
 typedef struct {
     int fil;
     int col;

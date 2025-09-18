@@ -53,18 +53,24 @@
 1757522350 c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\estructuras\piladin.h
 	"estructuras.h"
 
-1757522350 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\main.c
+1758157480 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\main.c
 	<unistd.h>
 	"main.h"
-
-1757522350 c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\main.h
-	<stdio.h>
-	<stdlib.h>
 	"mapa.h"
 
-1757523767 c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\mapa.h
+1757899434 c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\main.h
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+	<string.h>
+	<stdbool.h>
+	"mapa.h"
+	"jugador.h"
 
-1757523063 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\mapa.c
+1758157698 c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\mapa.h
+	"jugador.h"
+
+1758157680 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\mapa.c
 	"mapa.h"
 	<string.h>
 	<stdio.h>
@@ -126,6 +132,13 @@
 	"jugador.h"
 
 1757885976 c:\users\haziel\desktop\tp\laberintosyfantasmas\jugador.h
+	"main.h"
+	"mapa.h"
+
+1757903520 source:c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\jugador.c
+	"jugador.h"
+
+1757907439 c:\users\erikm\desktop\laberintos y fantasmas\laberintosyfantasmas\jugador.h
 	"main.h"
 	"mapa.h"
 
