@@ -54,7 +54,7 @@ void llenarMat(char**mat, int fil, int col) {
             {
                 for (size_t j = 0; j < ESPACIADO; j++)
                 {
-                    mat[x+i][y+j] = CAMINO_FINAL;
+                    mat[x+i][y+j] = CELDA;
                 }
 
             }
@@ -149,7 +149,7 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
         for (int j = 0; j < col; j++)
         {
             if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
-            m->mat[i][j] = CAMINO_FINAL;
+            m->mat[i][j] = CELDA;
         }
     }
 
@@ -178,7 +178,7 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
         for (int j = 0; j < col; j++)
         {
             if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
-            m->mat[i][j] = CAMINO_FINAL;
+            m->mat[i][j] = CELDA;
         }
     }
 
@@ -194,17 +194,24 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
     return 0;
 }
 
+int validarPosicion(Celdas *vecino, int filas, int col) 
+{
+    return vecino->fil >=ESPACIADO && vecino->fil < filas - ESPACIADO && 
+           vecino->col >=ESPACIADO && vecino->col < col -ESPACIADO &&
+           (vecino->fil -ESPACIADO) % (ESPACIADO + 1) == 0 && 
+           (vecino->col -ESPACIADO) % (ESPACIADO + 1) == 0;
+}
+
 int buscarVecinos(char**mat,int fil, int col,Celdas*act,Celdas*vecinos)
 {
-    int posx[] = { -2, 0, 2, 0 };
-    int posy[] = { 0, 2, 0, -2 };
     int cant = 0;
+    int posx[] = { 0, SALTO, 0, - SALTO };
+    int posy[] = { SALTO, 0, - SALTO, 0 };
+    Celdas vecino;
     for (int i = 0; i < 4; i++) {
-        if((act->fil + posx[i])>0
-            && (act->fil + posx[i])<fil
-            && (act->col + posy[i])>0
-            && (act->col + posy[i])<col
-            && mat[act->fil+posx[i]][act->col+posy[i]] != VISITADO)
+        vecino.fil = act->fil + posx[i];
+        vecino.col = act->col + posy[i];
+        if(validarPosicion(&vecino,fil,col) && mat[vecino.fil][vecino.col] == CELDA)
         {
             vecinos[cant].fil = posx[i];
             vecinos[cant].col = posy[i];
