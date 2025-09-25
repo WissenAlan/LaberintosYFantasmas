@@ -45,6 +45,7 @@
 # Archivos de C
 *.layout
 *.depend
+.vscode/
 
 # Kernel Module Compile Results
 *.mod*
