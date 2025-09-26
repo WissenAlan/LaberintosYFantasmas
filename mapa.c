@@ -194,11 +194,11 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
     return 0;
 }
 
-int validarPosicion(Celdas *vecino, int filas, int col)
+int validarPosicion(Celdas *vecino, int filas, int col) 
 {
-    return vecino->fil >=ESPACIADO && vecino->fil < filas - ESPACIADO &&
+    return vecino->fil >=ESPACIADO && vecino->fil < filas - ESPACIADO && 
            vecino->col >=ESPACIADO && vecino->col < col -ESPACIADO &&
-           (vecino->fil -ESPACIADO) % (ESPACIADO + 1) == 0 &&
+           (vecino->fil -ESPACIADO) % (ESPACIADO + 1) == 0 && 
            (vecino->col -ESPACIADO) % (ESPACIADO + 1) == 0;
 }
 
