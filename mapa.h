@@ -10,7 +10,7 @@
 #define PARED '#'
 #define VISITADO '.'
 #define CAMINO '.'
-#define CELDA ' '
+#define CAMINO_FINAL ' '
 #define ENTRADA 'E'
 #define SALIDA 'S'
 #define JUGADOR 'P'
