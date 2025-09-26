@@ -4,16 +4,16 @@
 #include "jugador.h"
 
 #define ESPACIADO 2
-#define ESPACIO_CELDA ESPACIADO + 1
-#define SALTO (ESPACIADO + 1) * 2 + 1
 
 #define PARED '#'
 #define VISITADO '.'
 #define CAMINO '.'
-#define CAMINO_FINAL ' '
+#define CELDA ' '
 #define ENTRADA 'E'
 #define SALIDA 'S'
 #define JUGADOR 'P'
+#define FANTASMA 'F'
+#define BONIFICACION 'B'
 
 typedef struct {
     int fil;
