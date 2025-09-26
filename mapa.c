@@ -66,7 +66,7 @@ void mostrarMat(char**mat, int fil, int col) {
 
 int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
     int cantVecinos;
-    int r;
+    int r,rNum;
     int cantBoni = 2;
     int cantFan = 3;
     tPila p;
@@ -122,8 +122,8 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
         }
         else
         {
-            r = rand() % 10;
-            if(cantBoni && !r)
+            rNum = rand() % 10;
+            if(cantBoni && !rNum)
             {
                 m->mat[act.fil][act.col] = BONIFICACION;
                 cantBoni --;
@@ -154,7 +154,7 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
     pla->posx=act.fil;
     pla->posy=act.col;
     m->mat[fil-1][vecinos[r].col]= SALIDA ;
-//    m->mat[fil-1][vecinos[r].col]= FANTASMA ;
+    m->mat[fil-2][vecinos[r].col]= FANTASMA ;
     m->posxS=fil- 1;
     m->posyS=vecinos[r].col;
     m->exit=false;
