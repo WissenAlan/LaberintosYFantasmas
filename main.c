@@ -15,15 +15,15 @@ int main() {
         return -1;
     llenarMat(m.mat,TAM_FIL,TAM_COL);
     crearLaberinto(&m,TAM_FIL,TAM_COL,&p);
-    while(m.exit != true)
-    {
+//    while(m.exit != true)
+//    {
         mostrarMat(m.mat,TAM_FIL,TAM_COL);
-        tecla= getch();
-        moverjugador(m.mat,tecla,&p);
-        //ai(m.mat,&p);
-        checkend(&m,&p);
-        system("cls");
-    }
+//        tecla= getch();
+//        moverjugador(m.mat,tecla,&p);
+//        //ai(m.mat,&p);
+//        checkend(&m,&p);
+//        system("cls");
+//    }
     eliminarMatriz(m.mat,TAM_FIL,TAM_COL);
     return 0;
 }

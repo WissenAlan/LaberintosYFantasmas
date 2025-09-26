@@ -1,26 +1,27 @@
 #include "jugador.h"
 void moverjugador(char**mat,char movimiento,struct player *p)
 {
-    if(movimiento == 'w' && mat[p->posx -1][p->posy] != '#' && mat[p->posx-1][p->posy] != 'E')
+    if(movimiento == 'w' && mat[p->posx -1][p->posy] != PARED && mat[p->posx-1][p->posy] != 'E')
     {
         move_up(mat,p);
     }
-    if(movimiento == 's'  && mat[p->posx +1][p->posy] != '#')
+    if(movimiento == 's'  && mat[p->posx +1][p->posy] != PARED)
     {
         move_down(mat,p);
     }
-    if(movimiento == 'a' && mat[p->posx][p->posy-1] != '#')
+    if(movimiento == 'a' && mat[p->posx][p->posy-1] != PARED)
     {
         move_left(mat,p);
     }
-    if(movimiento =='d' && mat[p->posx][p->posy+1] != '#')
+    if(movimiento =='d' && mat[p->posx][p->posy+1] != PARED)
     {
         move_right(mat,p);
     }
 }
+
 void move_up(char**mat,struct player * p)
 {
-    mat[p->posx][p->posy]= CAMINO_FINAL;
+    mat[p->posx][p->posy]= CELDA;
     p->last_x=p->posx;
     p->last_y=p->posy;
     p->posx--;
@@ -28,7 +29,7 @@ void move_up(char**mat,struct player * p)
 }
 void move_down(char**mat,struct player * p)
 {
-    mat[p->posx][p->posy]= CAMINO_FINAL;
+    mat[p->posx][p->posy]= CELDA;
     p->last_x=p->posx;
     p->last_y=p->posy;
     p->posx++;
@@ -36,7 +37,7 @@ void move_down(char**mat,struct player * p)
 }
 void move_left(char**mat,struct player * p)
 {
-    mat[p->posx][p->posy]= CAMINO_FINAL;
+    mat[p->posx][p->posy]= CELDA;
     p->last_x=p->posx;
     p->last_y=p->posy;
     p->posy--;
@@ -44,7 +45,7 @@ void move_left(char**mat,struct player * p)
 }
 void move_right(char**mat,struct player * p)
 {
-    mat[p->posx][p->posy]= CAMINO_FINAL;
+    mat[p->posx][p->posy]= CELDA;
     p->last_x=p->posx;
     p->last_y=p->posy;
     p->posy++;
@@ -103,7 +104,7 @@ int state(char **mat,int trypos,struct player *p)
         default:
             break;
     }
-    if(mat[try_x][try_y]== '#' || mat[try_x][try_y] == 'E')
+    if(mat[try_x][try_y]== PARED || mat[try_x][try_y] == 'E')
     {
         reward+= -100;
     }
@@ -112,7 +113,7 @@ int state(char **mat,int trypos,struct player *p)
     {
         reward+=100;
     }
-    if(try_x > p->posx && mat[try_x][try_y] != '#')
+    if(try_x > p->posx && mat[try_x][try_y] != PARED)
     {
         reward+=50;
     }

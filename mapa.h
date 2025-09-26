@@ -14,6 +14,8 @@
 #define ENTRADA 'E'
 #define SALIDA 'S'
 #define JUGADOR 'P'
+#define FANTASMA 'F'
+#define BONIFICACION 'B'
 
 typedef struct {
     int fil;
