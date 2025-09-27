@@ -8,4 +8,8 @@
 #include "mapa.h"
 #include "jugador.h"
 
+
+int crearMapa();
+int crearConexion();
+
 #endif // MAIN_H_INCLUDED

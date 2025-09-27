@@ -1,3 +1,8 @@
+*.layout
+*.depend
+/obj
+/bin
+
 # Prerequisites
 *.d
 
@@ -41,10 +46,6 @@
 *.su
 *.idb
 *.pdb
-
-# Archivos de C
-*.layout
-*.depend
 
 # Kernel Module Compile Results
 *.mod*
