@@ -19,6 +19,9 @@
 				<Option compiler="gcc-mingw64" />
 			</Target>
 		</Build>
+		<Linker>
+			<Add library="ws2_32" />
+		</Linker>
 		<Unit filename="estructuras/colaDin.c">
 			<Option compilerVar="CC" />
 		</Unit>
