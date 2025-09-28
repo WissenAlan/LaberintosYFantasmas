@@ -5,7 +5,25 @@
 #include "mapa.h"
 #include "red/cliente.h"
 #include "estructuras/estructuras.h"
+#include "game.h"
 
+
+int main(int argc, char* argv[])
+{
+    bool exit_status = EXIT_FAILURE;
+    struct game *game= NULL;
+    if(game_new(&game))
+    {
+        game_run(game);
+        exit_status= EXIT_SUCCESS;
+
+    }
+    game_free(&game);
+    return exit_status;
+}
+
+
+/*
 int main() {
     int op;
     printf("MENU:\n1) Conectar al servidor.\n2) Generar mapa.");
@@ -37,15 +55,15 @@ int crearMapa() {
         return SIN_MEM;
     llenarMat(m.mat, TAM_FIL, TAM_COL);
     crearLaberinto(&m, fil, col, &p);
-//    while(m.exit != true)
-//    {
-    mostrarMat(m.mat, TAM_FIL, TAM_COL);
-//        tecla= getch();
-//        moverjugador(m.mat,tecla,&p);
-//        //ai(m.mat,&p);
-//        checkend(&m,&p);
-//        system("cls");
-//    }
+    while(m.exit != true)
+    {
+        mostrarMat(m.mat, TAM_FIL, TAM_COL);
+       //tecla= getch();
+        //moverjugador(m.mat,tecla,&p);
+        ai(m.mat,&p);
+        checkend(&m,&p);
+      system("cls");
+    }
     eliminarMatriz(m.mat, TAM_FIL, TAM_COL);
 }
 
@@ -80,3 +98,4 @@ int crearConexion() {
     close_connection(soc);
     return TODO_OK;
 }
+*/

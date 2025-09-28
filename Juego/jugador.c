@@ -1,91 +1,87 @@
 #include "jugador.h"
-void moverjugador(char**mat,char movimiento,struct player *p)
+void moverjugador(tCola *colamov,char**mat,char movimiento,struct player *p)
 {
-    if(movimiento == 'w' && mat[p->posx -1][p->posy] != '#' && mat[p->posx-1][p->posy] != 'E')
+    struct moves move;
+    move.posx= p->posx;
+    move.posy= p->posy;
+    if(movimiento == 'w' && mat[p->posx-1][p->posy] != '#' && mat[p->posx-1][p->posy] != 'E')
     {
-        move_up(mat,p);
+        p->posx--;
+        encolarMov(colamov,&move,ARRIBA);
     }
-    if(movimiento == 's'  && mat[p->posx +1][p->posy] != '#')
+    if(movimiento == 's'  && mat[p->posx+1][p->posy] != '#')
     {
-        move_down(mat,p);
+        p->posx++;
+        encolarMov(colamov,&move,ABAJO);
     }
     if(movimiento == 'a' && mat[p->posx][p->posy-1] != '#')
     {
-        move_left(mat,p);
+        p->posy--;
+        encolarMov(colamov,&move,IZQUIERDA);
     }
     if(movimiento =='d' && mat[p->posx][p->posy+1] != '#')
     {
-        move_right(mat,p);
+        p->posy++;
+        encolarMov(colamov,&move,DERECHA);
     }
 }
-void move_up(char**mat,struct player * p)
+void encolarMov(tCola *cola,struct moves *movimiento,int mov)
 {
-    mat[p->posx][p->posy]= CELDA;
-    p->last_x=p->posx;
-    p->last_y=p->posy;
-    p->posx--;
-    mat[p->posx][p->posy]=JUGADOR;
+    movimiento->move=mov;
+    colaInsertar(cola,movimiento,sizeof(struct moves));
 }
-void move_down(char**mat,struct player * p)
+void ai(tCola *colamov,char **mat,struct player *player,struct ghost *p)
 {
-    mat[p->posx][p->posy]= CELDA;
-    p->last_x=p->posx;
-    p->last_y=p->posy;
-    p->posx++;
-    mat[p->posx][p->posy]=JUGADOR;
-}
-void move_left(char**mat,struct player * p)
-{
-    mat[p->posx][p->posy]= CELDA;
-    p->last_x=p->posx;
-    p->last_y=p->posy;
-    p->posy--;
-    mat[p->posx][p->posy]=JUGADOR;
-}
-void move_right(char**mat,struct player * p)
-{
-    mat[p->posx][p->posy]= CELDA;
-    p->last_x=p->posx;
-    p->last_y=p->posy;
-    p->posy++;
-    mat[p->posx][p->posy]=JUGADOR;
-}
-void ai(char **mat,struct player *p)
-{
-    int try_w=state(mat,1,p);
-    int try_s=state(mat,2,p);
-    int try_a=state(mat,3,p);
-    int try_d=state(mat,4,p);
+    int try_w=state(mat,1,player,p);
+    int try_s=state(mat,2,player,p);
+    int try_a=state(mat,3,player,p);
+    int try_d=state(mat,4,player,p);
+    struct moves move;
+    move.posx= p->posx;
+    move.posy= p->posy;
     if(try_w >= try_s && try_w >= try_a && try_w >= try_d)
     {
-        move_up(mat,p);
+       encolarMov(colamov,&move,ARRIBA);
     }
     else
     {
         if(try_s >= try_a && try_s >=try_d)
         {
-            move_down(mat,p);
+            encolarMov(colamov,&move,ABAJO);
         }
         else
         {
             if(try_a > try_d)
             {
-                move_left(mat,p);
+                encolarMov(colamov,&move,IZQUIERDA);
             }
             else
             {
-                move_right(mat,p);
+                encolarMov(colamov,&move,DERECHA);
             }
         }
     }
 }
-int state(char **mat,int trypos,struct player *p)
+int abs(int numero)
+{
+    if(numero > 0)
+    {
+        return numero;
+    }
+    else
+    {
+        return -numero;
+    }
+}
+int state(char **mat,int trypos,struct player *p,struct ghost *f)
 {
     int reward = 0;
-    int try_x=p->posx;
-    int try_y=p->posy;
-    int dif_x;
-    int dif_y;
+    int try_x=f->posx;
+    int try_y=f->posy;
+    int diff_x;
+    int diff_y;
+    int try_diff_x;
+    int try_diff_y;
     switch(trypos)
     {
         case 1:
@@ -103,22 +99,26 @@ int state(char **mat,int trypos,struct player *p)
         default:
             break;
     }
-    if(mat[try_x][try_y]== '#' || mat[try_x][try_y] == 'E')
+    if(mat[try_x][try_y]== '#' || mat[try_x][try_y] == 'E' || mat[try_x][try_y] == 'S')
     {
         reward+= -100;
     }
     //if para que detecte algo lo modificamos para que detecte a el jugador;
-    if(mat[try_x][try_y] == 'S')
+    if(mat[try_x][try_y] == 'P')
     {
         reward+=100;
     }
-    if(try_x > p->posx && mat[try_x][try_y] != '#')
+    diff_x=abs(f->posx - p->posx);
+    diff_y =abs(f->posy - p->posy);
+    try_diff_x= abs(try_x - p->posx);
+    try_diff_y =abs(try_y - p->posy);
+    if(try_diff_x < diff_x)
     {
-        reward+=50;
+        reward+=5;
     }
-    if(try_x  == p->last_x && try_y == p->last_y)
+    if(try_diff_y < diff_y)
     {
-        reward-=51;
+        reward+=5;
     }
     return reward;
 }

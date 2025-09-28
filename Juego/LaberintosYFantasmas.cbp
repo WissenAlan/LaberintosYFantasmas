@@ -31,6 +31,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="estructuras/pilaDin.h" />
+		<Unit filename="game.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="game.h" />
 		<Unit filename="jugador.c">
 			<Option compilerVar="CC" />
 		</Unit>

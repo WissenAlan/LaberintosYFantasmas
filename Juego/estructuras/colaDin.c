@@ -8,30 +8,24 @@ void crearCola(tCola*cola)
     cola->pri = NULL;
 }
 
-int colaInsertar(tCola*cola,const void*dato,unsigned tam)
+int colaInsertar(tCola*p,const void*d,unsigned cantBytes)
 {
-    tNodo*nue;
-    nue = (tNodo*)malloc(sizeof(tNodo));
-    if(!nue)
-        return SIN_MEM;
-    nue->dato = malloc(tam);
-    if(!nue->dato)
+    tNodo *nue = (tNodo *) malloc(sizeof(tNodo));
+
+    if(nue == NULL || (nue->dato = malloc(cantBytes)) == NULL)
     {
         free(nue);
-        return SIN_MEM;
+        return 0;
     }
-
-    memcpy(nue->dato,dato,tam);
-    nue->tamInfo = tam;
+    memcpy(nue->dato, d, cantBytes);
+    nue->tamInfo = cantBytes;
     nue->sig = NULL;
-
-    if(!cola->pri)
-        cola->pri = nue;
+    if(p->ult)
+        p->ult->sig = nue;
     else
-        cola->ult->sig = nue;
-    cola->ult = nue;
-
-    return TODO_OK;
+        p->pri = nue;
+    p->ult = nue;
+    return 1;
 }
 
 int sacarDeCola(tCola*cola,void*dato,unsigned tam)
@@ -65,4 +59,12 @@ int verPrimero(tCola*cola,void*dato,unsigned tam)
         return COLA_VACIA;
     memcpy(dato,elim->dato,MIN(tam,elim->tamInfo));
     return TODO_OK;
+}
+int colaVacia(tCola *cola)
+{
+    if(cola->pri == NULL)
+    {
+        return 1;
+    }
+    return 0;
 }

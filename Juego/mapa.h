@@ -1,10 +1,8 @@
 #ifndef FUNCIONES_H_INCLUDED
 #define FUNCIONES_H_INCLUDED
-
-#include "jugador.h"
-
+#include "main.h"
+#include "game.h"
 #define ESPACIADO 2
-
 #define PARED '#'
 #define VISITADO '.'
 #define CAMINO '.'
@@ -14,12 +12,10 @@
 #define JUGADOR 'P'
 #define FANTASMA 'F'
 #define BONIFICACION 'B'
-
-typedef struct {
+typedef struct{
     int fil;
     int col;
 }Celdas;
-
 struct mapaL
 {
     char **mat;
@@ -34,5 +30,4 @@ void eliminarMatriz(char**mat,int filas,int columnas);
 int crearLaberinto(struct mapaL *m, int fil, int col,struct player *p);
 int buscarVecinos(char**mat,int fil, int col,Celdas*act,Celdas*vecinos);
 void checkend(struct mapaL *m,struct player *p);
-
 #endif // FUNCIONES_H_INCLUDED

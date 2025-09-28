@@ -7,7 +7,12 @@
 #include <stdbool.h>
 #include "mapa.h"
 #include "jugador.h"
-
+#include "estructuras/colaDin.h"
+#define ARRIBA 1
+#define ABAJO 2
+#define IZQUIERDA 3
+#define DERECHA 4
+//aca no van funciones sino todas las macros osea los #define
 
 int crearMapa();
 int crearConexion();

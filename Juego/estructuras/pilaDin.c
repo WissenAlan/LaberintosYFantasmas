@@ -14,7 +14,6 @@ int pilaVacia(const tPila*pila)
         return PILA_VACIA;
     return TODO_OK;
 }
-
 int apilar(tPila*pila,const void* dato,unsigned tamDato)
 {
     tNodo*nue;
