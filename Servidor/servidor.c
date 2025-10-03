@@ -23,15 +23,6 @@ SOCKET create_server_socket() {
     return soc;
 }
 
-void process_request(const char* request, char* response) {
-    char operacion[16], text[TAM_BUFFER];
-    sscanf(request, "%15s %[^\n]", operacion, text);
-    if (strcmp(operacion, "HOLA") == 0) {
-        printf("HOLA AMIGO");
-        snprintf(response, TAM_BUFFER, "%s", text);
-    } else
-        snprintf(response, TAM_BUFFER, "Operacion no valida");
-}
 void run_server() {
     if (init_winsock() != 0) {
         printf("Error al inicializar Winsock\n");
@@ -69,4 +60,18 @@ void run_server() {
     WSACleanup();
 }
 
+void process_request(const char* request, char* response) {
+    char funcion[TAM_BUFFER];
+    sscanf(request, "%s", funcion);
+    char *cmd = strtok(funcion, "|");
+    FILE*jugadores, indiceBin, indiceIdx;
+    if (strcmp(cmd, "NOMBRE") == 0) {
+        char *nombre = strtok(funcion, "\0");
+        printf("Se ingreso el nombre: %s",nombre);
+//        indiceIdx = fopen(ARCH_IDX,"");
+        jugadores = fopen(ARCH_JUG,"ab");
+        snprintf(response, TAM_BUFFER, "%s", funcion);
+    } else
+        snprintf(response, TAM_BUFFER, "nombre no valida");
+}
 

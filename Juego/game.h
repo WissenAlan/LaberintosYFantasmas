@@ -1,17 +1,23 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
-#include "main.h"
-#include "estructuras/colaDin.h"
-struct game {
 
-    bool is_running;
-    struct player *p;
-    struct mapaL *m;
-    struct fantasma *f;
+#include <stdlib.h>
+#include "estructuras/colaDin.h"
+#include "jugador.h"
+#include "mapa.h"
+#include "red/cliente.h"
+typedef struct {
+    int is_running;
+    player *p;
+    tMapa *m;
+    ghost *f;
     tCola *colaMov;
-};
-bool game_new(struct game **game);
-void game_free(struct game **game);
-void game_run(struct game *game);
-void game_update(struct game *g);
+} tGame;
+int game_new(tGame *game);
+void game_free(tGame *game);
+void game_run(tGame *game);
+void game_update(tGame *g);
+
+void moverfantasmas(tGame *g, tCola *cola);
+int crearConexion();
 #endif // GAME_H_INCLUDED

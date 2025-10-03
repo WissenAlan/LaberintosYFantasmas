@@ -26,6 +26,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="estructuras/colaDin.h" />
+		<Unit filename="estructuras/constantes.h" />
 		<Unit filename="estructuras/estructuras.h" />
 		<Unit filename="estructuras/pilaDin.c">
 			<Option compilerVar="CC" />

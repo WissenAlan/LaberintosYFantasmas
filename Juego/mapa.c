@@ -64,7 +64,7 @@ void mostrarMat(char**mat, int fil, int col) {
     }
 }
 
-int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
+int crearLaberinto(tMapa *m, int fil, int col,player *jugador) {
     int cantVecinos;
     int r;
     int cantBoni = 2;
@@ -150,13 +150,13 @@ int crearLaberinto(struct mapaL *m, int fil, int col,struct player *pla) {
 
     m->mat[act.fil-1][act.col] = ENTRADA;
     m->mat[act.fil][act.col] = JUGADOR;
-    pla->posx=act.fil;
-    pla->posy=act.col;
+    jugador->posx=act.fil;
+    jugador->posy=act.col;
     m->mat[fil-1][vecinos[r].col]= SALIDA ;
     m->mat[fil-2][vecinos[r].col]= FANTASMA ;
     m->posxS=fil- 1;
     m->posyS=vecinos[r].col;
-    m->exit=false;
+    m->exit=FALSE;
     vaciarPila(&p);
     return 0;
 }
@@ -183,12 +183,33 @@ int buscarVecinos(char**mat,int fil, int col,Celdas*act,Celdas*vecinos)
     return cant;
 }
 
-void checkend(struct mapaL *m,struct player *p)
+void checkend(tMapa *m,player *p)
 {
     if(p->posx == m->posxS && p->posy == m->posyS)
     {
-        m->exit=true;
+        m->exit=VERDADERO;
     }
 }
+int crearMapa(player *p, ghost* f, tMapa* m) {
+    int fil, col;
+    int cont = 0;
+    char tecla = 'w';
 
+    fil = TAM_FIL % 2 == 0 ? TAM_FIL - 1 : TAM_FIL;
+    col = TAM_COL % 2 == 0 ? TAM_COL - 1 : TAM_COL;
+    m->mat = crearMatriz(TAM_FIL, TAM_COL);
+    if (!m->mat)
+        return SIN_MEM;
+    llenarMat(m->mat, TAM_FIL, TAM_COL);
+    crearLaberinto(m, fil, col, p);
+//    while (m->exit != VERDADERO) {
+        mostrarMat(m->mat, TAM_FIL, TAM_COL);
+        //tecla= getch();
+        //moverjugador(m->mat,tecla,p);
+//        ai(colaMov, m->mat, p, f);
+        checkend(m, p);
+//        system("cls");
+//    }
+    eliminarMatriz(m->mat, TAM_FIL, TAM_COL);
+}
 
