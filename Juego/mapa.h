@@ -12,9 +12,6 @@
 #define JUGADOR 'P'
 #define FANTASMA 'F'
 #define BONIFICACION 'B'
-
-#define TAM_FIL 23
-#define TAM_COL 29
 typedef struct {
     int fil;
     int col;
@@ -23,15 +20,16 @@ typedef struct mapaL{
     char **mat;
     int posyS;
     int posxS;
+    int filMapa, colMapa;
     int exit;
 } tMapa;
 void llenarMat(char**mat, int fil, int col);
 void mostrarMat(char**mat, int fil, int col);
 char**crearMatriz(int filas, int columnas);
 void eliminarMatriz(char**mat, int filas, int columnas);
-int crearLaberinto(tMapa *m, int fil, int col, player *p);
+int crearLaberinto(tMapa *m, int fil, int col, player *p, int, int, int);
 int buscarVecinos(char**mat, int fil, int col, Celdas*act, Celdas*vecinos);
 void checkend(tMapa *m, player *p);
 
-int crearMapa(player *p, ghost* f, tMapa* m);
+int crearMapa(player *p, tMapa* m , int, int, int);
 #endif // FUNCIONES_H_INCLUDED

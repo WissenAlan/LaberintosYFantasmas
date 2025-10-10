@@ -10,7 +10,7 @@ typedef struct {
     int posx;
     int posy;
     unsigned puntos;
-    unsigned lifes;
+    unsigned vidas;
 } player;
 typedef struct {
     int posx;

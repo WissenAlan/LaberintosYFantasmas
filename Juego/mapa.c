@@ -10,7 +10,7 @@ char**crearMatriz(int filas, int columnas) {
     if (!mat)
         return NULL;
     for (int i = 0; i < filas; i++) {
-        mat[i] =(char*) malloc(columnas * sizeof(char));
+        mat[i] = (char*) malloc(columnas * sizeof(char));
         if (mat[i] == NULL) {
             for (int j = 0; j < i; j++)
                 free(mat[j]);
@@ -21,38 +21,26 @@ char**crearMatriz(int filas, int columnas) {
     return mat;
 }
 
-void eliminarMatriz(char**mat,int filas,int columnas)
-{
+void eliminarMatriz(char**mat, int filas, int columnas) {
     for (int i = 0; i < filas; i++)
         free(mat[i]);
     free(mat);
 }
 
 void llenarMat(char**mat, int fil, int col) {
-
     int x, y, i, j;
-    for ( x = 0; x < fil; x++)
-    {
-        for ( y = 0; y < col; y++)
-        {
-                mat[x][y] = PARED;
-        }
+    for (x = 0; x < fil; x++) {
+        for (y = 0; y < col; y++)
+            mat[x][y] = PARED;
     }
-
-    for ( x = ESPACIADO ; x < fil - ESPACIADO; x+= ESPACIADO + 1) {
-        for ( y = ESPACIADO ; y < col - ESPACIADO; y += ESPACIADO + 1) {
-            for (int i = 0; i < ESPACIADO; i++)
-            {
+    for (x = ESPACIADO ; x < fil - ESPACIADO; x += ESPACIADO + 1) {
+        for (y = ESPACIADO ; y < col - ESPACIADO; y += ESPACIADO + 1) {
+            for (int i = 0; i < ESPACIADO; i++) {
                 for (size_t j = 0; j < ESPACIADO; j++)
-                {
-                    mat[x+i][y+j] = CELDA;
-                }
-
+                    mat[x + i][y + j] = CELDA;
             }
-
         }
     }
-
 }
 
 void mostrarMat(char**mat, int fil, int col) {
@@ -64,13 +52,14 @@ void mostrarMat(char**mat, int fil, int col) {
     }
 }
 
-int crearLaberinto(tMapa *m, int fil, int col,player *jugador) {
+int crearLaberinto(tMapa *m, int filMod, int colMod, player *jugador, int fant, int prem, int ext) {
     int cantVecinos;
     int r;
-    int cantBoni = 2;
-    int cantFan = 3;
+    int cantBoni = prem + ext;
+    int cantFan = fant-1;
     tPila p;
-    Celdas act = {1,1};
+    jugador->posx = 1;
+    Celdas act = {1, 1};
     Celdas vecinos[4];
     Celdas pared;
     srand(time(NULL));
@@ -79,7 +68,7 @@ int crearLaberinto(tMapa *m, int fil, int col,player *jugador) {
     while (pilaVacia(&p) == TODO_OK) {
         desapilar(&p, &act, sizeof(Celdas));
         m->mat[act.fil][act.col] = VISITADO;
-        cantVecinos = buscarVecinos(m->mat, fil, col, &act, vecinos);
+        cantVecinos = buscarVecinos(m->mat, filMod, colMod, &act, vecinos);
         if (cantVecinos) {
             apilar(&p, &act, sizeof(Celdas));
             r = rand() % cantVecinos;
@@ -87,28 +76,24 @@ int crearLaberinto(tMapa *m, int fil, int col,player *jugador) {
             pared.col = act.col + vecinos[r].col / 2;
             m->mat[pared.fil][pared.col] = CAMINO;
             m->mat[pared.fil][pared.col] = CAMINO;
-            vecinos[r].col +=act.col;
-            vecinos[r].fil +=act.fil;
+            vecinos[r].col += act.col;
+            vecinos[r].fil += act.fil;
             apilar(&p, &vecinos[r], sizeof(Celdas));
         }
     }
-
-    for (int i = 0; i < fil; i++)
-    {
-        for (int j = 0; j < col; j++)
-        {
+    for (int i = 0; i < filMod; i++) {
+        for (int j = 0; j < colMod; j++) {
             if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
-            m->mat[i][j] = CELDA;
+                m->mat[i][j] = CELDA;
         }
     }
-
     act.col = 1;
     act.fil = 1;
     apilar(&p, &act, sizeof(Celdas));
     while (pilaVacia(&p) == TODO_OK) {
         desapilar(&p, &act, sizeof(Celdas));
         m->mat[act.fil][act.col] = VISITADO;
-        cantVecinos = buscarVecinos(m->mat, fil, col, &act, vecinos);
+        cantVecinos = buscarVecinos(m->mat, filMod, colMod, &act, vecinos);
         if (cantVecinos) {
             apilar(&p, &act, sizeof(Celdas));
             r = rand() % cantVecinos;
@@ -116,65 +101,53 @@ int crearLaberinto(tMapa *m, int fil, int col,player *jugador) {
             pared.col = act.col + vecinos[r].col / 2;
             m->mat[pared.fil][pared.col] = CAMINO;
             m->mat[pared.fil][pared.col] = CAMINO;
-            vecinos[r].col +=act.col;
-            vecinos[r].fil +=act.fil;
+            vecinos[r].col += act.col;
+            vecinos[r].fil += act.fil;
             apilar(&p, &vecinos[r], sizeof(Celdas));
-        }
-        else
-        {
-            if(cantBoni && !(rand() % 10))
-            {
+        } else {
+            if (cantBoni && !(rand() % 10)) {
                 m->mat[act.fil][act.col] = BONIFICACION;
                 cantBoni --;
-            }
-            else
-            if(cantFan
-               && act.fil > fil/10
-               && act.col > col/10
-               && rand() % 3 == 0)
-            {
+            } else if (cantFan
+                       && act.fil > filMod / 10
+                       && act.col > colMod / 10
+                       && rand() % 3 == 0) {
                 m->mat[act.fil][act.col] = FANTASMA;
                 cantFan --;
             }
         }
     }
-
-    for (int i = 0; i < fil; i++)
-    {
-        for (int j = 0; j < col; j++)
-        {
+    for (int i = 0; i < filMod; i++) {
+        for (int j = 0; j < colMod; j++) {
             if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
-            m->mat[i][j] = CELDA;
+                m->mat[i][j] = CELDA;
         }
     }
-
-    m->mat[act.fil-1][act.col] = ENTRADA;
+    m->mat[act.fil - 1][act.col] = ENTRADA;
     m->mat[act.fil][act.col] = JUGADOR;
-    jugador->posx=act.fil;
-    jugador->posy=act.col;
-    m->mat[fil-1][vecinos[r].col]= SALIDA ;
-    m->mat[fil-2][vecinos[r].col]= FANTASMA ;
-    m->posxS=fil- 1;
-    m->posyS=vecinos[r].col;
-    m->exit=FALSE;
+    jugador->posx = act.fil;
+    jugador->posy = act.col;
+    m->mat[filMod - 1][vecinos[r].col] = SALIDA ;
+    m->mat[filMod - 2][vecinos[r].col] = FANTASMA ;
+    m->posxS = filMod - 1;
+    m->posyS = vecinos[r].col;
+    m->exit = FALSE;
     vaciarPila(&p);
-    return 0;
+    return VERDADERO;
 }
 
-int buscarVecinos(char**mat,int fil, int col,Celdas*act,Celdas*vecinos)
-{
+int buscarVecinos(char**mat, int fil, int col, Celdas*act, Celdas*vecinos) {
     int posx[] = { -2, 0, 2, 0 };
     int posy[] = { 0, 2, 0, -2 };
     int cant = 0;
     for (int i = 0; i < 4; i++) {
-        if((act->fil + posx[i])>0
-            && (act->fil + posx[i])<fil
-            && (act->col + posy[i])>0
-            && (act->col + posy[i])<col
-            && mat[act->fil+posx[i]][act->col+posy[i]] != VISITADO
-            && mat[act->fil+posx[i]][act->col+posy[i]] != FANTASMA
-            && mat[act->fil+posx[i]][act->col+posy[i]] != BONIFICACION)
-        {
+        if ((act->fil + posx[i]) > 0
+                && (act->fil + posx[i]) < fil
+                && (act->col + posy[i]) > 0
+                && (act->col + posy[i]) < col
+                && mat[act->fil + posx[i]][act->col + posy[i]] != VISITADO
+                && mat[act->fil + posx[i]][act->col + posy[i]] != FANTASMA
+                && mat[act->fil + posx[i]][act->col + posy[i]] != BONIFICACION) {
             vecinos[cant].fil = posx[i];
             vecinos[cant].col = posy[i];
             cant++;
@@ -183,33 +156,21 @@ int buscarVecinos(char**mat,int fil, int col,Celdas*act,Celdas*vecinos)
     return cant;
 }
 
-void checkend(tMapa *m,player *p)
-{
-    if(p->posx == m->posxS && p->posy == m->posyS)
-    {
-        m->exit=VERDADERO;
-    }
+void checkend(tMapa *m, player *p) {
+    if (p->posx == m->posxS && p->posy == m->posyS)
+        m->exit = VERDADERO;
 }
-int crearMapa(player *p, ghost* f, tMapa* m) {
+int crearMapa(player *p, tMapa* m, int fant, int prem, int ext) {
     int fil, col;
     int cont = 0;
-    char tecla = 'w';
-
-    fil = TAM_FIL % 2 == 0 ? TAM_FIL - 1 : TAM_FIL;
-    col = TAM_COL % 2 == 0 ? TAM_COL - 1 : TAM_COL;
-    m->mat = crearMatriz(TAM_FIL, TAM_COL);
+    m->exit = FALSE;
+    fil = m->filMapa % 2 == 0 ? m->filMapa - 1 : m->filMapa;
+    col = m->colMapa % 2 == 0 ? m->colMapa - 1 : m->colMapa;
+    m->mat = crearMatriz(fil, col);
     if (!m->mat)
-        return SIN_MEM;
-    llenarMat(m->mat, TAM_FIL, TAM_COL);
-    crearLaberinto(m, fil, col, p);
-//    while (m->exit != VERDADERO) {
-        mostrarMat(m->mat, TAM_FIL, TAM_COL);
-        //tecla= getch();
-        //moverjugador(m->mat,tecla,p);
-//        ai(colaMov, m->mat, p, f);
-        checkend(m, p);
-//        system("cls");
-//    }
-    eliminarMatriz(m->mat, TAM_FIL, TAM_COL);
+        return FALSE;
+    llenarMat(m->mat, fil, col);
+    crearLaberinto(m, fil, col, p, fant, prem, ext);
+    return VERDADERO;
 }
 

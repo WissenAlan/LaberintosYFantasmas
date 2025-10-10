@@ -3,6 +3,8 @@ void moverjugador(tCola *colamov, char**mat, char movimiento, player *p) {
     moves move;
     move.posx = p->posx;
     move.posy = p->posy;
+    if (movimiento == 'W' || movimiento == 'A' || movimiento == 'S' || movimiento == 'D') //SI TIENE MAYUS LAS CONVIERTE A MINUS
+        movimiento += 32;
     if (movimiento == 'w' && mat[p->posx - 1][p->posy] != '#' && mat[p->posx - 1][p->posy] != 'E') {
         p->posx--;
         encolarMov(colamov, &move, ARRIBA);

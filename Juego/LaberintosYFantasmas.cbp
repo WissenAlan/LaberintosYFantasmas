@@ -22,6 +22,10 @@
 		<Linker>
 			<Add library="ws2_32" />
 		</Linker>
+		<Unit filename="estructuras/Arbol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="estructuras/Arbol.h" />
 		<Unit filename="estructuras/colaDin.c">
 			<Option compilerVar="CC" />
 		</Unit>
