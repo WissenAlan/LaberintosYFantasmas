@@ -35,8 +35,8 @@ void llenarMat(char**mat, int fil, int col) {
     }
     for (x = ESPACIADO ; x < fil - ESPACIADO; x += ESPACIADO + 1) {
         for (y = ESPACIADO ; y < col - ESPACIADO; y += ESPACIADO + 1) {
-            for (int i = 0; i < ESPACIADO; i++) {
-                for (size_t j = 0; j < ESPACIADO; j++)
+            for (i = 0; i < ESPACIADO; i++) {
+                for (j = 0; j < ESPACIADO; j++)
                     mat[x + i][y + j] = CELDA;
             }
         }

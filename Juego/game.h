@@ -2,7 +2,6 @@
 #define GAME_H_INCLUDED
 
 #include <stdlib.h>
-#include "estructuras/colaDin.h"
 #include "jugador.h"
 #include "mapa.h"
 #include "red/cliente.h"
@@ -11,7 +10,7 @@ typedef struct {
     player *p;
     tMapa *m;
     ghost *f;
-    tCola *colaMov;
+    tCola colaMov;
     int cantFant, cantVidas, cantPremios, cantVidasExt;
 } tGame;
 int game_new(tGame *game);

@@ -36,12 +36,13 @@ int game_new(tGame *g) {
         asignarConfig(linea, &g->cantVidasExt);
         fclose(config);
     }
-    if (crearJugador(g) == FALSE){
+    if (crearJugador(g) == FALSE) {
         free(g->m);
         return FALSE;
     }
-    if(crearMapa(g->p, g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == FALSE)
+    if (crearMapa(g->p, g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == FALSE)
         return FALSE;
+    crearCola(&(g->colaMov));
     //aca agregamos la conecion con el servidor todo eso etc
     g->is_running = VERDADERO;
     return VERDADERO;
@@ -66,29 +67,32 @@ int crearJugador(tGame *g) {
     return VERDADERO;
 }
 void game_free(tGame *g) {
+    free(g->p);
+    eliminarMatriz(g->m->mat, g->m->filMapa, g->m->colMapa);
+    free(g->m);
+//    free();
     printf("todo bien!");
 }
 void game_run(tGame *g) {
-    while (g->is_running==VERDADERO) {
+    while (g->is_running == VERDADERO) {
         crearConexion(g);
         g->is_running = FALSE;
     }
 }
 void game_update(tGame *g) {
-    tCola cola ;
-    crearCola(&cola);
     char tecla;
     tecla = getch(); // cambiar por eventos;
-    moverjugador(&cola, g->m->mat, tecla, g->p);
-    moverfantasmas(g, &cola);
-    desencolarmovs(&cola, g->m->mat, g->p);
+    moverjugador(&(g->colaMov), g->m->mat, tecla, g->p);
+    moverfantasmas(g, &(g->colaMov));
+    desencolarmovs(&(g->colaMov), g->m->mat, g->p);
+    //destruir
 }
 void moverfantasmas(tGame *g, tCola *cola) {
     int i, j;
     ghost fant;
     for (i = 0; i < g->m->filMapa; i++) {
         for (j = 0; j < g->m->colMapa; j++) {
-            if (g->m->mat[i][j] == 'F') {
+            if (g->m->mat[i][j] == FANTASMA) {
                 fant.posx = i;
                 fant.posy = j;
                 ai(cola, g->m->mat, g->p, &fant);
@@ -111,7 +115,7 @@ void intercambiar(void *a, void*b, unsigned tam) {
 }
 void desencolarmovs(tCola *cola, char ** mat, player *p) {
     moves movi;
-    while (!colaVacia(cola)) {
+    while (colaVacia(cola)!=COLA_VACIA) {
         /* sacarDeCola rellena 'movimientos' */
         sacarDeCola(cola, &movi, sizeof(moves));
         if (movi.move == ARRIBA) {
@@ -221,7 +225,7 @@ void iniciarJuego(tGame* g) {
 //        checkend(m, p);
 //        system("cls");
 //    }
-    eliminarMatriz(g->m->mat, g->m->filMapa, g->m->colMapa);
+//    eliminarMatriz(g->m->mat, g->m->filMapa, g->m->colMapa);
     // logica para cuando tengamos graficos
     /*game_start(g);
     while(g->is_running && !g->inicio)

@@ -5,6 +5,6 @@ int main() {
     if (game_new(&game) == VERDADERO) {
         game_run(&game);
     }
-//    game_free(&game);
+    game_free(&game);
     return 0;
 }
