@@ -2,7 +2,7 @@
 #define FUNCIONES_H_INCLUDED
 #include "jugador.h"
 #include "estructuras/constantes.h"
-#define ESPACIADO 1
+#define ESPACIADO 2
 #define PARED '#'
 #define VISITADO '.'
 #define CAMINO '.'
