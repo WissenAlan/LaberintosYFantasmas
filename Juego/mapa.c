@@ -46,8 +46,8 @@ void llenarMat(char**mat, int fil, int col) {
 void mostrarMat(char**mat, int fil, int col) {
     for (int x = 0; x < fil; x++) {
         printf("     ");
-        for (int y = 0; y < col; y++)
-            printf("%c", mat[x][y]);
+//        for (int y = 0; y < col; y++)
+            printf("%s", mat[x]);
         printf("\n");
     }
 }
@@ -164,13 +164,13 @@ int crearMapa(player *p, tMapa* m, int fant, int prem, int ext) {
     int fil, col;
     int cont = 0;
     m->exit = FALSE;
-    fil = m->filMapa % 2 == 0 ? m->filMapa - 1 : m->filMapa;
-    col = m->colMapa % 2 == 0 ? m->colMapa - 1 : m->colMapa;
-    m->mat = crearMatriz(fil, col);
+    m->filMapa = m->filMapa % 2 == 0 ? m->filMapa - 1 : m->filMapa;
+    m->colMapa = m->colMapa % 2 == 0 ? m->colMapa - 1 : m->colMapa;
+    m->mat = crearMatriz(m->filMapa, m->colMapa);
     if (!m->mat)
         return FALSE;
-    llenarMat(m->mat, fil, col);
-    crearLaberinto(m, fil, col, p, fant, prem, ext);
+    llenarMat(m->mat, m->filMapa, m->colMapa);
+    crearLaberinto(m, m->filMapa, m->colMapa, p, fant, prem, ext);
     return VERDADERO;
 }
 
