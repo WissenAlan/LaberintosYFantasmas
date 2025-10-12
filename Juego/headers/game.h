@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "jugador.h"
 #include "mapa.h"
-#include "red/cliente.h"
+#include "../red/cliente.h"
 typedef struct {
     int is_running;
     player *p;

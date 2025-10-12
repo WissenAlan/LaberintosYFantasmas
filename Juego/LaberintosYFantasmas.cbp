@@ -39,19 +39,19 @@
 		<Unit filename="game.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="game.h" />
+		<Unit filename="headers/game.h" />
+		<Unit filename="headers/jugador.h" />
+		<Unit filename="headers/main.h" />
+		<Unit filename="headers/mapa.h" />
 		<Unit filename="jugador.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="jugador.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="main.h" />
 		<Unit filename="mapa.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="mapa.h" />
 		<Unit filename="red/cliente.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -1,4 +1,4 @@
-#include "jugador.h"
+#include "headers/jugador.h"
 void moverjugador(tCola *colamov, char**mat, char movimiento, player *p) {
     moves move;
     move.posx = p->posx;

@@ -1,6 +1,6 @@
 #ifndef JUGADOR_H_INCLUDED
 #define JUGADOR_H_INCLUDED
-#include "estructuras/colaDin.h"
+#include "../estructuras/colaDin.h"
 
 #define ARRIBA 1
 #define ABAJO 2

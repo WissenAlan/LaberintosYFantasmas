@@ -1,7 +1,7 @@
-#include "main.h"
-#include "jugador.h"
-#include "mapa.h"
-#include "game.h"
+#include "headers/main.h"
+#include "headers/jugador.h"
+#include "headers/mapa.h"
+#include "headers/game.h"
 
 int game_new(tGame *g) {
     // tCola Colamov;
