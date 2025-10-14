@@ -1,10 +1,14 @@
-#include "headers/mapa.h"
+#include "header/mapa.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "estructuras/pilaDin.h"
-
+int crearMapa(tMapa *m) {
+    m->exit = FALSE;
+    m->posxS = m->posyS = m->colMapa = m->filMapa = 0;
+    m->mat = NULL;
+}
 char**crearMatriz(int filas, int columnas) {
     char**mat = (char**)malloc(filas * sizeof(char*));
     if (!mat)
@@ -45,60 +49,43 @@ El siguiente algoritmo inicializa la matriz de la siguiente forma:
 El espacio vacio sirve como nodo para el algoritmo de formacion del mapa
 */
 
-void llenarMat(char** mat, int fil, int col)
-{
-
-    int x,y,i;
-
-    for (int x = 0; x < fil; x++)
-    {
+void llenarMat(char** mat, int fil, int col) {
+    int x, y, i;
+    for (x = 0; x < fil; x++) {
         memset(mat[x], PARED, col);  /// Llenar fila completa de una vez
     }
-
-    for (x = ESPACIADO; x < fil - ESPACIADO; x += ESPACIADO + 1)
-    {
-        for (y = ESPACIADO; y < col - ESPACIADO; y += ESPACIADO + 1)
-        {
+    for (x = ESPACIADO; x < fil - ESPACIADO; x += ESPACIADO + 1) {
+        for (y = ESPACIADO; y < col - ESPACIADO; y += ESPACIADO + 1) {
             for (i = 0; i < ESPACIADO; i++)
-            {
                 memset(&mat[x + i][y], CELDA, ESPACIADO);
-            }
         }
     }
 }
 
 void mostrarMat(char**mat, int fil, int col) {
-    for (int x = 0; x < fil; x++) {
-        printf("     ");
-//        for (int y = 0; y < col; y++)
-            printf("%s", mat[x]);
-        printf("\n");
-    }
+    for (int x = 0; x < fil; x++)
+        printf("     %s\n", mat[x]);
 }
 
-int crearLaberinto(tMapa *m, int filMod, int colMod, player *jugador, int fant, int prem, int ext) {
+int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, int prem, int ext) {
     int cantVecinos;
     int r;
     int cantBoni = prem + ext;
-    int cantFan = fant-1;
+    int cantFan = fant - 1;
     tPila p;
-    jugador->posx = 1;
+    pJug->posx = 1;
     Celdas act = {1, 1};
     Celdas vecinos[4];
     Celdas pared;
     srand(time(NULL));
     crearPila(&p);
     apilar(&p, &act, sizeof(Celdas));                   ///Apilo la primera celda
-    while (pilaVacia(&p) == TODO_OK)
-    {
+    while (pilaVacia(&p) == TODO_OK) {
         desapilar(&p, &act, sizeof(Celdas));            ///saco la ultima celda modificada
         m->mat[act.fil][act.col] = VISITADO;   ///<-----------Marco como visitado
-
         cantVecinos = buscarVecinos(m->mat, filMod, colMod, &act, vecinos); /// calculo los vecinos que hay disponibles y los guatdo en un vector
-
         if (cantVecinos) {
             apilar(&p, &act, sizeof(Celdas));           /// Como hay un vecino al que saltar lo apilo nuevamente
-
             r = rand() % cantVecinos;///<--------------- Selecciono un vecino random de lo que hay
             pared.fil = act.fil + vecinos[r].fil / 2;
             pared.col = act.col + vecinos[r].col / 2;
@@ -107,20 +94,20 @@ int crearLaberinto(tMapa *m, int filMod, int colMod, player *jugador, int fant, 
             vecinos[r].col += act.col;
             vecinos[r].fil += act.fil;
             apilar(&p, &vecinos[r], sizeof(Celdas));/// <----------------- Apilo la celda que se acaba de usar para que sea la ultima modificada
-        }else {
+        } else {
             /// ATENCION!!!
             /// el sigiente algoritmo es para dererminar si se pone un fantasma o una bonificacion a traves de los numeros random
             /// fue hecho a las 3:55 am. luego de pelear con un error que se solucionaba poniendo un parentesis
             /// el que quiera hacerlo mejor, bienvenido sea ATTE: ERIK O.o
-            if (cantBoni && !(rand() % 10))
-            {
+            if (cantBoni && !(rand() % 10)) {
                 m->mat[act.fil][act.col] = BONIFICACION;
                 cantBoni --;
-            } else if (cantFan
+            } else if (cantFan > 0
                        && act.fil > filMod / 10
                        && act.col > colMod / 10
                        && rand() % 3 == 0) {
                 m->mat[act.fil][act.col] = FANTASMA;
+                //ubicar en vector de fantasmas!
                 cantFan --;
             }
         }
@@ -169,13 +156,12 @@ int crearLaberinto(tMapa *m, int filMod, int colMod, player *jugador, int fant, 
 //    }
     m->mat[act.fil - 1][act.col] = ENTRADA;
     m->mat[act.fil][act.col] = JUGADOR;
-    jugador->posx = act.fil;
-    jugador->posy = act.col;
+    pJug->posx = act.fil;
+    pJug->posy = act.col;
     m->mat[filMod - 1][vecinos[r].col] = SALIDA ;
     m->mat[filMod - 2][vecinos[r].col] = FANTASMA ;
     m->posxS = filMod - 1;
     m->posyS = vecinos[r].col;
-    m->exit = FALSE;
     vaciarPila(&p);
     return VERDADERO;
 }
@@ -191,7 +177,7 @@ int buscarVecinos(char**mat, int fil, int col, Celdas*act, Celdas*vecinos) {
                                   /// deberia para poder generar mas espacio, de lo contrario solo habria
                                   /// un camino y seria mas complejo
     int cant = 0;
-    for (int i = 0; i < 4; i++) {                 /// en esta condicion bastante larga revisamos:
+    for (int i = 0; i < 4; i++) { /// en esta condicion bastante larga revisamos:
         if ((act->fil + posx[i]) > 0 ///<------ que no se salga de la matriz
                 && (act->fil + posx[i]) < fil
                 && (act->col + posy[i]) > 0
@@ -207,11 +193,11 @@ int buscarVecinos(char**mat, int fil, int col, Celdas*act, Celdas*vecinos) {
     return cant;
 }
 
-void checkend(tMapa *m, player *p) {
-    if (p->posx == m->posxS && p->posy == m->posyS)
+void checkend(tMapa *m, tJugador *pJug) {
+    if (pJug->posx == m->posxS && pJug->posy == m->posyS)
         m->exit = VERDADERO;
 }
-int crearMapa(player *p, tMapa* m, int fant, int prem, int ext) {
+int llenarMapa(tJugador *p, tMapa* m, int fant, int prem, int ext) {
     int fil, col;
     int cont = 0;
     m->exit = FALSE;

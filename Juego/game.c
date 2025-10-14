@@ -1,31 +1,23 @@
-#include "headers/main.h"
-#include "headers/jugador.h"
-#include "headers/mapa.h"
-#include "headers/game.h"
+#include "header/game.h"
 
 int game_new(tGame *g) {
-    // tCola Colamov;
     char linea[TAM_BUFFER];
     char *valor;
-    g->m = malloc(sizeof(tMapa));
-    if (!g->m) {
-        printf("ERROR en malloc");
-        return FALSE;
-    }
+    crearMapa(&g->m);
     FILE*config = fopen(ARCHIVO_CONFIG, "r");
     if (!config) {
         printf("No hay archivo de configuracion de mapa.\nSe genera el juego en predeterminado.\n");
         g->cantFant = 3;
         g->cantVidas = 3;
         g->cantPremios = 2;
-        g->m->filMapa = 21;
-        g->m->colMapa = 21;
+        g->m.filMapa = 21;
+        g->m.colMapa = 21;
         g->cantVidasExt = 1;
     } else {
         fgets(linea, TAM_BUFFER, config);
-        asignarConfig(linea, &g->m->filMapa);
+        asignarConfig(linea, &(g->m.filMapa));
         fgets(linea, TAM_BUFFER, config);
-        asignarConfig(linea, &g->m->colMapa);
+        asignarConfig(linea, &g->m.colMapa);
         fgets(linea, TAM_BUFFER, config);
         asignarConfig(linea, &g->cantVidas);
         fgets(linea, TAM_BUFFER, config);
@@ -36,14 +28,11 @@ int game_new(tGame *g) {
         asignarConfig(linea, &g->cantVidasExt);
         fclose(config);
     }
-    if (crearJugador(g) == FALSE) {
-        free(g->m);
+    crearJugador(&g->p, g->cantVidas);
+    if (llenarMapa(&g->p, &g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == FALSE){
         return FALSE;
     }
-    if (crearMapa(g->p, g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == FALSE)
-        return FALSE;
     crearCola(&(g->colaMov));
-    //aca agregamos la conecion con el servidor todo eso etc
     g->is_running = VERDADERO;
     return VERDADERO;
 }
@@ -51,51 +40,37 @@ void asignarConfig(char* linea, int* parametro) {
     char*valor = strchr(linea, ':');
     if (valor) {
         valor++; // avanzar para saltar los dos puntos ':'
-        // eliminar salto de línea si existe
-        valor[strcspn(valor, "\n")] = '\0';
+        valor[strcspn(valor, "\n")] = '\0';// eliminar salto de línea
         *parametro = atoi(valor);
     }
 }
-
-int crearJugador(tGame *g) {
-    g->p = (player*)malloc(sizeof(player));
-    if (!g->p) {
-        printf("ERROR en malloc");
-        return FALSE;
-    }
-    g->p->vidas = g->cantVidas;
-    return VERDADERO;
-}
 void game_free(tGame *g) {
-    free(g->p);
-    eliminarMatriz(g->m->mat, g->m->filMapa, g->m->colMapa);
-    free(g->m);
-//    free();
-    printf("todo bien!");
+    eliminarMatriz(g->m.mat, g->m.filMapa, g->m.colMapa);
+    if(colaVacia(&(g->colaMov))!=COLA_VACIA)
+        vaciarCola(&(g->colaMov));
+    printf("\t\tFin del juego!");
 }
 void game_run(tGame *g) {
-    while (g->is_running == VERDADERO) {
-        crearConexion(g);
-        g->is_running = FALSE;
-    }
+    crearConexion(g);
+    if(getVidasJugador(&g->p)<=0)
+        printf("\n\t\tPERDISTE\n");
+    else
+        printf("\n\t\tGANASTE\n");
 }
 void game_update(tGame *g) {
-    char tecla;
-    tecla = getch(); // cambiar por eventos;
-    moverjugador(&(g->colaMov), g->m->mat, tecla, g->p);
-    moverfantasmas(g, &(g->colaMov));
-    desencolarmovs(&(g->colaMov), g->m->mat, g->p);
-    //destruir
+    moverJugador(&(g->colaMov), g->m.mat, &g->p);
+    moverFantasmas(g);
+    desencolarMovs(&(g->colaMov), g->m.mat, &g->p);
 }
-void moverfantasmas(tGame *g, tCola *cola) {
+void moverFantasmas(tGame *g) {
     int i, j;
-    ghost fant;
-    for (i = 0; i < g->m->filMapa; i++) {
-        for (j = 0; j < g->m->colMapa; j++) {
-            if (g->m->mat[i][j] == FANTASMA) {
+    tFantasma fant;
+    for (i = 0; i < g->m.filMapa; i++) {
+        for (j = 0; j < g->m.colMapa; j++) {
+            if (g->m.mat[i][j] == FANTASMA) {
                 fant.posx = i;
                 fant.posy = j;
-                ai(cola, g->m->mat, g->p, &fant);
+                ai(&(g->colaMov), g->m.mat, &g->p, &fant);
             }
         }
     }
@@ -113,43 +88,27 @@ void intercambiar(void *a, void*b, unsigned tam) {
         e2++;
     }
 }
-void desencolarmovs(tCola *cola, char ** mat, player *p) {
-    moves movi;
-    while (colaVacia(cola)!=COLA_VACIA) {
+void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug) {
+    tMovimiento movi;
+    int x, y;
+    while (colaVacia(cola) != COLA_VACIA) {
+        x = 0;
+        y = 0;
         /* sacarDeCola rellena 'movimientos' */
-        sacarDeCola(cola, &movi, sizeof(moves));
-        if (movi.move == ARRIBA) {
-            if (mat[movi.posx - 1][movi.posy] != FANTASMA && mat[movi.posx - 1][movi.posy] != '#')
-                intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx - 1][movi.posy], sizeof(char));
-            if (mat[movi.posx - 1][movi.posy] == JUGADOR && mat[movi.posx][movi.posy] == FANTASMA) {
-                mat[movi.posx][movi.posy] = CAMINO;
-                p->vidas--;
-            }
-        }
-        if (movi.move == ABAJO) {
-            if (mat[movi.posx + 1][movi.posy] != FANTASMA && mat[movi.posx + 1][movi.posy] != '#')
-                intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + 1][movi.posy], sizeof(char));
-            if (mat[movi.posx + 1][movi.posy] == JUGADOR && mat[movi.posx][movi.posy] == FANTASMA) {
-                mat[movi.posx][movi.posy] = CAMINO;
-                p->vidas--;
-            }
-        }
-        if (movi.move == IZQUIERDA) {
-            if (mat[movi.posx][movi.posy - 1] != FANTASMA && mat[movi.posx][movi.posy - 1] != '#')
-                intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx][movi.posy - 1], sizeof(char));
-            if (mat[movi.posx][movi.posy - 1] == JUGADOR && mat[movi.posx][movi.posy] == FANTASMA) {
-                mat[movi.posx][movi.posy] = CAMINO;
-                p->vidas--;
-            }
-        }
-        if (movi.move == DERECHA) {
-            if (mat[movi.posx][movi.posy + 1] != FANTASMA && mat[movi.posx][movi.posy + 1] != '#')
-                intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx][movi.posy + 1], sizeof(char));
-            if (mat[movi.posx][movi.posy + 1] == JUGADOR && mat[movi.posx][movi.posy] == FANTASMA) {
-                mat[movi.posx][movi.posy] = CAMINO;
-                p->vidas--;
-            }
-        }
+        sacarDeCola(cola, &movi, sizeof(tMovimiento));
+        if (movi.movimiento == ARRIBA)
+            x++;
+        else if (movi.movimiento == ABAJO)
+            x--;
+        else if (movi.movimiento == IZQUIERDA)
+            y++;
+        else
+            y--;
+        if (mat[movi.posx][movi.posy] == JUGADOR) {
+            mat[movi.posx+x][movi.posy+y] = CELDA;
+            pJug->vidas--;
+        }else if (mat[movi.posx][movi.posy] == CELDA)
+            intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
     }
 }
 
@@ -170,7 +129,6 @@ int crearConexion(tGame* g) {
     int opc;
     while (opc != 3) {
         printf("> ");
-//        flush;
         scanf("%d", &opc);
         getchar();
         switch (opc) {
@@ -211,21 +169,13 @@ int crearConexion(tGame* g) {
 }
 
 void iniciarJuego(tGame* g) {
-    while (g->is_running == VERDADERO && g->m->exit == FALSE) {
-        mostrarMat(g->m->mat, g->m->filMapa, g->m->colMapa);
+    while (g->m.exit == FALSE && getVidasJugador(&g->p) > 0) {
+        printf("Cantidad de vidas: %d \tCantidad de puntos %d\n",getVidasJugador(&g->p),getPuntosJugador(&g->p));
+        mostrarMat(g->m.mat, g->m.filMapa, g->m.colMapa);
         game_update(g);
-        checkend(g->m, g->p);
+        checkend(&g->m, &g->p);
         system("cls");
     }
-//    while (m->exit != VERDADERO) {
-//        mostrarMat(m->mat, TAM_FIL, TAM_COL);
-    //tecla= getch();
-    //moverjugador(m->mat,tecla,p);
-//        ai(colaMov, m->mat, p, f);
-//        checkend(m, p);
-//        system("cls");
-//    }
-//    eliminarMatriz(g->m->mat, g->m->filMapa, g->m->colMapa);
     // logica para cuando tengamos graficos
     /*game_start(g);
     while(g->is_running && !g->inicio)

@@ -22,6 +22,10 @@
 		<Linker>
 			<Add library="ws2_32" />
 		</Linker>
+		<UnitsGlob directory="header" wildcard="" recursive="0" id="325466608" addToProject="1">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</UnitsGlob>
 		<Unit filename="estructuras/Arbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -39,10 +43,18 @@
 		<Unit filename="game.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="headers/game.h" />
-		<Unit filename="headers/jugador.h" />
-		<Unit filename="headers/main.h" />
-		<Unit filename="headers/mapa.h" />
+		<Unit filename="header/game.h">
+			<Option glob="325466608" />
+		</Unit>
+		<Unit filename="header/jugador.h">
+			<Option glob="325466608" />
+		</Unit>
+		<Unit filename="header/main.h">
+			<Option glob="325466608" />
+		</Unit>
+		<Unit filename="header/mapa.h">
+			<Option glob="325466608" />
+		</Unit>
 		<Unit filename="jugador.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -3,20 +3,15 @@
 #include "jugador.h"
 #include "../estructuras/constantes.h"
 #define ESPACIADO 2
-#define PARED '#'
 #define VISITADO '.'
 #define CAMINO '.'
 #define CELDA ' '
-#define ENTRADA 'E'
-#define SALIDA 'S'
-#define JUGADOR 'P'
-#define FANTASMA 'F'
 #define BONIFICACION 'B'
 typedef struct {
     int fil;
     int col;
 } Celdas;
-typedef struct mapaL{
+typedef struct{
     char **mat;
     int posyS;
     int posxS;
@@ -27,9 +22,9 @@ void llenarMat(char**mat, int fil, int col);
 void mostrarMat(char**mat, int fil, int col);
 char**crearMatriz(int filas, int columnas);
 void eliminarMatriz(char**mat, int filas, int columnas);
-int crearLaberinto(tMapa *m, int fil, int col, player *p, int, int, int);
+int crearLaberinto(tMapa *m, int fil, int col, tJugador*p, int, int, int);
 int buscarVecinos(char**mat, int fil, int col, Celdas*act, Celdas*vecinos);
-void checkend(tMapa *m, player *p);
-
-int crearMapa(player *p, tMapa* m , int, int, int);
+void checkend(tMapa *m, tJugador *p);
+int crearMapa(tMapa *m);
+int llenarMapa(tJugador *p, tMapa* m , int, int, int);
 #endif // FUNCIONES_H_INCLUDED
