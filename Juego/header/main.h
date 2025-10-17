@@ -8,6 +8,9 @@
 #include "jugador.h"
 #include "game.h"
 #include "../estructuras/estructuras.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
 //aca no van funciones sino todas las macros osea los #define
 
 #endif // MAIN_H_INCLUDED
