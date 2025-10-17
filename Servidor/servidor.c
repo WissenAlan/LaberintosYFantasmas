@@ -23,30 +23,25 @@ SOCKET create_server_socket() {
     return soc;
 }
 
-void process_request(const char* request, char* response) {
-    char operacion[16], text[TAM_BUFFER];
-    sscanf(request, "%15s %[^\n]", operacion, text);
-    if (strcmp(operacion, "HOLA") == 0) {
-        printf("HOLA AMIGO");
-        snprintf(response, TAM_BUFFER, "%s", text);
-    } else
-        snprintf(response, TAM_BUFFER, "Operacion no valida");
-}
 void run_server() {
+    SOCKET server_socket, socCli;
+    int tamCli;
+    struct sockaddr_in dirCli;
+    char buffer[TAM_BUFFER], response[TAM_BUFFER];
+    int bytes_recib;
     if (init_winsock() != 0) {
         printf("Error al inicializar Winsock\n");
         return;
     }
-    SOCKET server_socket = create_server_socket();
+    server_socket = create_server_socket();
     if (server_socket == INVALID_SOCKET) {
         printf("Error al crear socket del servidor\n");
         WSACleanup();
         return;
     }
     printf("Servidor escuchando en puerto %d...\n", PUERTO);
-    struct sockaddr_in dirCli;
-    int tamCli = sizeof(dirCli);
-    SOCKET socCli = accept(server_socket, (struct sockaddr *)&dirCli, &tamCli);
+    tamCli = sizeof(dirCli);
+    socCli = accept(server_socket, (struct sockaddr *)&dirCli, &tamCli);
     if (socCli == INVALID_SOCKET) {
         printf("Error en accept()\n");
         closesocket(server_socket);
@@ -54,8 +49,6 @@ void run_server() {
         return;
     }
     printf("Cliente conectado.\n");
-    char buffer[TAM_BUFFER], response[TAM_BUFFER];
-    int bytes_recib;
     while ((bytes_recib = recv(socCli, buffer, TAM_BUFFER - 1, 0)) > 0) {
         buffer[bytes_recib] = '\0';
         printf("Recibido: %s\n", buffer);
@@ -69,4 +62,20 @@ void run_server() {
     WSACleanup();
 }
 
+void process_request(const char* request, char* response) {
+    char funcion[TAM_BUFFER];
+    char *cmd, *nombre;
+    FILE*jugadores, indiceBin, indiceIdx;
+    strcpy(funcion, request);
+    cmd = strtok(funcion, "|");
+    if (strcmp(cmd, "NOMBRE") == 0) {
+        strcpy(funcion, funcion + strlen(cmd) + 1);
+        nombre = strtok(funcion, "");
+        printf("Se ingreso el nombre: %s", nombre);
+//        indiceIdx = fopen(ARCH_IDX,"");
+        jugadores = fopen(ARCH_JUG, "ab");
+        snprintf(response, TAM_BUFFER, "%s", funcion);
+    } else
+        snprintf(response, TAM_BUFFER, "nombre no valida");
+}
 

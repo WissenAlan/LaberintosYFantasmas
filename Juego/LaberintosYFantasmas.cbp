@@ -40,13 +40,11 @@
 		<Linker>
 			<Add library="ws2_32" />
 		</Linker>
-		<ExtraCommands>
-			<Add after='copy &quot;$(PROJECT_DIR)dll\*.dll&quot; &quot;$(TARGET_OUTPUT_DIR)&quot;' />
-		</ExtraCommands>
 		<Unit filename="estructuras/colaDin.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="estructuras/colaDin.h" />
+		<Unit filename="estructuras/constantes.h" />
 		<Unit filename="estructuras/estructuras.h" />
 		<Unit filename="estructuras/pilaDin.c">
 			<Option compilerVar="CC" />
@@ -55,19 +53,27 @@
 		<Unit filename="game.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="game.h" />
+		<Unit filename="header/game.h">
+			<Option glob="325466608" />
+		</Unit>
+		<Unit filename="header/jugador.h">
+			<Option glob="325466608" />
+		</Unit>
+		<Unit filename="header/main.h">
+			<Option glob="325466608" />
+		</Unit>
+		<Unit filename="header/mapa.h">
+			<Option glob="325466608" />
+		</Unit>
 		<Unit filename="jugador.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="jugador.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="main.h" />
 		<Unit filename="mapa.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="mapa.h" />
 		<Unit filename="red/cliente.c">
 			<Option compilerVar="CC" />
 		</Unit>
