@@ -2,9 +2,6 @@
 #define GAME_H_INCLUDED
 #include "main.h"
 #include "estructuras/colaDin.h"
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
 struct game {
 
     bool is_running;
