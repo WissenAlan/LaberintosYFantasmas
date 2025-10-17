@@ -7,7 +7,6 @@
 #define SERVER_IP "192.168.0.9"
 #define PUERTO 5302
 #define TAM_BUFFER 1024
-#define TAM_NOMBRE 50
 #define TODO_OK 0
 #define MENSAJE_INVALIDO -1
 #define ERROR_WINSOCK -2

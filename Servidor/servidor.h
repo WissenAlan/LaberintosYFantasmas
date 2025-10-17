@@ -5,7 +5,7 @@
 #include <stdio.h>
 #define PUERTO 5302
 #define TAM_BUFFER 1024
-#define ARCH_JUG "jugadores.dat"
+
 int init_winsock();
 
 SOCKET create_server_socket();
