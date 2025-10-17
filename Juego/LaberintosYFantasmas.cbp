@@ -11,6 +11,24 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="SDL_IMAGE/include/SDL2" />
+					<Add directory="SDL_MIXER/include/SDL2" />
+					<Add directory="SDL_TTF/include/SDL2" />
+					<Add directory="SDL2/include/SDL2" />
+				</Compiler>
+				<Linker>
+					<Add library="mingw32" />
+					<Add library="SDL2main" />
+					<Add library="SDL2" />
+					<Add library="SDL2_image" />
+					<Add library="SDL2_ttf" />
+					<Add library="SDL2_mixer" />
+					<Add directory="SDL_IMAGE/lib" />
+					<Add directory="SDL_MIXER/lib" />
+					<Add directory="SDL_TTF/lib" />
+					<Add directory="SDL2/lib" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/LaberintosYFantasmas" prefix_auto="1" extension_auto="1" />
@@ -22,6 +40,9 @@
 		<Linker>
 			<Add library="ws2_32" />
 		</Linker>
+		<ExtraCommands>
+			<Add after='copy &quot;$(PROJECT_DIR)dll\*.dll&quot; &quot;$(TARGET_OUTPUT_DIR)&quot;' />
+		</ExtraCommands>
 		<Unit filename="estructuras/colaDin.c">
 			<Option compilerVar="CC" />
 		</Unit>
