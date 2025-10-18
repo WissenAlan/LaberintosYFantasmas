@@ -11,15 +11,11 @@ unsigned getVidasJugador(tJugador *pJug){
 unsigned getPuntosJugador(tJugador *pJug){
     return pJug->puntos;
 }
-void moverJugador(tCola *colamov, char **mat, tJugador *pJug) {
+void moverJugador(tCola *colamov, char **mat, tJugador *pJug,char tecla) {
     tMovimiento tmov;
     tmov.posx = pJug->posx;
     tmov.posy = pJug->posy;
     tmov.entidad = JUGADOR;
-    int teclaInv = 1;
-    char tecla = getch(); // lee la tecla presionada
-    while (teclaInv == 1) {
-        teclaInv = 0;
         switch (tecla) {
         case 'W':
         case 'w':
@@ -54,10 +50,9 @@ void moverJugador(tCola *colamov, char **mat, tJugador *pJug) {
             }
             break;
         default:
-            teclaInv = 1;
             break;
         }
-    }
+
 }
 
 void encolarMov(tCola *cola, tMovimiento *pmov, int mov) {

@@ -30,7 +30,7 @@ typedef struct {
 void crearJugador(tJugador *pJug, int);
 unsigned getVidasJugador(tJugador *pJug);
 unsigned getPuntosJugador(tJugador *pJug);
-void moverJugador(tCola *colamov, char** mat, tJugador* p);
+void moverJugador(tCola *colamov, char **mat, tJugador *pJug,char tecla);
 void move_up(char**mat, tJugador *pJug);
 void move_down(char**mat, tJugador *pJug);
 void move_left(char**mat, tJugador *pJug);
