@@ -68,9 +68,6 @@ void menu_pausa(tGame *g)
 
                 if(SDL_PointInRect(&click,&btnGuardarySalir))
                 {
-                    //GuardarPatron(g->matriz, filas_R, columnas_R);
-
-                    g->custom=false;
                     g->is_pausing=false;
                     g->inicio=true;
                     Mix_PlayChannel(-1,g->sonidomenu,0);
@@ -82,113 +79,23 @@ void menu_pausa(tGame *g)
         }
     }
 }
-void subMenuCustom(tGame *g)
-{
-    bool mouseclickLeft=false,mouseclickRight=false;
-//    inicializarmatriz(g->matriz,filas_R,columnas_R);
-    while(g->custom && g->is_running)
-    {
-        while(SDL_PollEvent(&g->eventos))
-        {
-            switch(g->eventos.type)
-            {
-            case SDL_QUIT:
-                g->is_running=false;
-                g->custom=false;
-                g->inicio=false;
-                break;
-            case SDL_KEYDOWN:
-                switch(g->eventos.key.keysym.scancode)
-                {
-                case SDL_SCANCODE_ESCAPE:
-                    g->is_pausing=true;
-                    break;
-                default:
-                    break;
-                }
-                break;
-            default:
-                break;
-            }
-        }
-        game_drawlab(g);
-        SDL_Delay(15);
-        if(g->is_pausing)
-        {
-            menu_pausa(g);
-        }
-    }
-    // funcion para guardar en archivo proximamente parte 3
-}
-/*
-void matriz_draw(struct game *g)
-{
-    int i, j;
-    SDL_Rect rect = {0,0,SIZE-1,SIZE-1};
-    SDL_SetRenderDrawColor(g->renderer,CUADRADO_COLOR);
-    for(i=0; i<filas_R; i++)
-    {
-        rect.y= SIZE*i;
-        for(j=0; j<columnas_R; j++)
-        {
-            rect.x=SIZE *j;
-            if(g->matriz[i][j] == Celula_Viva)
-            {
-                g->estilo(g,rect);
-            }
-
-        }
-    }
-
-}*/
-void game_drawlab(tGame *g)
-{
-    char mapa[16][16]={{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
-            {'.','#','.','#','.','#','.','#','.','#','.','#','.','#','.','#'},
-            {'.','.','.','#','.','#','.','#','.','#','.','#','.','#','.','#'},
-            {'#','.','#','#','.','#','.','#','.','#','.','#','.','#','.','#'}};
-    int i,j;
-    SDL_Rect rect = {0,0,30-3,30-3}; // padding 3
-    SDL_SetRenderDrawColor(g->renderer,0,0,0,255);
-    SDL_RenderClear(g->renderer);
-    SDL_SetRenderDrawColor(g->renderer,CUADRADO_COLOR);
-    for(i=0; i<16; i++)
-    {
-        rect.y= 30*i;
-        for(j=0; j<16; j++)
-        {
-            rect.x=30*j;
-            if(mapa[i][j] == '.')
-            {
-
-                SDL_RenderFillRect(g->renderer,&rect);
-            }
-
-        }
-    }
-   SDL_RenderPresent(g->renderer);
-}
-void cargarTexturasMenu(tGame *g,SDL_Rect botonP,SDL_Rect botonC,SDL_Rect botonI,SDL_Rect botonS)
+void cargarTexturasMenu(tGame *g,SDL_Rect botonP,SDL_Rect botonR,SDL_Rect botonS)
 {
     SDL_Color black = {255,255,255,255};
     SDL_Rect textP = {75,250};
-    SDL_Rect textC = {50,330}; // custom
-    SDL_Rect textI = {30,410}; // controles
-    SDL_Rect textS  = {85,490};
+    SDL_Rect textR = {50,330};
+    SDL_Rect textS = {30,410};
 
     SDL_Texture* textura;
     SDL_Surface * superficie;
-
-
     SDL_RenderClear(g->renderer);
     SDL_RenderCopy(g->renderer,g->fondo,NULL,NULL);
 
     SDL_SetRenderDrawColor(g->renderer,169, 169, 169,255);
 
     SDL_RenderFillRect(g->renderer,&botonP);
-    SDL_RenderFillRect(g->renderer,&botonI);
-    //SDL_RenderFillRect(g->renderer,&botonS);
-    SDL_RenderFillRect(g->renderer,&botonC);
+    SDL_RenderFillRect(g->renderer,&botonR);
+    SDL_RenderFillRect(g->renderer,&botonS);
 
 
     // boton play
@@ -201,33 +108,26 @@ void cargarTexturasMenu(tGame *g,SDL_Rect botonP,SDL_Rect botonC,SDL_Rect botonI
     SDL_RenderCopy(g->renderer,textura,NULL,&textP);
     SDL_DestroyTexture(textura);
 
-    //boton guia
-    superficie = TTF_RenderText_Blended(g->titulo_f,"Salir",black);
-    textura= SDL_CreateTextureFromSurface(g->renderer,superficie);
-    SDL_QueryTexture(textura, NULL, NULL, &textI.w, &textI.h);
-    SDL_FreeSurface(superficie);
-    textI.x = botonI.x + (botonI.w / 2) - (textI.w / 2);
-    textI.y = botonI.y + (botonI.h / 2) - (textI.h / 2);
-    SDL_RenderCopy(g->renderer,textura,NULL,&textI);
-    SDL_DestroyTexture(textura);
-    //boton custom
+    //boton ranking
     superficie = TTF_RenderText_Blended(g->titulo_f,"Ranking",black);
     textura= SDL_CreateTextureFromSurface(g->renderer,superficie);
-    SDL_QueryTexture(textura, NULL, NULL, &textC.w, &textC.h);
+    SDL_QueryTexture(textura, NULL, NULL, &textR.w, &textR.h);
     SDL_FreeSurface(superficie);
-    textC.x = botonC.x + (botonC.w / 2) - (textC.w / 2);
-    textC.y = botonC.y + (botonC.h / 2) - (textC.h / 2);
-    SDL_RenderCopy(g->renderer,textura,NULL,&textC);
+    textR.x = botonR.x + (botonR.w / 2) - (textR.w / 2);
+    textR.y = botonR.y + (botonR.h / 2) - (textR.h / 2);
+    SDL_RenderCopy(g->renderer,textura,NULL,&textR);
     SDL_DestroyTexture(textura);
-
-    /* //boton salir
+    //boton salir
     superficie = TTF_RenderText_Blended(g->titulo_f,"Salir",black);
     textura= SDL_CreateTextureFromSurface(g->renderer,superficie);
     SDL_QueryTexture(textura, NULL, NULL, &textS.w, &textS.h);
     SDL_FreeSurface(superficie);
+    textS.x = botonS.x + (botonS.w / 2) - (textS.w / 2);
+    textS.y = botonS.y + (botonS.h / 2) - (textS.h / 2);
     SDL_RenderCopy(g->renderer,textura,NULL,&textS);
-    SDL_DestroyTexture(textura);*/
-    // musica de menu
+    SDL_DestroyTexture(textura);
+
+    //musica menu
     Mix_HaltMusic();
     Mix_PlayMusic(g->musica,-1);
     SDL_RenderPresent(g->renderer);
@@ -235,11 +135,10 @@ void cargarTexturasMenu(tGame *g,SDL_Rect botonP,SDL_Rect botonC,SDL_Rect botonI
 void menu_inicio(tGame *g)
 {
     SDL_Rect botonP = {20,250,240,60};
-    SDL_Rect botonC = {20,330,240,60};   // custom
-    SDL_Rect botonI  = {20,410,240,60};  // controles
-    SDL_Rect botonS  = {20,490,240,60};
+    SDL_Rect botonR = {20,330,240,60};
+    SDL_Rect botonS  = {20,410,240,60};
     SDL_Point click;
-    cargarTexturasMenu(g,botonP,botonC,botonI,botonS);
+    cargarTexturasMenu(g,botonP,botonR,botonS);
     while(g->inicio)
     {
         // se verifican los eventos
@@ -274,31 +173,25 @@ void menu_inicio(tGame *g)
                     Mix_PlayChannel(-1,g->sonidomenu,0);
 
                 }
-                if(SDL_PointInRect(&click,&botonC))
+                if(SDL_PointInRect(&click,&botonR))
                 {
-                    g->custom=true;
-                    subMenuCustom(g);
-                    cargarTexturasMenu(g,botonP,botonC,botonI,botonS);
-                }
-                if(SDL_PointInRect(&click,&botonI))
-                {
-                    g->controles=true;
-                    submenuguia(g);
-                    cargarTexturasMenu(g,botonP,botonC,botonI,botonS);
+                    g->ranking=true;
+                    submenuranking(g);
+                    cargarTexturasMenu(g,botonP,botonR,botonS);
                 }
             }
         }
     }
     Mix_HaltMusic();
 }
-void submenuguia(tGame *g)
+void submenuranking(tGame *g)
 {
     int i;
     SDL_Texture* textura;
     SDL_Surface * superficie;
     SDL_Point click;
     SDL_Rect cuadradoCerrar ={WINDOW_WIDTH*0.455,WINDOW_HEIGHT-124,130,45}; //modificar por constantes
-    SDL_RenderCopy(g->renderer,g->guia,NULL,NULL);// se carga la imagen
+    SDL_RenderCopy(g->renderer,g->rank,NULL,NULL);// se carga la imagen
 
     SDL_RenderPresent(g->renderer);
 
@@ -316,6 +209,7 @@ void submenuguia(tGame *g)
         SDL_RenderCopy(g->renderer, rank_tex, NULL, &rank_rect);
         SDL_RenderCopy(g->renderer, name_tex, NULL, &name_rect);
         SDL_RenderCopy(g->renderer, score_tex, NULL, &score_rect);
+        // modificar cuando esten los rankings
         for(i=0;i<10;i++)
         {
             rank_rect.y+=35;
@@ -340,7 +234,7 @@ void submenuguia(tGame *g)
 
 
     SDL_RenderPresent(g->renderer);
-    while(g->controles)
+    while(g->ranking)
     {
         while(SDL_PollEvent(&g->eventos))
         {
@@ -348,15 +242,14 @@ void submenuguia(tGame *g)
             {
             case SDL_QUIT:
                 g->is_running=false;
-                g->custom=false;
                 g->inicio=false;
-                g->controles=false;
+                g->ranking=false;
                 break;
             case SDL_KEYDOWN:
                 switch(g->eventos.key.keysym.scancode)
                 {
                 case SDL_SCANCODE_ESCAPE:
-                    g->controles=false;
+                    g->ranking=false;
                     break;
                 default:
                     break;
@@ -369,7 +262,7 @@ void submenuguia(tGame *g)
                     click.y= g->eventos.button.y;
                     if(SDL_PointInRect(&click,&cuadradoCerrar))
                     {
-                        g->controles=false;
+                        g->ranking=false;
                     }
                 }
                 break;

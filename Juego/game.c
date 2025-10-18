@@ -10,8 +10,7 @@ int game_new(tGame *g)
     g->is_running=true;
     g->is_pausing=false;
     g->inicio=true;
-    g->custom=false;
-    g->controles=false;
+    g->ranking=false;
     if(!game_init_sdl(g))
     {
         return 0;
@@ -77,6 +76,10 @@ void game_free(tGame *g)
         SDL_DestroyWindow(g->window);
         g->window=NULL;
     }
+    SDL_DestroyTexture(g->personaje);
+    SDL_DestroyTexture(g->fantasmas);
+    SDL_DestroyTexture(g->rank);
+    SDL_DestroyTexture(g->fondo);
     Mix_HaltChannel(-1);
     Mix_FreeMusic(g->musica);
     Mix_FreeChunk(g->sonidomenu);
@@ -87,8 +90,6 @@ void game_free(tGame *g)
     IMG_Quit();
     SDL_Quit();
     Mix_Quit();
-    free(g);
-    g=NULL;
     printf("\t\tFin del juego!");
 }
 void game_run(tGame *g)
@@ -121,16 +122,16 @@ void game_draw(tGame *g)
         for(j=0; j<g->m.colMapa; j++)
         {
             rect.x=sizec*j;
-            if(g->m.mat[i][j] == '#')
+            if(g->m.mat[i][j] == PARED)
             {
 
                 SDL_RenderFillRect(g->renderer,&rect);
             }
-            if(g->m.mat[i][j] == 'P')
+            if(g->m.mat[i][j] == JUGADOR)
             {
                 SDL_RenderCopy(g->renderer,g->personaje, NULL, &rect);
             }
-            if(g->m.mat[i][j] == 'F')
+            if(g->m.mat[i][j] == FANTASMA)
             {
                 SDL_RenderCopy(g->renderer,g->fantasmas, NULL, &rect);
             }
@@ -186,6 +187,7 @@ void game_events(tGame *g)
             {
             case SDL_SCANCODE_ESCAPE:
                 g->is_pausing=true;
+                menu_pausa(g);
                 break;
             case SDL_SCANCODE_M:
                 Mix_HaltMusic();

@@ -81,7 +81,7 @@ void load_media(tGame *g)
     {
          printf("ERROR creacion textura %s",IMG_GetError());
     }
-    g->guia=SDL_CreateTextureFromSurface(g->renderer,superficie);
+    g->rank=SDL_CreateTextureFromSurface(g->renderer,superficie);
     SDL_FreeSurface(superficie);
     if(!g->fondo)
     {

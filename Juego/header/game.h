@@ -21,12 +21,11 @@ typedef struct {
      bool is_running;
     bool is_pausing;
     bool inicio;
-    bool custom;
-    bool controles;
+    bool ranking;
     TTF_Font *text_f;
     TTF_Font *titulo_f;
     SDL_Texture *fondo;
-    SDL_Texture *guia;
+    SDL_Texture *rank;
     SDL_Texture *personaje;
     SDL_Texture *fantasmas;
     Mix_Chunk *sonidomenu;
