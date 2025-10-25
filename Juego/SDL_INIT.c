@@ -50,7 +50,7 @@ int game_init_sdl(tGame *g)
         printf("ERROR abriendo el audio %s",Mix_GetError());
         return 0;
     }
-
+    load_media(g);
     SDL_SetWindowIcon(g->window,icon_surface);
     SDL_FreeSurface(icon_surface);
     icon_surface=NULL;

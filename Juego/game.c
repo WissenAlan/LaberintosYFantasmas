@@ -16,7 +16,6 @@ int game_new(tGame *g)
         return 0;
         printf("error");
     }
-    load_media(g);
     if (!config)
     {
         printf("No hay archivo de configuracion de mapa.\nSe genera el juego en predeterminado.\n");
@@ -97,13 +96,17 @@ void game_run(tGame *g)
     //crearConexion(g);
     while(g->is_running)
     {
-        game_start(g);
-        while(g->is_running && !g->inicio)
+        if(g->inicio)
         {
-            game_events(g);
-            //agregar checklifes
-            game_draw(g);
-            SDL_Delay(32);
+            game_start(g);
+        }
+        game_events(g);
+        game_draw(g);
+        SDL_Delay(32);
+        if(g->m.exit || g->m.jugadorMuerto)
+        {
+            g->is_pausing=true;
+            menu_pausa(g);
         }
     }
 }
@@ -154,7 +157,8 @@ void game_update(tGame *g)
 {
     moverFantasmas(g);
     desencolarMovs(&(g->colaMov), g->m.mat, &g->p);
-    checkend(&g->m, &g->p);
+    checkend(&g->m,&g->p);
+    checklifes(&g->m,&g->p);
 }
 void moverFantasmas(tGame *g)
 {
@@ -185,10 +189,6 @@ void game_events(tGame *g)
         case SDL_KEYDOWN:
             switch(g->eventos.key.keysym.scancode)
             {
-            case SDL_SCANCODE_ESCAPE:
-                g->is_pausing=true;
-                menu_pausa(g);
-                break;
             case SDL_SCANCODE_M:
                 Mix_HaltMusic();
                 break;
