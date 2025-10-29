@@ -17,6 +17,7 @@ typedef struct{
     int posxS;
     int filMapa, colMapa;
     int exit;
+    int jugadorMuerto;
 } tMapa;
 void llenarMat(char**mat, int fil, int col);
 void mostrarMat(char**mat, int fil, int col);
@@ -27,4 +28,5 @@ int buscarVecinos(char**mat, int fil, int col, Celdas*act, Celdas*vecinos);
 void checkend(tMapa *m, tJugador *p);
 int crearMapa(tMapa *m);
 int llenarMapa(tJugador *p, tMapa* m , int, int, int);
+void checklifes(tMapa *m, tJugador *pJug);
 #endif // FUNCIONES_H_INCLUDED

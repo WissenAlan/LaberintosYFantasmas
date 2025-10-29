@@ -9,12 +9,13 @@
 #define ABAJO 2
 #define IZQUIERDA 3
 #define DERECHA 4
-
+#define bufferSize 50
 typedef struct {
     int posx;
     int posy;
     unsigned puntos;
     unsigned vidas;
+    char nombre[bufferSize];
 } tJugador;
 typedef struct {
     int posx;
@@ -30,7 +31,7 @@ typedef struct {
 void crearJugador(tJugador *pJug, int);
 unsigned getVidasJugador(tJugador *pJug);
 unsigned getPuntosJugador(tJugador *pJug);
-void moverJugador(tCola *colamov, char** mat, tJugador* p);
+void moverJugador(tCola *colamov, char **mat, tJugador *pJug,char tecla);
 void move_up(char**mat, tJugador *pJug);
 void move_down(char**mat, tJugador *pJug);
 void move_left(char**mat, tJugador *pJug);

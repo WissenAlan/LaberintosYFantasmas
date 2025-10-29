@@ -162,6 +162,8 @@ int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, i
     m->mat[filMod - 2][vecinos[r].col] = FANTASMA ;
     m->posxS = filMod - 1;
     m->posyS = vecinos[r].col;
+    m->jugadorMuerto= FALSE;
+    m->exit= FALSE;
     vaciarPila(&p);
     return VERDADERO;
 }
@@ -192,10 +194,16 @@ int buscarVecinos(char**mat, int fil, int col, Celdas*act, Celdas*vecinos) {
     }
     return cant;
 }
-
 void checkend(tMapa *m, tJugador *pJug) {
     if (pJug->posx == m->posxS && pJug->posy == m->posyS)
         m->exit = VERDADERO;
+}
+void checklifes(tMapa *m, tJugador *pJug)
+{
+    if(pJug->vidas == 0)
+    {
+        m->jugadorMuerto= VERDADERO;
+    }
 }
 int llenarMapa(tJugador *p, tMapa* m, int fant, int prem, int ext) {
     int fil, col;

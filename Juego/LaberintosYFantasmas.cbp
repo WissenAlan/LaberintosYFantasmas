@@ -4,28 +4,85 @@
 	<Project>
 		<Option title="LaberintosYFantasmas" />
 		<Option pch_mode="2" />
-		<Option compiler="gcc-mingw64" />
+		<Option compiler="gcc-msys2-mingw64" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/LaberintosYFantasmas" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="SDL_IMAGE/include/SDL2" />
+					<Add directory="SDL_MIXER/include/SDL2" />
+					<Add directory="SDL_TTF/include/SDL2" />
+					<Add directory="SDL2/include/SDL2" />
+				</Compiler>
+				<Linker>
+					<Add library="mingw32" />
+					<Add library="SDL2main" />
+					<Add library="SDL2" />
+					<Add library="SDL2_image" />
+					<Add library="SDL2_ttf" />
+					<Add library="SDL2_mixer" />
+					<Add library="ws2_32" />
+					<Add directory="SDL_IMAGE/lib" />
+					<Add directory="SDL_MIXER/lib" />
+					<Add directory="SDL_TTF/lib" />
+					<Add directory="SDL2/lib" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/LaberintosYFantasmas" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
-				<Option compiler="gcc-mingw64" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="SDL_IMAGE/include/SDL2" />
+					<Add directory="SDL_MIXER/include/SDL2" />
+					<Add directory="SDL_TTF/include/SDL2" />
+					<Add directory="SDL2/include/SDL2" />
+				</Compiler>
+				<Linker>
+					<Add library="mingw32" />
+					<Add library="SDL2main" />
+					<Add library="SDL2" />
+					<Add library="SDL2_image" />
+					<Add library="SDL2_ttf" />
+					<Add library="SDL2_mixer" />
+					<Add library="ws2_32" />
+					<Add directory="SDL_IMAGE/lib" />
+					<Add directory="SDL_MIXER/lib" />
+					<Add directory="SDL_TTF/lib" />
+					<Add directory="SDL2/lib" />
+				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add directory="SDL_IMAGE/include/SDL2" />
+			<Add directory="SDL_MIXER/include/SDL2" />
+			<Add directory="SDL_TTF/include/SDL2" />
+			<Add directory="SDL2/include/SDL2" />
+		</Compiler>
 		<Linker>
+			<Add library="SDL2main" />
+			<Add library="SDL2" />
+			<Add library="SDL2_image" />
+			<Add library="SDL2_ttf" />
+			<Add library="mingw32" />
+			<Add library="SDL2_mixer" />
 			<Add library="ws2_32" />
+			<Add directory="SDL_IMAGE/lib" />
+			<Add directory="SDL_MIXER/lib" />
+			<Add directory="SDL_TTF/lib" />
+			<Add directory="SDL2/lib" />
 		</Linker>
 		<UnitsGlob directory="header" wildcard="" recursive="0" id="325466608" addToProject="1">
 			<Option target="Debug" />
 			<Option target="Release" />
 		</UnitsGlob>
+		<Unit filename="SDL_INIT.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="estructuras/Arbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -43,6 +100,9 @@
 		<Unit filename="game.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="header/SDL_INIT.h">
+			<Option glob="325466608" />
+		</Unit>
 		<Unit filename="header/game.h">
 			<Option glob="325466608" />
 		</Unit>
@@ -55,6 +115,9 @@
 		<Unit filename="header/mapa.h">
 			<Option glob="325466608" />
 		</Unit>
+		<Unit filename="header/menus.h">
+			<Option glob="325466608" />
+		</Unit>
 		<Unit filename="jugador.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -62,6 +125,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="mapa.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="menus.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="red/cliente.c">
