@@ -115,8 +115,9 @@ int reiniciarJuego(tGame *g)
         return FALSE ;
     }
 }
-void crearBotonTextCentrado(SDL_Rect cuadrado,SDL_Rect texto,TTF_Font* fuente,SDL_Texture* textura,SDL_Color colorLetra,char *nombre,SDL_Renderer* render)
+void crearBotonTextCentrado(SDL_Rect cuadrado,TTF_Font* fuente,SDL_Texture* textura,SDL_Color colorLetra,char *nombre,SDL_Renderer* render)
 {
+    SDL_Rect texto;
     SDL_Surface *superficie= TTF_RenderText_Blended(fuente,nombre,colorLetra);
     textura= SDL_CreateTextureFromSurface(render,superficie);
     SDL_QueryTexture(textura, NULL, NULL, &texto.w, &texto.h);
@@ -128,11 +129,6 @@ void crearBotonTextCentrado(SDL_Rect cuadrado,SDL_Rect texto,TTF_Font* fuente,SD
 }
 void cargarTexturasMenu(tGame *g,SDL_Rect botonP,SDL_Rect botonR,SDL_Rect botonS)
 {
-    SDL_Color black = {255,255,255,255};//RGB
-    SDL_Rect textP = {75,250};
-    SDL_Rect textR = {50,330};
-    SDL_Rect textS = {30,410};
-
     SDL_Texture* textura;
     SDL_Surface * superficie;
     SDL_RenderClear(g->renderer);
@@ -143,12 +139,10 @@ void cargarTexturasMenu(tGame *g,SDL_Rect botonP,SDL_Rect botonR,SDL_Rect botonS
     SDL_RenderFillRect(g->renderer,&botonR);
     SDL_RenderFillRect(g->renderer,&botonS);
 
-    crearBotonTextCentrado(botonP,textP,g->titulo_f,textura,black,"Jugar",g->renderer);
-    crearBotonTextCentrado(botonR,textR,g->titulo_f,textura,black,"Ranking",g->renderer);
-    crearBotonTextCentrado(botonS,textS,g->titulo_f,textura,black,"Salir",g->renderer);
+    crearBotonTextCentrado(botonP,g->titulo_f,textura,NEGRO,"Jugar",g->renderer);
+    crearBotonTextCentrado(botonR,g->titulo_f,textura,NEGRO,"Ranking",g->renderer);
+    crearBotonTextCentrado(botonS,g->titulo_f,textura,NEGRO,"Salir",g->renderer);
     //musica menu
-    Mix_HaltMusic();
-    Mix_PlayMusic(g->musica,-1);
     SDL_RenderPresent(g->renderer);
 }
 void menu_inicio(tGame *g)
@@ -157,9 +151,12 @@ void menu_inicio(tGame *g)
     SDL_Rect botonR = {20,330,240,60};
     SDL_Rect botonS  = {20,410,240,60};
     SDL_Point click;
-    cargarTexturasMenu(g,botonP,botonR,botonS);
+    char* rank;
+    Mix_HaltMusic();
+    Mix_PlayMusic(g->musica,-1);
     while(g->inicio)
     {
+    cargarTexturasMenu(g,botonP,botonR,botonS);
         // se verifican los eventos
         while(SDL_PollEvent(&g->eventos))
         {
@@ -194,9 +191,16 @@ void menu_inicio(tGame *g)
                 }
                 if(SDL_PointInRect(&click,&botonR))
                 {
-                    g->ranking=true;
-                    submenuranking(g);
-                    cargarTexturasMenu(g,botonP,botonR,botonS);
+                     rank = crearConexion(g, VER_RANKING);
+                    if (rank != NULL)
+                    {
+                        g->ranking = true;
+                        submenuranking(g);
+                    }
+                    else
+                    {
+                        ///deberia imprimir un cartel que avise si no hay conexion
+                    }
                 }
             }
         }

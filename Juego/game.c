@@ -96,9 +96,12 @@ void game_run(tGame *g)
     //crearConexion(g);
     while(g->is_running)
     {
-        if(g->inicio)
+        if (g->inicio)
         {
-            game_start(g);
+            menu_inicio(g);
+            SDL_Delay(32);
+            Mix_HaltMusic();
+            Mix_PlayMusic(g->musicajuego, -1);
         }
         game_events(g);
         game_draw(g);
@@ -145,13 +148,6 @@ void game_draw(tGame *g)
 }
 void game_start(tGame *g)
 {
-    while(g->inicio)
-    {
-        menu_inicio(g);
-        SDL_Delay(32);
-    }
-    Mix_HaltMusic();
-    Mix_PlayMusic(g->musicajuego,-1);
 }
 void game_update(tGame *g)
 {
@@ -261,66 +257,58 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
     }
 }
 
-int crearConexion(tGame* g)
+char* crearConexion(tGame* g, int mensaje)
 {
     if (init_winsock() != 0)
     {
         printf("Error con WINSOCK\n");
-        return ERROR_WINSOCK;
+        return NULL;
     }
     SOCKET soc = connect_to_server(SERVER_IP, PUERTO);
     if (soc == INVALID_SOCKET)
     {
         printf("Error de conexion\n");
-        iniciarJuego(g);
+//        iniciarJuego(g);
         WSACleanup();
-        return ERROR_CONEXION;
+        return NULL;
     }
-    printf("Conectado al servidor\nMenu:\n1)Jugar nueva partida.\n2)Ver ranking de jugadores\n3)Salir.\n");
+    printf("Conectado al servidor\n");
     char nombre[TAM_NOMBRE], buffer[TAM_BUFFER], response[TAM_BUFFER];
-    int opc;
-    while (opc != 3)
+    printf("> ");
+    switch (mensaje)
     {
-        printf("> ");
-        scanf("%d", &opc);
-        getchar();
-        switch (opc)
-        {
-        case 1:
-            printf("Ingrese su nombre:\n");
-            scanf("%s", nombre);
-            nombre[strcspn(nombre, "\n")] = '\0'; //quitar salto de linea
-            if (strlen(nombre) == 0)
-                continue;
-            strcpy(buffer, "NOMBRE|");
-            buffer[strcspn(buffer, "\n")] = '\0'; //quitar salto de linea
-            strcat(buffer, nombre);
-            printf("Enviado: %s\n", buffer);
-            if (send_request(soc, buffer, response) == 0)
-                iniciarJuego(g);
+    case 1:
+        printf("Ingrese su nombre:\n");
+        scanf("%s", nombre);
+        nombre[strcspn(nombre, "\n")] = '\0'; //quitar salto de linea
+        strcpy(buffer, "NOMBRE|");
+        buffer[strcspn(buffer, "\n")] = '\0'; //quitar salto de linea
+        strcat(buffer, nombre);
+        printf("Enviado: %s\n", buffer);
+        if (send_request(soc, buffer, response) == 0)
+            iniciarJuego(g);
 //                printf("Respuesta: %s\n", response);
-            else
-            {
-                printf("Error al enviar o recibir datos\n");
-                break;
-            }
-            break;
-        case 2:
-            strcpy(buffer, "RANKING|");
-            buffer[strcspn(buffer, "\n")] = '\0'; //quitar salto de linea
-            printf("Enviado: %s\n", buffer);
-            if (send_request(soc, buffer, response) == 0)
-                printf("Respuesta: %s\n", response);
-            else
-                printf("Error al enviar o recibir datos\n");
-            break;
-        default:
-            printf("Opcion invalida\n");
+        else
+        {
+            printf("Error al enviar o recibir datos\n");
             break;
         }
+        break;
+    case 2:
+        strcpy(buffer, "RANKING|");
+        buffer[strcspn(buffer, "\n")] = '\0'; //quitar salto de linea
+        printf("Enviado: %s\n", buffer);
+        if (send_request(soc, buffer, response) == 0)
+            printf("Respuesta: %s\n", response);
+        else
+            printf("Error al enviar o recibir datos\n");
+        break;
+    default:
+        printf("Opcion invalida\n");
+        break;
     }
     close_connection(soc);
-    return TODO_OK;
+    return response;
 }
 
 void iniciarJuego(tGame* g)

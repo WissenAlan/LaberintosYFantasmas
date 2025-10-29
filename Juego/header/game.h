@@ -39,7 +39,7 @@ void game_update(tGame *g);
 void game_events(tGame *g);
 void game_draw(tGame *g);
 void moverFantasmas(tGame *g);
-int crearConexion(tGame* g);
+char* crearConexion(tGame* g, int);
 void iniciarJuego(tGame* g);
 void game_start(tGame *g);
 void asignarConfig(char*,int *parametro);

@@ -9,5 +9,9 @@
 #define ENTRADA 'E'
 #define SALIDA 'S'
 #define ARCHIVO_CONFIG "config.txt"
+#define VER_RANKING 2
+#define JUGAR 1
+#define NEGRO (SDL_Color){0, 0, 0, 255}
+#define BLANCO (SDL_Color){255, 255, 255, 255}
 
 #endif // CONSTANTES_H_INCLUDED
