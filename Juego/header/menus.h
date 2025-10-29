@@ -4,6 +4,8 @@
 #define ANCHOCUADRADO 500
 #define LARGOCUADRADO 250
 #define LARGOTEXTO 50
+#define ANCHOPARAMETRO 100
+#define ALTOPARAMETRO 30
 void menu_pausa(tGame *g);
 void cargarTexturasMenu(tGame *g,SDL_Rect botonP,SDL_Rect botonR,SDL_Rect botonS);
 void menu_inicio(tGame* g);
