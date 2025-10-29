@@ -90,12 +90,14 @@ void game_free(tGame *g)
     IMG_Quit();
     SDL_Quit();
     Mix_Quit();
-    printf("\t\tFin del juego!");
+    printf("\n\tFin del juego!");
 }
 void game_run(tGame *g)
 {
-    //crearConexion(g);
     //menuIngresarNombre(g);
+    tMovimiento tMov;
+    tCola colaMovsJugador;
+    crearCola(&colaMovsJugador);
     while(g->is_running)
     {
         if (g->inicio)
@@ -105,7 +107,7 @@ void game_run(tGame *g)
             Mix_HaltMusic();
             Mix_PlayMusic(g->musicajuego, -1);
         }
-        game_events(g);
+        game_events(g, &colaMovsJugador);
         game_draw(g);
         SDL_Delay(32);
         if(g->m.exit || g->m.jugadorMuerto)
@@ -114,6 +116,13 @@ void game_run(tGame *g)
             menu_pausa(g);
         }
     }
+    printf("MOVIMIENTOS:\n");
+    while (colaVacia(&colaMovsJugador) != COLA_VACIA)
+    {
+        sacarDeCola(&colaMovsJugador, &tMov, sizeof(tMov));
+        printf("%c\t", tMov.movimiento == ARRIBA ? 'W' : (tMov.movimiento == ABAJO ? 'S' : (tMov.movimiento == DERECHA) ? 'D' : 'A'));
+    }
+
 }
 void game_draw(tGame *g)
 {
@@ -175,8 +184,9 @@ void moverFantasmas(tGame *g)
         }
     }
 }
-void game_events(tGame *g)
+void game_events(tGame *g, tCola* colaMovsJugador)
 {
+    tMovimiento tMov;
     while(SDL_PollEvent(&g->eventos))
     {
         switch(g->eventos.type)
@@ -191,19 +201,12 @@ void game_events(tGame *g)
                 Mix_HaltMusic();
                 break;
             case SDL_SCANCODE_W:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,'w');
-                game_update(g);
-                break;
             case SDL_SCANCODE_S:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,'s');
-                game_update(g);
-                break;
             case SDL_SCANCODE_A:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,'a');
-                game_update(g);
-                break;
             case SDL_SCANCODE_D:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,'d');
+                moverJugador(&g->colaMov,g->m.mat,&g->p,g->eventos.key.keysym.scancode);
+                verPrimero(&g->colaMov, &tMov, sizeof(tMov));
+                colaInsertar(colaMovsJugador, &tMov, sizeof(tMov));
                 game_update(g);
                 break;
             default:
@@ -214,8 +217,8 @@ void game_events(tGame *g)
             break;
         }
     }
-
 }
+
 void intercambiar(void *a, void*b, unsigned tam)
 {
     int i;

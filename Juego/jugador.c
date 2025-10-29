@@ -1,4 +1,5 @@
 #include "header/jugador.h"
+#include "header/SDL_INIT.h"
 void crearJugador(tJugador *p, int cantVidas) {
     p->puntos = 0;
     p->vidas = cantVidas;
@@ -11,38 +12,34 @@ unsigned getVidasJugador(tJugador *pJug){
 unsigned getPuntosJugador(tJugador *pJug){
     return pJug->puntos;
 }
-void moverJugador(tCola *colamov, char **mat, tJugador *pJug,char tecla) {
+void moverJugador(tCola *colamov, char **mat, tJugador *pJug, int tecla) {
     tMovimiento tmov;
     tmov.posx = pJug->posx;
     tmov.posy = pJug->posy;
     tmov.entidad = JUGADOR;
         switch (tecla) {
-        case 'W':
-        case 'w':
+        case SDL_SCANCODE_W:
             if (mat[pJug->posx - 1][pJug->posy] != PARED && mat[pJug->posx - 1][pJug->posy] != ENTRADA && mat[pJug->posx - 1][pJug->posy] != FANTASMA) {
                 pJug->posx--;
                 tmov.posx--;
                 encolarMov(colamov, &tmov, ARRIBA);
             }
             break;
-        case 's':
-        case 'S':
+        case SDL_SCANCODE_S:
             if (mat[pJug->posx + 1][pJug->posy] != PARED && mat[pJug->posx + 1][pJug->posy] != FANTASMA) {
                 pJug->posx++;
                 tmov.posx++;
                 encolarMov(colamov, &tmov, ABAJO);
             }
             break;
-        case 'a':
-        case 'A':
+        case SDL_SCANCODE_A:
             if (mat[pJug->posx][pJug->posy - 1] != PARED && mat[pJug->posx][pJug->posy-1] != FANTASMA) {
                 tmov.posy--;
                 pJug->posy--;
                 encolarMov(colamov, &tmov, IZQUIERDA);
             }
             break;
-        case 'd':
-        case 'D':
+        case SDL_SCANCODE_D:
             if (mat[pJug->posx][pJug->posy + 1] != PARED && mat[pJug->posx][pJug->posy + 1] != FANTASMA) {
                 tmov.posy++;
                 pJug->posy++;
@@ -52,7 +49,6 @@ void moverJugador(tCola *colamov, char **mat, tJugador *pJug,char tecla) {
         default:
             break;
         }
-
 }
 
 void encolarMov(tCola *cola, tMovimiento *pmov, int mov) {
