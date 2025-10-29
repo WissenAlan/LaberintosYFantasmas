@@ -11,6 +11,7 @@ int game_new(tGame *g)
     g->is_pausing=false;
     g->inicio=true;
     g->ranking=false;
+    g->is_writing=false;
     if(!game_init_sdl(g))
     {
         return 0;
@@ -94,6 +95,7 @@ void game_free(tGame *g)
 void game_run(tGame *g)
 {
     //crearConexion(g);
+    //menuIngresarNombre(g);
     while(g->is_running)
     {
         if (g->inicio)

@@ -11,4 +11,5 @@ void cargarTexturasMenu(tGame *g,SDL_Rect botonP,SDL_Rect botonR,SDL_Rect botonS
 void menu_inicio(tGame* g);
 void submenuranking(tGame *g);
 int reiniciarJuego(tGame *g);
+void menuIngresarNombre(tGame *g);
 #endif // MENUS_H_INCLUDED

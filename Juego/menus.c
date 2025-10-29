@@ -156,7 +156,7 @@ void menu_inicio(tGame *g)
     Mix_PlayMusic(g->musica,-1);
     while(g->inicio)
     {
-    cargarTexturasMenu(g,botonP,botonR,botonS);
+        cargarTexturasMenu(g,botonP,botonR,botonS);
         // se verifican los eventos
         while(SDL_PollEvent(&g->eventos))
         {
@@ -191,86 +191,143 @@ void menu_inicio(tGame *g)
                 }
                 if(SDL_PointInRect(&click,&botonR))
                 {
-                     rank = crearConexion(g, VER_RANKING);
-                    if (rank != NULL)
-                    {
-                        g->ranking = true;
-                        submenuranking(g);
-                    }
-                    else
-                    {
-                        ///deberia imprimir un cartel que avise si no hay conexion
-                    }
+                    g->ranking = true;
+                    submenuranking(g);
                 }
             }
         }
     }
     Mix_HaltMusic();
 }
-void submenuranking(tGame *g)
+void menuIngresarNombre(tGame *g)
 {
-    int i;
+    int anchoTexto;
     SDL_Color white = {255,255,255,255};
     SDL_Texture* textura;
     SDL_Surface * superficie;
-    SDL_Point click;
-    SDL_Rect cuadradoCerrar = {WINDOW_WIDTH*0.455,WINDOW_HEIGHT-124,130,45}; //modificar por constantes
-    SDL_RenderCopy(g->renderer,g->rank,NULL,NULL);// se carga la imagen
-
+    SDL_RenderClear(g->renderer);
+    SDL_RenderCopy(g->renderer,g->rank,NULL,NULL);
+    SDL_Rect textointerfaz= {(WINDOW_WIDTH - 700 )/2,(WINDOW_HEIGHT - 50)/3 - 30,700,60};
+    SDL_Rect cuadradoText= {(WINDOW_WIDTH - 700 )/2,(WINDOW_HEIGHT - 50)/3,700,60};
+    crearBoton(textointerfaz,g->text_f,white,"Ingrese Su NickName",g->renderer,1);
+    SDL_SetRenderDrawColor(g->renderer,169, 169, 169,255);
+    SDL_RenderFillRect(g->renderer,&cuadradoText);
     SDL_RenderPresent(g->renderer);
-
-    SDL_Rect rank_rect ={(WINDOW_WIDTH*0.20), 160, ANCHOPARAMETRO,ALTOPARAMETRO};
-    SDL_Rect name_rect ={(WINDOW_WIDTH - 100) / 2, 160, ANCHOPARAMETRO,ALTOPARAMETRO};
-    SDL_Rect score_rect ={(WINDOW_WIDTH - 300) - 120, 160,ANCHOPARAMETRO+20,ALTOPARAMETRO}; // modificar por constantes
-    crearBoton(rank_rect,g->titulo_f,white,"Rank",g->renderer,0);
-    crearBoton(name_rect,g->titulo_f,white,"Name",g->renderer,0);
-    crearBoton(score_rect,g->titulo_f,white,"Score",g->renderer,0);
-    for(i=0; i<10; i++)
+    strncpy(g->p.nombre,"",bufferSize);
+    SDL_StartTextInput();
+    g->is_writing=true;
+    while(g->is_writing)
     {
-        rank_rect.y+=35;
-        name_rect.y+=35;
-        score_rect.y+=35;
-        crearBoton(rank_rect,g->titulo_f,white,"1.",g->renderer,0);
-        crearBoton(name_rect,g->titulo_f,white,"JDPHA",g->renderer,0);
-        crearBoton(score_rect,g->titulo_f,white,"1000",g->renderer,0);
-    }
-    SDL_RenderPresent(g->renderer);
-    while(g->ranking)
-    {
-        while(SDL_PollEvent(&g->eventos))
+        while (SDL_PollEvent(&g->eventos))
         {
-            switch(g->eventos.type)
+            if (g->eventos.type == SDL_QUIT)
             {
-            case SDL_QUIT:
+
+                g->is_writing= false;
                 g->is_running=false;
                 g->inicio=false;
-                g->ranking=false;
-                break;
-            case SDL_KEYDOWN:
-                switch(g->eventos.key.keysym.scancode)
+            }
+
+            if (g->eventos.type == SDL_KEYDOWN)
+            {
+                if (g->eventos.key.keysym.sym == SDLK_RETURN)
                 {
-                case SDL_SCANCODE_ESCAPE:
+                    g->is_writing = false;
+                }
+                if (g->eventos.key.keysym.sym == SDLK_BACKSPACE && strlen(g->p.nombre) > 0)
+                {
+                    g->p.nombre[strlen(g->p.nombre) - 1] = '\0';
+                }
+                if (g->eventos.type == SDL_TEXTINPUT)
+                {
+                    if (strlen(g->p.nombre) + strlen(g->eventos.text.text) < bufferSize)
+                    {
+                        strcat(g->p.nombre,g->eventos.text.text);
+                    }
+                }
+            }
+        }
+        SDL_SetRenderDrawColor(g->renderer, 0, 0, 0, 255);
+        SDL_RenderClear(g->renderer);
+
+        SDL_RenderCopy(g->renderer,g->rank,NULL,NULL);
+
+
+        crearBoton(textointerfaz,g->text_f,white,"Ingrese Su NickName",g->renderer,1);
+
+        SDL_SetRenderDrawColor(g->renderer,169, 169, 169,255);
+        SDL_RenderFillRect(g->renderer,&cuadradoText);
+        crearBoton(cuadradoText,g->text_f,white,g->p.nombre,g->renderer,1);
+        SDL_RenderPresent(g->renderer);
+        SDL_Delay(16);
+    }
+    SDL_StopTextInput();
+}
+void submenuranking(tGame *g)
+{
+        int i;
+        SDL_Color white = {255,255,255,255};
+        SDL_Texture* textura;
+        SDL_Surface * superficie;
+        SDL_Point click;
+        SDL_Rect cuadradoCerrar = {WINDOW_WIDTH*0.455,WINDOW_HEIGHT-124,130,45}; //modificar por constantes
+        SDL_RenderCopy(g->renderer,g->rank,NULL,NULL);// se carga la imagen
+
+        SDL_RenderPresent(g->renderer);
+
+        SDL_Rect rank_rect = {(WINDOW_WIDTH*0.20), 160, ANCHOPARAMETRO,ALTOPARAMETRO};
+        SDL_Rect name_rect = {(WINDOW_WIDTH - 100) / 2, 160, ANCHOPARAMETRO,ALTOPARAMETRO};
+        SDL_Rect score_rect = {(WINDOW_WIDTH - 300) - 120, 160,ANCHOPARAMETRO+20,ALTOPARAMETRO}; // modificar por constantes
+        crearBoton(rank_rect,g->titulo_f,white,"Rank",g->renderer,0);
+        crearBoton(name_rect,g->titulo_f,white,"Name",g->renderer,0);
+        crearBoton(score_rect,g->titulo_f,white,"Score",g->renderer,0);
+        for(i=0; i<10; i++)
+        {
+            rank_rect.y+=35;
+            name_rect.y+=35;
+            score_rect.y+=35;
+            crearBoton(rank_rect,g->titulo_f,white,"1.",g->renderer,0);
+            crearBoton(name_rect,g->titulo_f,white,"JDPHA",g->renderer,0);
+            crearBoton(score_rect,g->titulo_f,white,"1000",g->renderer,0);
+        }
+        SDL_RenderPresent(g->renderer);
+        while(g->ranking)
+        {
+            while(SDL_PollEvent(&g->eventos))
+            {
+                switch(g->eventos.type)
+                {
+                case SDL_QUIT:
+                    g->is_running=false;
+                    g->inicio=false;
                     g->ranking=false;
+                    break;
+                case SDL_KEYDOWN:
+                    switch(g->eventos.key.keysym.scancode)
+                    {
+                    case SDL_SCANCODE_ESCAPE:
+                        g->ranking=false;
+                        break;
+                    default:
+                        break;
+                    }
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    if(g->eventos.button.button == SDL_BUTTON_LEFT)
+                    {
+                        click.x= g->eventos.button.x;
+                        click.y= g->eventos.button.y;
+                        if(SDL_PointInRect(&click,&cuadradoCerrar))
+                        {
+                            g->ranking=false;
+                        }
+                    }
                     break;
                 default:
                     break;
                 }
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                if(g->eventos.button.button == SDL_BUTTON_LEFT)
-                {
-                    click.x= g->eventos.button.x;
-                    click.y= g->eventos.button.y;
-                    if(SDL_PointInRect(&click,&cuadradoCerrar))
-                    {
-                        g->ranking=false;
-                    }
-                }
-                break;
-            default:
-                break;
             }
         }
-    }
 
 }
+

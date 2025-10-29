@@ -22,6 +22,7 @@ typedef struct {
     bool is_pausing;
     bool inicio;
     bool ranking;
+    bool is_writing;
     TTF_Font *text_f;
     TTF_Font *titulo_f;
     SDL_Texture *fondo;

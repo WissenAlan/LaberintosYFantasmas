@@ -9,12 +9,13 @@
 #define ABAJO 2
 #define IZQUIERDA 3
 #define DERECHA 4
-
+#define bufferSize 50
 typedef struct {
     int posx;
     int posy;
     unsigned puntos;
     unsigned vidas;
+    char nombre[bufferSize];
 } tJugador;
 typedef struct {
     int posx;
