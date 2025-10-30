@@ -9,7 +9,7 @@
 #define ABAJO 2
 #define IZQUIERDA 3
 #define DERECHA 4
-#define bufferSize 50
+#define bufferSize 7
 typedef struct {
     int posx;
     int posy;

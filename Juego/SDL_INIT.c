@@ -76,6 +76,11 @@ void load_media(tGame *g)
     {
          printf("ERROR creacion textura %s",IMG_GetError());
     }
+    g->premio=IMG_LoadTexture(g->renderer,"premio.png");
+    if(!g->premio)
+    {
+         printf("ERROR creacion textura %s",IMG_GetError());
+    }
     g->personaje=IMG_LoadTexture(g->renderer,"personaje.png");
     if(!g->personaje)
     {

@@ -80,6 +80,7 @@ void game_free(tGame *g)
     SDL_DestroyTexture(g->fantasmas);
     SDL_DestroyTexture(g->rank);
     SDL_DestroyTexture(g->fondo);
+    SDL_DestroyTexture(g->premio);
     Mix_HaltChannel(-1);
     Mix_FreeMusic(g->musica);
     Mix_FreeChunk(g->sonidomenu);
@@ -95,13 +96,12 @@ void game_free(tGame *g)
 void game_run(tGame *g)
 {
     //crearConexion(g);
-    //menuIngresarNombre(g);
     while(g->is_running)
     {
         if (g->inicio)
         {
             menu_inicio(g);
-            SDL_Delay(32);
+            menuIngresarNombre(g);
             Mix_HaltMusic();
             Mix_PlayMusic(g->musicajuego, -1);
         }
@@ -143,13 +143,14 @@ void game_draw(tGame *g)
             {
                 SDL_RenderCopy(g->renderer,g->fantasmas, NULL, &rect);
             }
+            if(g->m.mat[i][j] == BONIFICACION)
+            {
+                SDL_RenderCopy(g->renderer,g->premio, NULL, &rect);
+            }
 
         }
     }
    SDL_RenderPresent(g->renderer);
-}
-void game_start(tGame *g)
-{
 }
 void game_update(tGame *g)
 {
@@ -249,10 +250,15 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             y++;
         else
             y--;
-        if (mat[movi.posx][movi.posy] == JUGADOR)
+        if (movi.entidad == FANTASMA && mat[movi.posx+x][movi.posy+y] == JUGADOR)
         {
             mat[movi.posx+x][movi.posy+y] = CELDA;
             pJug->vidas--;
+        }
+        if (movi.entidad == JUGADOR && mat[movi.posx+x][movi.posy+y] == BONIFICACION)
+        {
+            mat[movi.posx+x][movi.posy+y] = CELDA;
+            pJug->puntos+=100;
         }
         else if (mat[movi.posx][movi.posy] == CELDA)
             intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
