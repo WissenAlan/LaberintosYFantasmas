@@ -27,7 +27,6 @@ typedef struct {
     TTF_Font *titulo_f;
     SDL_Texture *fondo;
     SDL_Texture *rank;
-    SDL_Texture *fondonombre;
     SDL_Texture *personaje;
     SDL_Texture *fantasmas;
     SDL_Texture *premio;
