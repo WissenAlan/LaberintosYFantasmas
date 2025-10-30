@@ -250,7 +250,7 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             y++;
         else
             y--;
-        if (movi.entidad == FANTASMA && mat[movi.posx+x][movi.posy+y] == JUGADOR)
+        if (movi.entidad == FANTASMA && mat[movi.posx+x][movi.posy+y] == FANTASMA)
         {
             mat[movi.posx+x][movi.posy+y] = CELDA;
             pJug->vidas--;

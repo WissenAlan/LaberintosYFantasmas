@@ -71,6 +71,11 @@ void load_media(tGame *g)
     {
         printf("ERROR creacion textura %s",IMG_GetError());
     }
+    g->fondonombre=IMG_LoadTexture(g->renderer,"fondonombre.png");
+    if(!g->fondonombre)
+    {
+        printf("ERROR creacion textura %s",IMG_GetError());
+    }
     g->fantasmas=IMG_LoadTexture(g->renderer,"FANTASMON.png");
     if(!g->fantasmas)
     {
