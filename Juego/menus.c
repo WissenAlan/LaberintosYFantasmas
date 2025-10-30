@@ -226,7 +226,7 @@ void menuIngresarNombre(tGame *g)
             }
             if (g->eventos.type == SDL_KEYDOWN)
             {
-                if (g->eventos.key.keysym.sym == SDLK_RETURN)
+                if (g->eventos.key.keysym.sym == SDLK_RETURN && strlen(g->p.nombre) >= 1)
                 {
                     g->is_writing = false;
                 }
@@ -245,8 +245,8 @@ void menuIngresarNombre(tGame *g)
         }
         SDL_RenderClear(g->renderer);
 
-    SDL_RenderCopy(g->renderer, g->fondo, NULL, NULL);
-    crearBoton(textointerfaz, g->text_f, white, "Ingrese Su NickName (MAX 6)", g->renderer, 1);
+    SDL_RenderCopy(g->renderer, g->fondonombre, NULL, NULL);
+    crearBoton(textointerfaz, g->text_f, white, "Ingrese Su Nombre (MAX 6)", g->renderer, 1);
 
     SDL_SetRenderDrawColor(g->renderer, 169, 169, 169, 255);
     SDL_RenderFillRect(g->renderer, &cuadradoText);
