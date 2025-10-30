@@ -13,7 +13,7 @@ typedef struct {
     tJugador p;
     tMapa m;
     tFantasma *f;
-    tCola colaMov;
+    tCola colaMov, colaMovsJugador;
     int cantFant, cantVidas, cantPremios, cantVidasExt;
     SDL_Window *window;
     SDL_Renderer *renderer;

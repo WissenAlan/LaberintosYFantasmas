@@ -49,6 +49,7 @@ int game_new(tGame *g)
         return FALSE;
     }
     crearCola(&(g->colaMov));
+     crearCola(&(g->colaMovsJugador));
     return VERDADERO;
 }
 void asignarConfig(char* linea, int* parametro)
@@ -178,6 +179,7 @@ void moverFantasmas(tGame *g)
 }
 void game_events(tGame *g)
 {
+    tMovimiento tMov;
     while(SDL_PollEvent(&g->eventos))
     {
         switch(g->eventos.type)
@@ -192,19 +194,12 @@ void game_events(tGame *g)
                 Mix_HaltMusic();
                 break;
             case SDL_SCANCODE_W:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,'w');
-                game_update(g);
-                break;
             case SDL_SCANCODE_S:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,'s');
-                game_update(g);
-                break;
             case SDL_SCANCODE_A:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,'a');
-                game_update(g);
-                break;
             case SDL_SCANCODE_D:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,'d');
+                moverJugador(&g->colaMov,g->m.mat,&g->p,g->eventos.key.keysym.scancode);
+                verPrimero(&g->colaMov, &tMov, sizeof(tMov));
+                colaInsertar(&g->colaMovsJugador, &tMov, sizeof(tMov));
                 game_update(g);
                 break;
             default:
@@ -215,7 +210,6 @@ void game_events(tGame *g)
             break;
         }
     }
-
 }
 void intercambiar(void *a, void*b, unsigned tam)
 {

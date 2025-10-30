@@ -22,9 +22,10 @@ void menu_pausa(tGame *g)
     /// Lo sumado a las coordenadas de rectangulo es el desplazamiento para centrarlos
     SDL_Rect resultadoGame= {(WINDOW_WIDTH - ANCHOCUADRADO)/2,(WINDOW_HEIGHT - LARGOCUADRADO)/2,ANCHOCUADRADO,LARGOCUADRADO};
     SDL_Rect textoResult= {(WINDOW_WIDTH - ANCHOCUADRADO)/2 + 10,(WINDOW_HEIGHT - LARGOCUADRADO)/2 + 25,450-13,LARGOTEXTO}; // ancho modificado
-    SDL_Rect textoMenu= {(WINDOW_WIDTH - ANCHOCUADRADO)/2 + 37,(WINDOW_HEIGHT - LARGOCUADRADO)/2 + 190,ANCHOCUADRADO,LARGOTEXTO};
-    SDL_Rect textoReset= {(WINDOW_WIDTH - ANCHOCUADRADO)/2 + 37,(WINDOW_HEIGHT - LARGOCUADRADO)/2 + 150,ANCHOCUADRADO,LARGOTEXTO};
-    SDL_Rect textoPuntaje= {(WINDOW_WIDTH - ANCHOCUADRADO)/2 + 60,(WINDOW_HEIGHT - LARGOCUADRADO)/2 + 100,ANCHOCUADRADO,LARGOTEXTO};
+    SDL_Rect textoMenu= {(WINDOW_WIDTH - ANCHOCUADRADO)/2 + 37,(WINDOW_HEIGHT - LARGOCUADRADO)/2 + 200,ANCHOCUADRADO,LARGOTEXTO};
+    SDL_Rect textoReset= {(WINDOW_WIDTH - ANCHOCUADRADO)/2 + 37,(WINDOW_HEIGHT - LARGOCUADRADO)/2 + 170,ANCHOCUADRADO,LARGOTEXTO};
+    SDL_Rect textoPuntaje= {(WINDOW_WIDTH - ANCHOCUADRADO)/2 + 60,(WINDOW_HEIGHT - LARGOCUADRADO)/2 + 90,ANCHOCUADRADO,LARGOTEXTO};
+    SDL_Rect textoCantMov= {(WINDOW_WIDTH - ANCHOCUADRADO)/2 + 60,(WINDOW_HEIGHT - LARGOCUADRADO)/2 + 120,ANCHOCUADRADO,LARGOTEXTO};
     SDL_SetRenderDrawColor(g->renderer,169, 169, 169,255);
     SDL_RenderFillRect(g->renderer, &resultadoGame);
     if(g->m.exit == VERDADERO)
@@ -35,8 +36,10 @@ void menu_pausa(tGame *g)
     {
         crearBoton(textoResult,g->text_f,white," Perdiste",g->renderer,0);
     }
-    sprintf(puntaje,"Puntaje : [%d]",getPuntosJugador(&g->p));
+    sprintf(puntaje,"Puntaje :    [%d]",getPuntosJugador(&g->p));
     crearBoton(textoPuntaje,g->text_f,white,puntaje,g->renderer,1);
+    sprintf(puntaje,"Movimientos: [%d]",contarMovs(&g->colaMovsJugador));
+    crearBoton(textoCantMov,g->text_f,white,puntaje,g->renderer,1);
     crearBoton(textoReset,g->text_f,white,"Presiona R : Jugar",g->renderer,1);
     crearBoton(textoMenu,g->text_f,white,"Presiona M : Menu",g->renderer,1);
     SDL_RenderPresent(g->renderer);
