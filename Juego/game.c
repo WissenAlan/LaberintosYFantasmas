@@ -96,14 +96,12 @@ void game_free(tGame *g)
 void game_run(tGame *g)
 {
     //crearConexion(g);
+    menuIngresarNombre(g);
     while(g->is_running)
     {
         if (g->inicio)
         {
             menu_inicio(g);
-            if(!g->is_running)
-                return;
-            menuIngresarNombre(g);
             Mix_HaltMusic();
             Mix_PlayMusic(g->musicajuego, -1);
         }

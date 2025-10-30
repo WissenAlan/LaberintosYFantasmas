@@ -60,7 +60,7 @@ int game_init_sdl(tGame *g)
 }
 void load_media(tGame *g)
 {
-    SDL_Surface * superficie = IMG_Load("guia.png");
+    SDL_Surface * superficie=NULL;
     g->sonidomenu=Mix_LoadWAV("sonidomenu.ogg");
     g->musicajuego= Mix_LoadMUS("musicajuego.ogg");
     g->musica= Mix_LoadMUS("musicamenu.ogg");
@@ -91,11 +91,15 @@ void load_media(tGame *g)
     {
          printf("ERROR creacion textura %s",IMG_GetError());
     }
-    g->rank=SDL_CreateTextureFromSurface(g->renderer,superficie);
+    g->rank=IMG_LoadTexture(g->renderer,"ranking.png");
+    if(!g->rank)
+    {
+        printf("ERROR creacion textura %s",IMG_GetError());
+    }
     SDL_FreeSurface(superficie);
     if(!g->fondo)
     {
-        printf("Error creacion de imagen guia");
+        printf("Error creacion de imagen fondo");
     }
     g->text_f=TTF_OpenFont("freesansbold.ttf",24);
     if(!g->text_f)
