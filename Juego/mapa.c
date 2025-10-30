@@ -99,6 +99,7 @@ int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, i
             /// el sigiente algoritmo es para dererminar si se pone un fantasma o una bonificacion a traves de los numeros random
             /// fue hecho a las 3:55 am. luego de pelear con un error que se solucionaba poniendo un parentesis
             /// el que quiera hacerlo mejor, bienvenido sea ATTE: ERIK O.o
+            /// LO VA A HACER ALAN ATTE:Haziel
             if (cantBoni && !(rand() % 10)) {
                 m->mat[act.fil][act.col] = BONIFICACION;
                 cantBoni --;

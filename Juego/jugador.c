@@ -123,6 +123,16 @@ int state(char **mat, int trypos, const tJugador *pJug, const tFantasma *pFant) 
         reward += 5;
     return reward;
 }
+int contarMovs(tCola* colaMovsJugador){
+    tMovimiento tMov;
+    int contador;
+    while (colaVacia(colaMovsJugador) != COLA_VACIA)
+    {
+        contador++;
+        sacarDeCola(colaMovsJugador, &tMov, sizeof(tMov));
+    }
+    return contador;
+}
 
 int contarMovs(tCola* colaMovsJugador){
     tMovimiento tMov;
