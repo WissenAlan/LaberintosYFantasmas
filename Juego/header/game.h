@@ -13,7 +13,7 @@ typedef struct {
     tJugador p;
     tMapa m;
     tFantasma *f;
-    tCola colaMov;
+    tCola colaMov, colaMovsJugador;
     int cantFant, cantVidas, cantPremios, cantVidasExt;
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -37,7 +37,7 @@ int game_new(tGame *game);
 void game_free(tGame *game);
 void game_run(tGame *game);
 void game_update(tGame *g);
-void game_events(tGame *g, tCola*);
+void game_events(tGame *g);
 void game_draw(tGame *g);
 void moverFantasmas(tGame *g);
 char* crearConexion(tGame* g, int);

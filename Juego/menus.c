@@ -2,7 +2,7 @@
 #include "header/menus.h"
 void crearBoton(SDL_Rect cuadrado,TTF_Font* fuente,SDL_Color color,char *texto,SDL_Renderer* render,int ajustar)
 {
-    SDL_Texture *textura;
+    SDL_Texture *textura = NULL;
     SDL_Surface * superficie=TTF_RenderText_Blended(fuente,texto,color);
     SDL_RenderCopy(render,textura,NULL,&cuadrado);
     textura= SDL_CreateTextureFromSurface(render,superficie);
@@ -16,7 +16,6 @@ void crearBoton(SDL_Rect cuadrado,TTF_Font* fuente,SDL_Color color,char *texto,S
 }
 void menu_pausa(tGame *g)
 {
-
     char puntaje[TAM_BUFFER];
     SDL_Color white = {255,255,255,255}; // color RGB
     /// Lo sumado a las coordenadas de rectangulo es el desplazamiento para centrarlos
@@ -40,6 +39,7 @@ void menu_pausa(tGame *g)
     crearBoton(textoReset,g->text_f,white,"Presiona R : Jugar",g->renderer,1);
     crearBoton(textoMenu,g->text_f,white,"Presiona M : Menu",g->renderer,1);
     SDL_RenderPresent(g->renderer);
+    ///mostrar g->colaMovsJugador, funcion contarMovs;
     while(g->is_pausing)
     {
         // se verifican los eventos

@@ -49,6 +49,8 @@ int game_new(tGame *g)
         return FALSE;
     }
     crearCola(&(g->colaMov));
+    crearCola(&(g->colaMovsJugador));
+
     return VERDADERO;
 }
 void asignarConfig(char* linea, int* parametro)
@@ -95,9 +97,6 @@ void game_free(tGame *g)
 void game_run(tGame *g)
 {
     //menuIngresarNombre(g);
-    tMovimiento tMov;
-    tCola colaMovsJugador;
-    crearCola(&colaMovsJugador);
     while(g->is_running)
     {
         if (g->inicio)
@@ -107,7 +106,7 @@ void game_run(tGame *g)
             Mix_HaltMusic();
             Mix_PlayMusic(g->musicajuego, -1);
         }
-        game_events(g, &colaMovsJugador);
+        game_events(g);
         game_draw(g);
         SDL_Delay(32);
         if(g->m.exit || g->m.jugadorMuerto)
@@ -116,13 +115,6 @@ void game_run(tGame *g)
             menu_pausa(g);
         }
     }
-    printf("MOVIMIENTOS:\n");
-    while (colaVacia(&colaMovsJugador) != COLA_VACIA)
-    {
-        sacarDeCola(&colaMovsJugador, &tMov, sizeof(tMov));
-        printf("%c\t", tMov.movimiento == ARRIBA ? 'W' : (tMov.movimiento == ABAJO ? 'S' : (tMov.movimiento == DERECHA) ? 'D' : 'A'));
-    }
-
 }
 void game_draw(tGame *g)
 {
@@ -184,7 +176,7 @@ void moverFantasmas(tGame *g)
         }
     }
 }
-void game_events(tGame *g, tCola* colaMovsJugador)
+void game_events(tGame *g)
 {
     tMovimiento tMov;
     while(SDL_PollEvent(&g->eventos))
@@ -206,7 +198,7 @@ void game_events(tGame *g, tCola* colaMovsJugador)
             case SDL_SCANCODE_D:
                 moverJugador(&g->colaMov,g->m.mat,&g->p,g->eventos.key.keysym.scancode);
                 verPrimero(&g->colaMov, &tMov, sizeof(tMov));
-                colaInsertar(colaMovsJugador, &tMov, sizeof(tMov));
+                colaInsertar(&g->colaMovsJugador, &tMov, sizeof(tMov));
                 game_update(g);
                 break;
             default:
@@ -252,13 +244,17 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             y++;
         else
             y--;
-        if (mat[movi.posx][movi.posy] == JUGADOR)
+
+        if (mat[movi.posx][movi.posy] == JUGADOR && movi.entidad == FANTASMA)
+            continue;
+        if ((mat[movi.posx][movi.posy] == JUGADOR && mat[movi.posx + x][movi.posy + y] == FANTASMA)
+            || (mat[movi.posx][movi.posy] = FANTASMA && mat[movi.posx + x][movi.posy + y] == FANTASMA))
         {
-            mat[movi.posx+x][movi.posy+y] = CELDA;
+            mat[movi.posx + x][movi.posy + y] = JUGADOR;
+            mat[movi.posx][movi.posy] = CELDA;
             pJug->vidas--;
         }
-        else if (mat[movi.posx][movi.posy] == CELDA)
-            intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
+        intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
     }
 }
 

@@ -19,28 +19,28 @@ void moverJugador(tCola *colamov, char **mat, tJugador *pJug, int tecla) {
     tmov.entidad = JUGADOR;
         switch (tecla) {
         case SDL_SCANCODE_W:
-            if (mat[pJug->posx - 1][pJug->posy] != PARED && mat[pJug->posx - 1][pJug->posy] != ENTRADA && mat[pJug->posx - 1][pJug->posy] != FANTASMA) {
+            if (mat[pJug->posx - 1][pJug->posy] != PARED && mat[pJug->posx - 1][pJug->posy] != ENTRADA) {
                 pJug->posx--;
                 tmov.posx--;
                 encolarMov(colamov, &tmov, ARRIBA);
             }
             break;
         case SDL_SCANCODE_S:
-            if (mat[pJug->posx + 1][pJug->posy] != PARED && mat[pJug->posx + 1][pJug->posy] != FANTASMA) {
+            if (mat[pJug->posx + 1][pJug->posy] != PARED) {
                 pJug->posx++;
                 tmov.posx++;
                 encolarMov(colamov, &tmov, ABAJO);
             }
             break;
         case SDL_SCANCODE_A:
-            if (mat[pJug->posx][pJug->posy - 1] != PARED && mat[pJug->posx][pJug->posy-1] != FANTASMA) {
+            if (mat[pJug->posx][pJug->posy - 1] != PARED) {
                 tmov.posy--;
                 pJug->posy--;
                 encolarMov(colamov, &tmov, IZQUIERDA);
             }
             break;
         case SDL_SCANCODE_D:
-            if (mat[pJug->posx][pJug->posy + 1] != PARED && mat[pJug->posx][pJug->posy + 1] != FANTASMA) {
+            if (mat[pJug->posx][pJug->posy + 1] != PARED) {
                 tmov.posy++;
                 pJug->posy++;
                 encolarMov(colamov, &tmov, DERECHA);
@@ -124,3 +124,13 @@ int state(char **mat, int trypos, const tJugador *pJug, const tFantasma *pFant) 
     return reward;
 }
 
+int contarMovs(tCola* colaMovsJugador){
+    tMovimiento tMov;
+    int contador;
+    while (colaVacia(colaMovsJugador) != COLA_VACIA)
+    {
+        contador++;
+        sacarDeCola(colaMovsJugador, &tMov, sizeof(tMov));
+    }
+    return contador;
+}
