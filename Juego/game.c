@@ -7,12 +7,12 @@ int game_new(tGame *g)
     char *valor;
     crearMapa(&g->m);
     FILE*config = fopen(ARCHIVO_CONFIG, "r");
-    g->is_running=true;
-    g->is_pausing=false;
-    g->inicio=true;
-    g->ranking=false;
-    g->is_writing=false;
-    if(!game_init_sdl(g))
+    g->is_running = true;
+    g->is_pausing = false;
+    g->inicio = true;
+    g->ranking = false;
+    g->is_writing = false;
+    if (!game_init_sdl(g))
     {
         return 0;
         printf("error");
@@ -45,11 +45,9 @@ int game_new(tGame *g)
     }
     crearJugador(&g->p, g->cantVidas);
     if (llenarMapa(&g->p, &g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == FALSE)
-    {
         return FALSE;
-    }
     crearCola(&(g->colaMov));
-     crearCola(&(g->colaMovsJugador));
+    crearCola(&(g->colaMovsJugador));
     return VERDADERO;
 }
 void asignarConfig(char* linea, int* parametro)
@@ -65,17 +63,17 @@ void asignarConfig(char* linea, int* parametro)
 void game_free(tGame *g)
 {
     eliminarMatriz(g->m.mat, g->m.filMapa, g->m.colMapa);
-    if(colaVacia(&(g->colaMov))!=COLA_VACIA)
+    if (colaVacia(&(g->colaMov)) != COLA_VACIA)
         vaciarCola(&(g->colaMov));
-    if(g->renderer)
+    if (g->renderer)
     {
         SDL_DestroyRenderer(g->renderer);
-        g->renderer=NULL;
+        g->renderer = NULL;
     }
-    if(g->window)
+    if (g->window)
     {
         SDL_DestroyWindow(g->window);
-        g->window=NULL;
+        g->window = NULL;
     }
     SDL_DestroyTexture(g->personaje);
     SDL_DestroyTexture(g->fantasmas);
@@ -98,7 +96,7 @@ void game_run(tGame *g)
 {
     //crearConexion(g);
     menuIngresarNombre(g);
-    while(g->is_running)
+    while (g->is_running)
     {
         if (g->inicio)
         {
@@ -109,56 +107,46 @@ void game_run(tGame *g)
         game_events(g);
         game_draw(g);
         SDL_Delay(32);
-        if(g->m.exit || g->m.jugadorMuerto)
+        if (g->m.exit || g->m.jugadorMuerto)
         {
-            g->is_pausing=true;
+            g->is_pausing = true;
             menu_pausa(g);
         }
     }
 }
 void game_draw(tGame *g)
 {
-    int i,j;
-    int sizec= WINDOW_WIDTH / g->m.colMapa;
-    int sizef= WINDOW_HEIGHT / g->m.filMapa;
-    SDL_Rect rect = {0,0,sizec-3,sizef-3}; // padding 3
-    SDL_SetRenderDrawColor(g->renderer,0,0,0,255);
+    int i, j;
+    int sizec = WINDOW_WIDTH / g->m.colMapa;
+    int sizef = WINDOW_HEIGHT / g->m.filMapa;
+    SDL_Rect rect = {0, 0, sizec - 3, sizef - 3}; // padding 3
+    SDL_SetRenderDrawColor(g->renderer, 0, 0, 0, 255);
     SDL_RenderClear(g->renderer);
-    SDL_SetRenderDrawColor(g->renderer,CUADRADO_COLOR);
-    for(i=0; i<g->m.filMapa; i++)
+    SDL_SetRenderDrawColor(g->renderer, CUADRADO_COLOR);
+    for (i = 0; i < g->m.filMapa; i++)
     {
-        rect.y= sizef*i;
-        for(j=0; j<g->m.colMapa; j++)
+        rect.y = sizef * i;
+        for (j = 0; j < g->m.colMapa; j++)
         {
-            rect.x=sizec*j;
-            if(g->m.mat[i][j] == PARED)
-            {
-
-                SDL_RenderFillRect(g->renderer,&rect);
-            }
-            if(g->m.mat[i][j] == JUGADOR)
-            {
-                SDL_RenderCopy(g->renderer,g->personaje, NULL, &rect);
-            }
-            if(g->m.mat[i][j] == FANTASMA)
-            {
-                SDL_RenderCopy(g->renderer,g->fantasmas, NULL, &rect);
-            }
-            if(g->m.mat[i][j] == BONIFICACION)
-            {
-                SDL_RenderCopy(g->renderer,g->premio, NULL, &rect);
-            }
-
+            rect.x = sizec * j;
+            if (g->m.mat[i][j] == PARED)
+                SDL_RenderFillRect(g->renderer, &rect);
+            if (g->m.mat[i][j] == JUGADOR)
+                SDL_RenderCopy(g->renderer, g->personaje, NULL, &rect);
+            if (g->m.mat[i][j] == FANTASMA)
+                SDL_RenderCopy(g->renderer, g->fantasmas, NULL, &rect);
+            if (g->m.mat[i][j] == BONIFICACION)
+                SDL_RenderCopy(g->renderer, g->premio, NULL, &rect);
         }
     }
-   SDL_RenderPresent(g->renderer);
+    SDL_RenderPresent(g->renderer);
 }
 void game_update(tGame *g)
 {
     moverFantasmas(g);
     desencolarMovs(&(g->colaMov), g->m.mat, &g->p);
-    checkend(&g->m,&g->p);
-    checklifes(&g->m,&g->p);
+    checkend(&g->m, &g->p);
+    checklifes(&g->m, &g->p);
 }
 void moverFantasmas(tGame *g)
 {
@@ -180,15 +168,15 @@ void moverFantasmas(tGame *g)
 void game_events(tGame *g)
 {
     tMovimiento tMov;
-    while(SDL_PollEvent(&g->eventos))
+    while (SDL_PollEvent(&g->eventos))
     {
-        switch(g->eventos.type)
+        switch (g->eventos.type)
         {
         case SDL_QUIT:
-            g->is_running=false;
+            g->is_running = false;
             break;
         case SDL_KEYDOWN:
-            switch(g->eventos.key.keysym.scancode)
+            switch (g->eventos.key.keysym.scancode)
             {
             case SDL_SCANCODE_M:
                 Mix_HaltMusic();
@@ -197,7 +185,7 @@ void game_events(tGame *g)
             case SDL_SCANCODE_S:
             case SDL_SCANCODE_A:
             case SDL_SCANCODE_D:
-                moverJugador(&g->colaMov,g->m.mat,&g->p,g->eventos.key.keysym.scancode);
+                moverJugador(&g->colaMov, g->m.mat, &g->p, g->eventos.key.keysym.scancode);
                 verPrimero(&g->colaMov, &tMov, sizeof(tMov));
                 colaInsertar(&g->colaMovsJugador, &tMov, sizeof(tMov));
                 game_update(g);
@@ -236,26 +224,34 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
         y = 0;
         /* sacarDeCola rellena 'movimientos' */
         sacarDeCola(cola, &movi, sizeof(tMovimiento));
-        if (movi.movimiento == ARRIBA)
+        if (movi.movimiento == SDL_SCANCODE_W)
             x++;
-        else if (movi.movimiento == ABAJO)
+        else if (movi.movimiento == SDL_SCANCODE_S)
             x--;
-        else if (movi.movimiento == IZQUIERDA)
+        else if (movi.movimiento == SDL_SCANCODE_A)
             y++;
         else
             y--;
-        if (movi.entidad == FANTASMA && mat[movi.posx][movi.posy] == JUGADOR)
+        if (!(movi.entidad == FANTASMA && mat[movi.posx + x][movi.posy + y] == JUGADOR)) //FANTASMA PISADO
         {
-            mat[movi.posx+x][movi.posy+y] = CELDA;
-            pJug->vidas--;
+            if (movi.entidad == FANTASMA && mat[movi.posx][movi.posy] == JUGADOR)
+            {
+                mat[movi.posx + x][movi.posy + y] = CELDA;
+                pJug->vidas--;
+            }
+            if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == FANTASMA)
+            {
+                mat[movi.posx][movi.posy] = CELDA;
+                pJug->vidas--;
+            }
+            if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == BONIFICACION)
+            {
+                mat[movi.posx][movi.posy] = CELDA;
+                pJug->puntos += 100;
+            }
+            if (mat[movi.posx][movi.posy] == CELDA)
+                intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
         }
-        if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == BONIFICACION)
-        {
-            mat[movi.posx][movi.posy] = CELDA;
-            pJug->puntos+=100;
-        }
-        if (mat[movi.posx][movi.posy] == CELDA)
-        intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
     }
 }
 
@@ -317,7 +313,7 @@ void iniciarJuego(tGame* g)
 {
     while (g->m.exit == FALSE && getVidasJugador(&g->p) > 0)
     {
-        printf("Cantidad de vidas: %d \tCantidad de puntos %d\n",getVidasJugador(&g->p),getPuntosJugador(&g->p));
+        printf("Cantidad de vidas: %d \tCantidad de puntos %d\n", getVidasJugador(&g->p), getPuntosJugador(&g->p));
         mostrarMat(g->m.mat, g->m.filMapa, g->m.colMapa);
         game_update(g);
         checkend(&g->m, &g->p);
