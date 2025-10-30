@@ -101,6 +101,8 @@ void game_run(tGame *g)
         if (g->inicio)
         {
             menu_inicio(g);
+            if(!g->is_running)
+                return;
             menuIngresarNombre(g);
             Mix_HaltMusic();
             Mix_PlayMusic(g->musicajuego, -1);
@@ -250,18 +252,18 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             y++;
         else
             y--;
-        if (movi.entidad == FANTASMA && mat[movi.posx+x][movi.posy+y] == JUGADOR)
+        if (movi.entidad == FANTASMA && mat[movi.posx][movi.posy] == JUGADOR)
         {
             mat[movi.posx+x][movi.posy+y] = CELDA;
             pJug->vidas--;
         }
-        if (movi.entidad == JUGADOR && mat[movi.posx+x][movi.posy+y] == BONIFICACION)
+        if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == BONIFICACION)
         {
-            mat[movi.posx+x][movi.posy+y] = CELDA;
+            mat[movi.posx][movi.posy] = CELDA;
             pJug->puntos+=100;
         }
-        else if (mat[movi.posx][movi.posy] == CELDA)
-            intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
+        if (mat[movi.posx][movi.posy] == CELDA)
+        intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
     }
 }
 
