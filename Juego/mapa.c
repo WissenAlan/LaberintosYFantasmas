@@ -165,6 +165,7 @@ int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, i
     m->posyS = vecinos[r].col;
     m->jugadorMuerto= FALSE;
     m->exit= FALSE;
+    pJug->roundBuff=0;
     vaciarPila(&p);
     return VERDADERO;
 }

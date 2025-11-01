@@ -16,6 +16,7 @@ typedef struct {
     unsigned puntos;
     unsigned vidas;
     char nombre[bufferSize];
+    int roundBuff;
 } tJugador;
 typedef struct {
     int posx;
@@ -37,8 +38,7 @@ void move_down(char**mat, tJugador *pJug);
 void move_left(char**mat, tJugador *pJug);
 void move_right(char**mat, tJugador *p);
 int abs(int numero);
-void ai(tCola *colamov, char **mat, tJugador *pJug, tFantasma *f);
-int state(char **mat, int trypos, const tJugador *pJug, const tFantasma *f);
+void CoordenadasesquinaMasLejosJugador(tJugador *jugador,int* filas,int* columnas);
 int contarMovs(tCola* colaMovsJugador);
 void encolarMov(tCola *cola, tMovimiento *movimiento, int mov);
 #endif // JUGADOR_H_INCLUDED

@@ -164,7 +164,7 @@ void moverFantasmas(tGame *g)
             {
                 fant.posx = i;
                 fant.posy = j;
-                ai(&(g->colaMov), g->m.mat, &g->p, &fant);
+                ai(&(g->colaMov),&g->m, &g->p, &fant);
             }
         }
     }
@@ -252,6 +252,7 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             {
                 mat[movi.posx][movi.posy] = CELDA;
                 pJug->puntos += 100;
+                pJug->roundBuff+=2;
             }
             if (mat[movi.posx][movi.posy] == CELDA)
                 intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));

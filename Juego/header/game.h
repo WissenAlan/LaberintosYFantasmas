@@ -9,6 +9,7 @@
 #include <SDL_mixer.h>
 #include <SDL_image.h>
 #include <stdbool.h>
+#include "time.h"
 typedef struct {
     tJugador p;
     tMapa m;

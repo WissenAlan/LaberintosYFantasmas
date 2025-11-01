@@ -29,4 +29,6 @@ void checkend(tMapa *m, tJugador *p);
 int crearMapa(tMapa *m);
 int llenarMapa(tJugador *p, tMapa* m , int, int, int);
 void checklifes(tMapa *m, tJugador *pJug);
+void ai(tCola *colamov,tMapa *mapa, tJugador *pJug, tFantasma *pFant);
+int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant);
 #endif // FUNCIONES_H_INCLUDED

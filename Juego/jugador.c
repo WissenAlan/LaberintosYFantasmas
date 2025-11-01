@@ -6,6 +6,7 @@ void crearJugador(tJugador *p, int cantVidas)
     p->vidas = cantVidas;
     p->posx = 0;
     p->posy = 0;
+    p->roundBuff=0;
 }
 unsigned getVidasJugador(tJugador *pJug)
 {
@@ -51,12 +52,12 @@ void moverJugador(tCola *colamov, char **mat, tJugador *pJug, int tecla)
     }
 }
 
-void ai(tCola *colamov, char **mat, tJugador *pJug, tFantasma *pFant)
+void ai(tCola *colamov,tMapa *mapa, tJugador *pJug, tFantasma *pFant)
 {
-    int try_w = state(mat, ARRIBA, pJug, pFant);
-    int try_s = state(mat, ABAJO, pJug, pFant);
-    int try_a = state(mat, IZQUIERDA, pJug, pFant);
-    int try_d = state(mat, DERECHA, pJug, pFant);
+    int try_w = state(mapa, ARRIBA, pJug, pFant);
+    int try_s = state(mapa, ABAJO, pJug, pFant);
+    int try_a = state(mapa, IZQUIERDA, pJug, pFant);
+    int try_d = state(mapa, DERECHA, pJug, pFant);
     tMovimiento movimiento;
     int lado;
     if (try_w >= try_s && try_w >= try_a && try_w >= try_d)
@@ -92,33 +93,83 @@ int abs(int numero)
     else
         return -numero;
 }
-int state(char **mat, int trypos, const tJugador *pJug, const tFantasma *pFant)
+int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
 {
     int reward = 0;
     int try_x = pFant->posx;
     int try_y = pFant->posy;
     int diff_x, diff_y, try_diff_x, try_diff_y;
+    srand(time(NULL));
     trypos == ARRIBA ? try_x-- : (trypos == ABAJO ? try_x++ : (trypos == IZQUIERDA ? try_y-- : try_y++));
-    if (mat[try_x][try_y] == PARED || mat[try_x][try_y] == ENTRADA || mat[try_x][try_y] == SALIDA || mat[try_x][try_y] == BONIFICACION)
-        return -1000;
+    if (mapa->mat[try_x][try_y] == PARED || mapa->mat[try_x][try_y] == ENTRADA || mapa->mat[try_x][try_y] == SALIDA || mapa->mat[try_x][try_y] == BONIFICACION)
+        reward+= -100;
     //if para que detecte algo lo modificamos para que detecte a el jugador;
-    if (mat[try_x][try_y] == JUGADOR)
-        return 1000;
-    diff_x = abs(pFant->posx - pJug->posx);
-    diff_y = abs(pFant->posy - pJug->posy);
-    try_diff_x = abs(try_x - pJug->posx);
-    try_diff_y = abs(try_y - pJug->posy);
-    // Recompensa por acercarse al jugador
+    if (mapa->mat[try_x][try_y] == JUGADOR)
+        reward+= 100;
+
+    printf("%d",pJug->roundBuff);
+    if(pJug->roundBuff > 0)
+    {
+        int auxcolumna=mapa->colMapa-1,auxfila=mapa->filMapa-1;
+        CoordenadasesquinaMasLejosJugador(pJug,&auxfila,&auxcolumna);
+        diff_x = abs(pFant->posx - (auxfila));
+        diff_y = abs(pFant->posy - (auxcolumna));
+        try_diff_x = abs(try_x - auxfila);
+        try_diff_y = abs(try_y - auxcolumna);
+    }
+    else
+    {
+        if(rand() % 3 == 2)
+        {
+            diff_x = abs(pFant->posx - (pJug->posx+4));
+            diff_y = abs(pFant->posy - (pJug->posy+4));
+            try_diff_x = abs(try_x - pJug->posx);
+            try_diff_y = abs(try_y - pJug->posy);
+        }
+        else
+        {
+            diff_x = abs(pFant->posx - pJug->posx);
+            diff_y = abs(pFant->posy - pJug->posy);
+            try_diff_x = abs(try_x - pJug->posx);
+            try_diff_y = abs(try_y - pJug->posy);
+        }
+    }
     if (try_diff_x < diff_x)
-        reward += 5;
+        reward += 50;
     if (try_diff_y < diff_y)
-        reward += 5;
+        reward += 50;
     // Penalización leve por alejarse
     if (try_diff_x > diff_x)
-        reward -= 2;
+        reward -= 20;
     if (try_diff_y > diff_y)
-        reward -= 2;
+        reward -= 20;
     return reward;
+}
+void CoordenadasesquinaMasLejosJugador(tJugador *jugador,int* filas,int* columnas)
+{
+    int esquina1 = abs(jugador->posx);
+    int esquina2 = abs(jugador->posy - *columnas);
+    int esquina3 = abs(jugador->posx - *filas);
+    int esquina4 = abs(jugador->posy);
+    if (esquina1 >= esquina2 && esquina1 >= esquina3 && esquina1 >= esquina4)
+    {
+        *filas=esquina1;
+        *columnas=0;
+    }
+    else if (esquina2 >= esquina3 && esquina2 >= esquina4)
+    {
+        *filas=0;
+        *columnas=esquina2;
+    }
+    else if (esquina3 >= esquina4)
+    {
+        *filas=esquina3;
+    }
+    else
+    {
+        *columnas=0;
+        *filas=esquina4;
+    }
 }
 int contarMovs(tCola* colaMovsJugador)
 {
