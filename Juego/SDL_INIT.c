@@ -71,7 +71,7 @@ void load_media(tGame *g)
     {
         printf("ERROR creacion textura %s",IMG_GetError());
     }
-    g->fantasmas=IMG_LoadTexture(g->renderer,"FANTASMON.png");
+    g->fantasmas=IMG_LoadTexture(g->renderer,"fantasma.png");
     if(!g->fantasmas)
     {
          printf("ERROR creacion textura %s",IMG_GetError());
@@ -87,12 +87,12 @@ void load_media(tGame *g)
          printf("ERROR creacion textura %s",IMG_GetError());
     }
     g->entrada=IMG_LoadTexture(g->renderer,"entrada.png");
-    if(!g->premio)
+    if(!g->entrada)
     {
          printf("ERROR creacion textura %s",IMG_GetError());
     }
     g->salida=IMG_LoadTexture(g->renderer,"salida.png");
-    if(!g->premio)
+    if(!g->salida)
     {
          printf("ERROR creacion textura %s",IMG_GetError());
     }
@@ -101,6 +101,18 @@ void load_media(tGame *g)
     {
          printf("ERROR creacion textura %s",IMG_GetError());
     }
+
+     g->piso=IMG_LoadTexture(g->renderer,"piso.png");
+    if(!g->piso)
+    {
+         printf("ERROR creacion textura %s",IMG_GetError());
+    }
+     g->pared=IMG_LoadTexture(g->renderer,"pared.png");
+    if(!g->pared)
+    {
+         printf("ERROR creacion textura %s",IMG_GetError());
+    }
+
     g->rank=IMG_LoadTexture(g->renderer,"ranking.png");
     if(!g->rank)
     {

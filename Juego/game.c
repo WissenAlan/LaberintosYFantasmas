@@ -119,7 +119,7 @@ void game_draw(tGame *g)
     int i, j;
     int sizec = WINDOW_WIDTH / g->m.colMapa;
     int sizef = WINDOW_HEIGHT / g->m.filMapa;
-    SDL_Rect rect = {0, 0, sizec - 3, sizef - 3}; // padding 3
+    SDL_Rect rect = {0, 0, sizec -0, sizef - 0}; // padding 3
     SDL_SetRenderDrawColor(g->renderer, 0, 0, 0, 255);
     SDL_RenderClear(g->renderer);
     SDL_SetRenderDrawColor(g->renderer, CUADRADO_COLOR);
@@ -141,6 +141,11 @@ void game_draw(tGame *g)
                 SDL_RenderCopy(g->renderer, g->entrada, NULL, &rect);
             if (g->m.mat[i][j] == SALIDA)
                 SDL_RenderCopy(g->renderer, g->salida, NULL, &rect);
+
+            if (g->m.mat[i][j] == PARED)
+                SDL_RenderCopy(g->renderer, g->pared, NULL, &rect);
+            if (g->m.mat[i][j] == CELDA)
+                SDL_RenderCopy(g->renderer, g->piso, NULL, &rect);
         }
     }
     SDL_RenderPresent(g->renderer);
