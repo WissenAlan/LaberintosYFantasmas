@@ -50,6 +50,10 @@ void moverJugador(tCola *colamov, char **mat, tJugador *pJug, int tecla)
         movimiento.movimiento = tecla;
         colaInsertar(colamov, &movimiento, sizeof(tMovimiento));
     }
+    if(pJug->roundBuff > 0)
+    {
+        pJug->roundBuff--;
+    }
 }
 
 void ai(tCola *colamov,tMapa *mapa, tJugador *pJug, tFantasma *pFant)
@@ -102,7 +106,7 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
     srand(time(NULL));
     trypos == ARRIBA ? try_x-- : (trypos == ABAJO ? try_x++ : (trypos == IZQUIERDA ? try_y-- : try_y++));
     if (mapa->mat[try_x][try_y] == PARED || mapa->mat[try_x][try_y] == ENTRADA || mapa->mat[try_x][try_y] == SALIDA || mapa->mat[try_x][try_y] == BONIFICACION)
-        reward+= -100;
+        reward+= -1000;
     //if para que detecte algo lo modificamos para que detecte a el jugador;
     if (mapa->mat[try_x][try_y] == JUGADOR)
         reward+= 100;
@@ -116,6 +120,8 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
         diff_y = abs(pFant->posy - (auxcolumna));
         try_diff_x = abs(try_x - auxfila);
         try_diff_y = abs(try_y - auxcolumna);
+        if (mapa->mat[try_x][try_y] == JUGADOR)
+        reward-= 500;
     }
     else
     {
@@ -125,6 +131,8 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
             diff_y = abs(pFant->posy - (pJug->posy+4));
             try_diff_x = abs(try_x - pJug->posx);
             try_diff_y = abs(try_y - pJug->posy);
+
+
         }
         else
         {
@@ -134,6 +142,8 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
             try_diff_y = abs(try_y - pJug->posy);
         }
     }
+    if (mapa->mat[try_x][try_y] == JUGADOR)
+        reward+= 100;
     if (try_diff_x < diff_x)
         reward += 50;
     if (try_diff_y < diff_y)

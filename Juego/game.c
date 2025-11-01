@@ -252,7 +252,7 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             {
                 mat[movi.posx][movi.posy] = CELDA;
                 pJug->puntos += 100;
-                pJug->roundBuff+=2;
+                pJug->roundBuff+=10;
             }
             if (mat[movi.posx][movi.posy] == CELDA)
                 intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
