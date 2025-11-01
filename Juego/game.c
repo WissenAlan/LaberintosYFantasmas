@@ -137,6 +137,10 @@ void game_draw(tGame *g)
                 SDL_RenderCopy(g->renderer, g->fantasmas, NULL, &rect);
             if (g->m.mat[i][j] == BONIFICACION)
                 SDL_RenderCopy(g->renderer, g->premio, NULL, &rect);
+            if (g->m.mat[i][j] == ENTRADA)
+                SDL_RenderCopy(g->renderer, g->entrada, NULL, &rect);
+            if (g->m.mat[i][j] == SALIDA)
+                SDL_RenderCopy(g->renderer, g->salida, NULL, &rect);
         }
     }
     SDL_RenderPresent(g->renderer);
