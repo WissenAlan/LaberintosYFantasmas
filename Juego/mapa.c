@@ -69,7 +69,7 @@ void mostrarMat(char**mat, int fil, int col) {
 
 int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, int prem, int ext) {
     int cantVecinos;
-    int r;
+    int r,i,j;
     int cantBoni = prem + ext;
     int cantFan = fant - 1;
     tPila p;
@@ -113,8 +113,8 @@ int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, i
             }
         }
     }
-    for (int i = 0; i < filMod; i++) {
-        for (int j = 0; j < colMod; j++) {
+    for (i = 0; i < filMod; i++) {
+        for (j = 0; j < colMod; j++) {
             if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
                 m->mat[i][j] = CELDA;
         }
@@ -171,15 +171,16 @@ int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, i
     return VERDADERO;
 }
 void guardarMapaEnArchivo(tMapa m, int filMod, int colMod, char* nombreArchivo) {
+    int i,j;
     FILE*f = fopen(nombreArchivo, "w");
     if (f == NULL) {
         perror("Error al abrir el archivo del mapa");
         return;
     }
 
-    for (int i = 0; i < filMod; i++) {
-        for (int j = 0; j < colMod; j++) {
-            char c = '?'; // Caracter por defecto si algo falla
+    for (i = 0; i < filMod; i++) {
+        for (j = 0; j < colMod; j++) {
+            char c = '?';
             switch (m.mat[i][j]) {
                 case JUGADOR:      c = 'J'; break;
                 case FANTASMA:     c = 'F'; break;
@@ -187,14 +188,10 @@ void guardarMapaEnArchivo(tMapa m, int filMod, int colMod, char* nombreArchivo) 
                 case BONIFICACION: c = 'B'; break;
                 case ENTRADA:      c = 'E'; break;
                 case SALIDA:       c = 'S'; break;
-
-                //  ATENCION AQUI
-                // Asumo que 'PARED' es el valor de las celdas no visitadas.
-                // Si tu enum/define se llama diferente, AJUSTA ESTE CASE.
-                case PARED:        c = '#'; break;
-
-                // Si PARED es 0, puedes borrar el case PARED y usar el default:
-                default:           c = '#'; break;
+                case PARED:        c = '#';
+                break;
+                default:
+                break;
             }
             fprintf(f, "%c", c);
         }

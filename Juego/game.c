@@ -80,6 +80,8 @@ void game_free(tGame *g)
     SDL_DestroyTexture(g->rank);
     SDL_DestroyTexture(g->fondo);
     SDL_DestroyTexture(g->premio);
+    SDL_DestroyTexture(g->pared);
+    SDL_DestroyTexture(g->piso);
     Mix_HaltChannel(-1);
     Mix_FreeMusic(g->musica);
     Mix_FreeChunk(g->sonidomenu);

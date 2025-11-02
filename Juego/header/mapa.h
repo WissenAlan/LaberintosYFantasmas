@@ -7,6 +7,7 @@
 #define CAMINO '.'
 #define CELDA ' '
 #define BONIFICACION 'B'
+#define VIDAEXT 'V'
 typedef struct {
     int fil;
     int col;
