@@ -122,7 +122,7 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
     }
     else
     {
-        if(rand() % 4 == 2)
+        if(rand() % 2)
         {
             diff_x = abs(pFant->posx - (pJug->posx+4));
             diff_y = abs(pFant->posy - (pJug->posy+4));
