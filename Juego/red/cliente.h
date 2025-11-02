@@ -4,7 +4,7 @@
 #include <winsock2.h>
 #include <stdio.h>
 
-#define SERVER_IP "192.168.0.9"
+#define SERVER_IP "127.0.0.1"
 #define PUERTO 5302
 #define TAM_BUFFER 1024
 #define TAM_NOMBRE 50
@@ -19,10 +19,15 @@ int init_winsock();
 // Conecta al servidor y devuelve el socket
 SOCKET connect_to_server(const char *server_ip, int puerto);
 
-// Envía una solicitud y recibe la respuesta
+// EnvÃ­a una solicitud y recibe la respuesta
 int send_request(SOCKET soc, const char *request, char *response);
 
-// Cierra la conexión y limpia Winsock
+// Cierra la conexiÃ³n y limpia Winsock
 void close_connection(SOCKET soc);
 
+void setSocketCliente(SOCKET s);
+void enviarPeticionCliente(const char *mensaje);
+
+
 #endif // CLIENTE_H_INCLUDED
+
