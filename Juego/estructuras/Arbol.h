@@ -13,7 +13,10 @@ struct sNodoA *der;
 
 typedef tNodoA *tArbol;
 
-
+typedef struct {
+    char nombre[7];
+    int puntaje;
+} tRanking;
 
 typedef struct{
 
@@ -31,12 +34,13 @@ int partidas_jugadas;
 
 }tJugadorDatos;
 
-typedef struct{
-int jugador_id;
-int puntos;
-int movimientos;
-
-}tPartidaDatos;
+typedef struct
+{
+    int id_partida;         // ID autoincremental
+    int id_jugador;         // ID del jugador
+    int puntaje;            // Puntos obtenidos
+    int movimientos;        // Movimientos realizados
+} tPartidaDatos;
 
 typedef struct{
 int clave;
@@ -89,10 +93,10 @@ int Eliminarraiz(tArbol *arbol, void *dato,int (*cmp)(const void*a,const void*b)
 int cmp_clave(const void *a, const void *b);
 
 int insertarArchaArbol(tArbol *arbol,const char *arch);
-
+int buscarJugadorPorNombre(const char *nombreArchivo, const char *nombreBuscado, tJugadorDatos *jugadorEncontrado);
 int crearIndice(tArbol *arbol, const char *arch);
 void guardarInorden(tArbol *arbol, FILE *pf);
 int buscarJugadorPorId(tArbol *arbol, const char *nombreArchivo, int idBuscado);
+int compararRanking(const void *a, const void *b);
 
 #endif // ARBOL_H_INCLUDED
-
