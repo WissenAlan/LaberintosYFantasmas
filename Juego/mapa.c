@@ -67,107 +67,172 @@ void mostrarMat(char**mat, int fil, int col) {
         printf("     %s\n", mat[x]);
 }
 
-int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, int prem, int ext) {
+void generarEstructuraLaberinto(tMapa *m, int filMod, int colMod) {
     int cantVecinos;
-    int r,i,j;
-    int cantBoni = prem + ext;
-    int cantFan = fant - 1;
+    int r;
     tPila p;
-    pJug->posx = 1;
-    Celdas act = {1, 1};
+    Celdas act = {1, 1}; // Celda inicial
     Celdas vecinos[4];
     Celdas pared;
-    srand(time(NULL));
+
     crearPila(&p);
-    apilar(&p, &act, sizeof(Celdas));                   ///Apilo la primera celda
+    apilar(&p, &act, sizeof(Celdas));
+
     while (pilaVacia(&p) == TODO_OK) {
-        desapilar(&p, &act, sizeof(Celdas));            ///saco la ultima celda modificada
-        m->mat[act.fil][act.col] = VISITADO;   ///<-----------Marco como visitado
-        cantVecinos = buscarVecinos(m->mat, filMod, colMod, &act, vecinos); /// calculo los vecinos que hay disponibles y los guatdo en un vector
-        if (cantVecinos) {
-            apilar(&p, &act, sizeof(Celdas));           /// Como hay un vecino al que saltar lo apilo nuevamente
-            r = rand() % cantVecinos;///<--------------- Selecciono un vecino random de lo que hay
+        desapilar(&p, &act, sizeof(Celdas));
+        m->mat[act.fil][act.col] = VISITADO;
+
+        cantVecinos = buscarVecinos(m->mat, filMod, colMod, &act, vecinos);
+
+        if (cantVecinos > 0) {
+            apilar(&p, &act, sizeof(Celdas)); // La volvemos a apilar
+
+            r = rand() % cantVecinos;
+
+            // Romper la pared
             pared.fil = act.fil + vecinos[r].fil / 2;
             pared.col = act.col + vecinos[r].col / 2;
             m->mat[pared.fil][pared.col] = CAMINO;
-            m->mat[pared.fil][pared.col] = CAMINO;
+
+            // Moverse a la siguiente celda
             vecinos[r].col += act.col;
             vecinos[r].fil += act.fil;
-            apilar(&p, &vecinos[r], sizeof(Celdas));/// <----------------- Apilo la celda que se acaba de usar para que sea la ultima modificada
-        } else {
-            /// ATENCION!!!
-            /// el sigiente algoritmo es para dererminar si se pone un fantasma o una bonificacion a traves de los numeros random
-            /// fue hecho a las 3:55 am. luego de pelear con un error que se solucionaba poniendo un parentesis
-            /// el que quiera hacerlo mejor, bienvenido sea ATTE: ERIK O.o
-            /// LO VA A HACER ALAN ATTE:Haziel
-            if (cantBoni && !(rand() % 10)) {
-                m->mat[act.fil][act.col] = BONIFICACION;
-                cantBoni --;
-            } else if (cantFan > 0
-                       && act.fil > filMod / 10
-                       && act.col > colMod / 10
-                       && rand() % 3 == 0) {
-                m->mat[act.fil][act.col] = FANTASMA;
-                //ubicar en vector de fantasmas!
-                cantFan --;
+            apilar(&p, &vecinos[r], sizeof(Celdas));
+        }
+    }
+    vaciarPila(&p);
+}
+int recolectarSpotsLibres(tMapa *m, int filMod, int colMod, Celdas spotsDisponibles[], int safeDist) {
+    int cantSpots = 0;
+    for (int i = 0; i < filMod; i++) {
+        for (int j = 0; j < colMod; j++) {
+            if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO) {
+                int distAlInicio = (i - 1) + (j - 1); // Distancia desde (1,1)
+
+                // Si está fuera de la zona segura, es un spot válido
+                if (distAlInicio > safeDist) {
+                    spotsDisponibles[cantSpots].fil = i;
+                    spotsDisponibles[cantSpots].col = j;
+                    cantSpots++;
+                }
             }
         }
     }
-    for (i = 0; i < filMod; i++) {
-        for (j = 0; j < colMod; j++) {
+    return cantSpots;
+}
+void barajarSpots(Celdas spotsDisponibles[], int cantSpots) {
+    Celdas tempSwap;
+    for (int i = cantSpots - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+
+        // Swap spotsDisponibles[i] con spotsDisponibles[j]
+        tempSwap = spotsDisponibles[i];
+        spotsDisponibles[i] = spotsDisponibles[j];
+        spotsDisponibles[j] = tempSwap;
+    }
+}
+void colocarItems(tMapa *m, Celdas spotsDisponibles[], int cantSpots, int prem, int ext, int fant) {
+    int spotIndex = 0,i;
+    Celdas act;
+
+    // Colocar Vidas
+    for (i = 0; i < ext && spotIndex < cantSpots; i++, spotIndex++) {
+        act = spotsDisponibles[spotIndex];
+        m->mat[act.fil][act.col] = VIDAEXT; // 'v'
+    }
+
+    // Colocar Premios
+    for (i = 0; i < prem && spotIndex < cantSpots; i++, spotIndex++) {
+        act = spotsDisponibles[spotIndex];
+        m->mat[act.fil][act.col] = BONIFICACION;
+    }
+
+    // Colocar Fantasmas
+    for (i = 0; i < fant && spotIndex < cantSpots; i++, spotIndex++) {
+        act = spotsDisponibles[spotIndex];
+        m->mat[act.fil][act.col] = FANTASMA;
+        // ubicar en vector de fantasmas!
+    }
+}
+void limpiarMapa(tMapa *m, int filMod, int colMod) {
+    for (int i = 0; i < filMod; i++) {
+        for (int j = 0; j < colMod; j++) {
             if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
                 m->mat[i][j] = CELDA;
         }
     }
-//    act.col = 1;
-//    act.fil = 1;
-//    apilar(&p, &act, sizeof(Celdas));
-//    while (pilaVacia(&p) == TODO_OK) {
-//        desapilar(&p, &act, sizeof(Celdas));
-//        m->mat[act.fil][act.col] = VISITADO;
-//        cantVecinos = buscarVecinos(m->mat, filMod, colMod, &act, vecinos);
-//        if (cantVecinos) {
-//            apilar(&p, &act, sizeof(Celdas));
-//            r = rand() % cantVecinos;
-//            pared.fil = act.fil + vecinos[r].fil / 2;
-//            pared.col = act.col + vecinos[r].col / 2;
-//            m->mat[pared.fil][pared.col] = CAMINO;
-//            m->mat[pared.fil][pared.col] = CAMINO;
-//            vecinos[r].col += act.col;
-//            vecinos[r].fil += act.fil;
-//            apilar(&p, &vecinos[r], sizeof(Celdas));
-//        } else {
-//            if (cantBoni && !(rand() % 10)) {
-//                m->mat[act.fil][act.col] = BONIFICACION;
-//                cantBoni --;
-//            } else if (cantFan
-//                       && act.fil > filMod / 10
-//                       && act.col > colMod / 10
-//                       && rand() % 3 == 0) {
-//                m->mat[act.fil][act.col] = FANTASMA;
-//                cantFan --;
-//            }
-//        }
-//    }
-//    for (int i = 0; i < filMod; i++) {
-//        for (int j = 0; j < colMod; j++) {
-//            if (m->mat[i][j] == VISITADO || m->mat[i][j] == CAMINO)
-//                m->mat[i][j] = CELDA;
-//        }
-//    }
-    m->mat[act.fil - 1][act.col] = ENTRADA;
-    m->mat[act.fil][act.col] = JUGADOR;
-    pJug->posx = act.fil;
-    pJug->posy = act.col;
-    m->mat[filMod - 1][vecinos[r].col] = SALIDA ;
-    m->mat[filMod - 2][vecinos[r].col] = FANTASMA ;
+}
+void colocarEntradaSalida(tMapa *m, int filMod, int colMod, tJugador *pJug) {
+    // Colocar ENTRADA y JUGADOR en (1,1)
+    int colSalida;
+   int posiblesSalidas[colMod];
+    int cantPosibles = 0;
+    int j;
+    m->mat[0][1] = ENTRADA; // (0, 1)
+    m->mat[1][1] = JUGADOR; // (1, 1)
+    pJug->posx = 1;
+    pJug->posy = 1;
+
+    // Colocar SALIDA y FANTASMA GUARDIÁN
+    for (j= 0; j < colMod; j++) {
+        if (m->mat[filMod - 2][j] == CELDA) { // Busca camino en la penúltima fila
+            posiblesSalidas[cantPosibles] = j;
+            cantPosibles++;
+        }
+    }
+
+    if (cantPosibles > 0) {
+        colSalida = posiblesSalidas[rand() % cantPosibles];
+    } else {
+        colSalida = (colMod / 2) | 1;
+    }
+
+    m->mat[filMod - 1][colSalida] = SALIDA;
+    m->mat[filMod - 2][colSalida] = FANTASMA;
+
+    // Guardar posición de la salida en el mapa
     m->posxS = filMod - 1;
-    m->posyS = vecinos[r].col;
-    m->jugadorMuerto= FALSE;
-    m->exit= FALSE;
-    pJug->roundBuff=0;
-    vaciarPila(&p);
-    guardarMapaEnArchivo(*m,m->filMapa,m->colMapa,"Laberinto.txt");
+    m->posyS = colSalida;
+}
+int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, int prem, int ext) {
+
+    // 1. Inicialización
+    srand(time(NULL));
+    int cantFan = fant - 1; // 1 fantasma se reserva para la salida
+    int safeDist = (filMod + colMod) / 8;
+    int cantSpots = 0;
+    if (safeDist < 4) safeDist = 4;
+
+    // Arreglo para guardar celdas libres (spots)
+    Celdas spotsDisponibles[filMod * colMod];
+
+    // 2. Generar Estructura del Laberinto (DFS)
+    generarEstructuraLaberinto(m, filMod, colMod);
+
+    // 3. Recolectar celdas libres (fuera de la zona segura)
+    cantSpots = recolectarSpotsLibres(m, filMod, colMod, spotsDisponibles, safeDist);
+
+    // 4. Barajar las celdas libres
+    if (cantSpots > 0) {
+        barajarSpots(spotsDisponibles, cantSpots);
+    }
+
+    // 5. Colocar ítems (premios, vidas, fantasmas)
+    colocarItems(m, spotsDisponibles, cantSpots, prem, ext, cantFan);
+
+    // 6. Limpiar el mapa (VISITADO -> CELDA)
+    limpiarMapa(m, filMod, colMod);
+
+    // 7. Colocar Entradas, Salidas y Jugador
+    colocarEntradaSalida(m, filMod, colMod, pJug);
+
+    // 8. Inicializar estado del juego y guardar
+    m->jugadorMuerto = FALSE;
+    m->exit = FALSE;
+    pJug->roundBuff = 0;
+
+    guardarMapaEnArchivo(*m, m->filMapa, m->colMapa, "Laberinto.txt");
+
     return VERDADERO;
 }
 void guardarMapaEnArchivo(tMapa m, int filMod, int colMod, char* nombreArchivo) {
@@ -183,12 +248,13 @@ void guardarMapaEnArchivo(tMapa m, int filMod, int colMod, char* nombreArchivo) 
             char c = '?';
             switch (m.mat[i][j]) {
                 case FANTASMA:     c = 'F'; break;
-                case CELDA:        c = ' '; break;
+                case CELDA:        c = '.'; break;
                 case BONIFICACION: c = 'P'; break;
                 case ENTRADA:      c = 'E'; break;
                 case SALIDA:       c = 'S'; break;
-                case PARED:        c = '#';
-                break;
+                case PARED:        c = '#';break;
+                case JUGADOR:      c = '.';break;
+                case VIDAEXT:     c = 'V'; break;
                 default:
                 break;
             }
