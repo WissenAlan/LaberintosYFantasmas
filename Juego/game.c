@@ -95,7 +95,7 @@ void game_free(tGame *g)
 void game_run(tGame *g)
 {
     //crearConexion(g);
-    menuIngresarNombre(g);
+ menuIngresarNombre(g);
     while (g->is_running)
     {
         if (g->inicio)
@@ -119,7 +119,7 @@ void game_draw(tGame *g)
     int i, j;
     int sizec = WINDOW_WIDTH / g->m.colMapa;
     int sizef = WINDOW_HEIGHT / g->m.filMapa;
-    SDL_Rect rect = {0, 0, sizec -0, sizef - 0}; // padding 3
+    SDL_Rect rect = {0, 0, sizec, sizef};
     SDL_SetRenderDrawColor(g->renderer, 0, 0, 0, 255);
     SDL_RenderClear(g->renderer);
     SDL_SetRenderDrawColor(g->renderer, CUADRADO_COLOR);
@@ -129,8 +129,6 @@ void game_draw(tGame *g)
         for (j = 0; j < g->m.colMapa; j++)
         {
             rect.x = sizec * j;
-            if (g->m.mat[i][j] == PARED)
-                SDL_RenderFillRect(g->renderer, &rect);
             if (g->m.mat[i][j] == JUGADOR)
                 SDL_RenderCopy(g->renderer, g->personaje, NULL, &rect);
             if (g->m.mat[i][j] == FANTASMA)
@@ -141,7 +139,6 @@ void game_draw(tGame *g)
                 SDL_RenderCopy(g->renderer, g->entrada, NULL, &rect);
             if (g->m.mat[i][j] == SALIDA)
                 SDL_RenderCopy(g->renderer, g->salida, NULL, &rect);
-
             if (g->m.mat[i][j] == PARED)
                 SDL_RenderCopy(g->renderer, g->pared, NULL, &rect);
             if (g->m.mat[i][j] == CELDA)

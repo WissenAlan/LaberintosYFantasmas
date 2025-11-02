@@ -110,9 +110,9 @@ void cargarTexturasMenu(tGame *g, SDL_Rect botonP, SDL_Rect botonR, SDL_Rect bot
 }
 void menu_inicio(tGame *g)
 {
-    SDL_Rect botonP = {20, 250, 240, 60};
-    SDL_Rect botonR = {20, 330, 240, 60};
-    SDL_Rect botonS  = {20, 410, 240, 60};
+    SDL_Rect botonP = {(WINDOW_WIDTH - 240) / 2, 250, 240, 60};
+    SDL_Rect botonR = {(WINDOW_WIDTH - 240) / 2, 330, 240, 60};
+    SDL_Rect botonS  = {(WINDOW_WIDTH - 240) / 2, 410, 240, 60};
     SDL_Point click;
     char* rank;
     Mix_HaltMusic();
@@ -168,7 +168,7 @@ void menuIngresarNombre(tGame *g)
     SDL_RenderCopy(g->renderer, g->rank, NULL, NULL);
     SDL_Rect textointerfaz = {(WINDOW_WIDTH - 700) / 2, (WINDOW_HEIGHT - 50) / 3 - 30, 700, 60};
     SDL_Rect cuadradoText = {(WINDOW_WIDTH - 700) / 2, (WINDOW_HEIGHT - 50) / 3, 700, 60};
-    strncpy(g->p.nombre, "", bufferSize);
+    strncpy(g->p.nombre, "", bufferNombreSize);
     SDL_StartTextInput();
     g->is_writing = true;
     while (g->is_writing)
@@ -186,11 +186,12 @@ void menuIngresarNombre(tGame *g)
                 if (g->eventos.key.keysym.sym == SDLK_RETURN && strlen(g->p.nombre) >= 1)
                     g->is_writing = false;
                 if (g->eventos.key.keysym.sym == SDLK_BACKSPACE && strlen(g->p.nombre) > 0)
+
                     *(g->p.nombre + strlen(g->p.nombre) - 1) = '\0';
             }
             if (g->eventos.type == SDL_TEXTINPUT)
             {
-                if (strlen(g->p.nombre) + strlen(g->eventos.text.text) < bufferSize)
+                if (strlen(g->p.nombre) + strlen(g->eventos.text.text) < bufferNombreSize)
                     strcat(g->p.nombre, g->eventos.text.text);
             }
         }
@@ -221,29 +222,32 @@ void menuIngresarNombre(tGame *g)
 }
 void submenuranking(tGame *g)
 {
-    int i;
-    SDL_Color white = {255, 255, 255, 255};
+    SDL_Color dorado ={ 220, 200, 150, 255 };
     SDL_Texture* textura;
     SDL_Surface * superficie;
     SDL_Point click;
-    SDL_Rect cuadradoCerrar = {WINDOW_WIDTH * 0.455, WINDOW_HEIGHT - 124, 130, 45}; //modificar por constantes
     SDL_RenderCopy(g->renderer, g->rank, NULL, NULL); // se carga la imagen
     SDL_RenderPresent(g->renderer);
-    SDL_Rect rank_rect = {(WINDOW_WIDTH * 0.20), 160, ANCHOPARAMETRO, ALTOPARAMETRO};
-    SDL_Rect name_rect = {(WINDOW_WIDTH - 100) / 2, 160, ANCHOPARAMETRO, ALTOPARAMETRO};
-    SDL_Rect score_rect = {(WINDOW_WIDTH - 300) - 120, 160, ANCHOPARAMETRO + 20, ALTOPARAMETRO}; // modificar por constantes
-    crearBoton(rank_rect, g->titulo_f, white, "Rank", g->renderer, 0);
-    crearBoton(name_rect, g->titulo_f, white, "Name", g->renderer, 0);
-    crearBoton(score_rect, g->titulo_f, white, "Score", g->renderer, 0);
-    for (i = 0; i < 10; i++)
-    {
-        rank_rect.y += 35;
-        name_rect.y += 35;
-        score_rect.y += 35;
-        crearBoton(rank_rect, g->titulo_f, white, "1.", g->renderer, 0);
-        crearBoton(name_rect, g->titulo_f, white, "JDPHA", g->renderer, 0);
-        crearBoton(score_rect, g->titulo_f, white, "1000", g->renderer, 0);
-    }
+    SDL_Rect TOP4name_rect = {WINDOW_WIDTH-1160,WINDOW_HEIGHT-280,130,30};
+    SDL_Rect TOP4point_rect = {WINDOW_WIDTH-1160,WINDOW_HEIGHT-250,130,20};
+    SDL_Rect TOP2name_rect = {WINDOW_WIDTH-930,WINDOW_HEIGHT-280,130,30};
+    SDL_Rect TOP2point_rect = {WINDOW_WIDTH-930,WINDOW_HEIGHT-250,130,20};
+    SDL_Rect TOP1name_rect = {WINDOW_WIDTH-695,WINDOW_HEIGHT-280,130,30};
+    SDL_Rect TOP1point_rect = {WINDOW_WIDTH-695,WINDOW_HEIGHT-250,130,20};
+    SDL_Rect TOP3name_rect = {WINDOW_WIDTH-455,WINDOW_HEIGHT-280,130,30};
+    SDL_Rect TOP3point_rect = {WINDOW_WIDTH-455,WINDOW_HEIGHT-250,130,20};
+    SDL_Rect TOP5name_rect = {WINDOW_WIDTH-230,WINDOW_HEIGHT-280,130,30};
+    SDL_Rect TOP5point_rect = {WINDOW_WIDTH-230,WINDOW_HEIGHT-250,130,20};
+    crearBoton(TOP5name_rect, g->titulo_f, dorado,"5.JDPHA", g->renderer, 0);
+    crearBoton(TOP5point_rect, g->titulo_f, dorado, "100", g->renderer, 1);
+    crearBoton(TOP4name_rect, g->titulo_f, dorado,"4.JDPHA", g->renderer, 0);
+    crearBoton(TOP4point_rect, g->titulo_f, dorado, "100", g->renderer, 1);
+    crearBoton(TOP3name_rect, g->titulo_f,dorado,"3.JDPHA", g->renderer, 0);
+    crearBoton(TOP3point_rect, g->titulo_f,dorado, "100", g->renderer, 1);
+    crearBoton(TOP2name_rect, g->titulo_f, dorado,"2.JDPHA", g->renderer, 0);
+    crearBoton(TOP2point_rect, g->titulo_f,dorado, "100", g->renderer, 1);
+    crearBoton(TOP1name_rect, g->titulo_f,dorado,"1.JDPHA", g->renderer, 0);
+    crearBoton(TOP1point_rect, g->titulo_f,dorado, "100", g->renderer, 1);
     SDL_RenderPresent(g->renderer);
     while (g->ranking)
     {
@@ -264,15 +268,6 @@ void submenuranking(tGame *g)
                     break;
                 default:
                     break;
-                }
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                if (g->eventos.button.button == SDL_BUTTON_LEFT)
-                {
-                    click.x = g->eventos.button.x;
-                    click.y = g->eventos.button.y;
-                    if (SDL_PointInRect(&click, &cuadradoCerrar))
-                        g->ranking = false;
                 }
                 break;
             default:

@@ -119,7 +119,7 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
         try_diff_x = abs(try_x - auxfila);
         try_diff_y = abs(try_y - auxcolumna);
         if (mapa->mat[try_x][try_y] == JUGADOR)
-        reward-= 500;
+            reward-= 500;
     }
     else
     {
@@ -127,8 +127,8 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
         {
             diff_x = abs(pFant->posx - (pJug->posx+4));
             diff_y = abs(pFant->posy - (pJug->posy+4));
-            try_diff_x = abs(try_x - pJug->posx);
-            try_diff_y = abs(try_y - pJug->posy);
+            try_diff_x = abs(try_x - (pJug->posx+4));
+            try_diff_y = abs(try_y - (pJug->posy+4));
 
 
         }

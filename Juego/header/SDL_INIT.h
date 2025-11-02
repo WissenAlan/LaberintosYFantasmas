@@ -9,7 +9,7 @@
 #define RENDERER_COLOR   0, 0, 0, 255
 #define CUADRADO_COLOR   255, 255, 255, 255
 #define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 760
+#define WINDOW_HEIGHT 768
 #define MIXER_FLAGS MIX_INIT_OGG
 #define IMAGE_FLAGS IMG_INIT_PNG
 int game_init_sdl(tGame *g);

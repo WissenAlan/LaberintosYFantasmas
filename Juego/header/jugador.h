@@ -9,13 +9,15 @@
 #define ABAJO 2
 #define IZQUIERDA 3
 #define DERECHA -2
-#define bufferSize 50
+#define bufferNombreSize 7
+#define bufferEmailSize 50
 typedef struct {
     int posx;
     int posy;
     unsigned puntos;
     unsigned vidas;
-    char nombre[bufferSize];
+    char nombre[bufferNombreSize];
+    char email[bufferEmailSize];
     int roundBuff;
 } tJugador;
 typedef struct {
