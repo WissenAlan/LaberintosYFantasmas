@@ -199,34 +199,47 @@ int process_request(const char *request, char *response)
     }
 
     if (strcmp(cmd, "RANKING") == 0)
-    {
-        printf("[SERVIDOR] Petición de ranking (modo clásico).\n");
-        FILE *pfIdx = fopen(ARCH_IDX, "rb");
-        FILE *pfJug = fopen(ARCH_JUG, "rb");
-        if (!pfIdx || !pfJug)
-        {
-            if (pfIdx) fclose(pfIdx);
-            if (pfJug) fclose(pfJug);
-            snprintf(response, TAM_BUFFER, "No hay jugadores registrados.");
-            return 1;
-        }
+{
+    printf("[SERVIDOR] Petición de ranking (Top 5 por puntos).\n");
 
-        snprintf(response, TAM_BUFFER, "Ranking (por ID):\n");
-        tIndice idx;
-        tJugadorDatos jug;
-        char temp[128];
-        while (fread(&idx, sizeof(tIndice), 1, pfIdx) == 1)
-        {
-            fseek(pfJug, idx.pos, SEEK_SET);
-            fread(&jug, sizeof(tJugadorDatos), 1, pfJug);
-            snprintf(temp, sizeof(temp), "ID %d) %s - Puntos: %d - Partidas: %d\n",
-                     jug.id, jug.nombre, jug.total_puntos, jug.partidas_jugadas);
-            strncat(response, temp, TAM_BUFFER - strlen(response) - 1);
-        }
-        fclose(pfIdx);
-        fclose(pfJug);
+    FILE *pfJug = fopen(ARCH_JUG, "rb");
+    if (!pfJug)
+    {
+        snprintf(response, TAM_BUFFER, "No hay jugadores registrados.");
         return 1;
     }
+
+    tLista lista;
+    crearLista(&lista);
+
+    tJugadorDatos jug;
+    while (fread(&jug, sizeof(tJugadorDatos), 1, pfJug) == 1)
+    {
+        insertarOrdenado(&lista, &jug, sizeof(tJugadorDatos), cmp_jugador_puntos_desc);
+    }
+    fclose(pfJug);
+
+    snprintf(response, TAM_BUFFER, "🏆 Top 5 Jugadores:\n");
+
+    int count = 0;
+    while (!listaVacia(&lista) && count < 5)
+    {
+        tJugadorDatos top;
+        sacarPrimero(&lista, &top, sizeof(tJugadorDatos));
+
+        char temp[128];
+        snprintf(temp, sizeof(temp),
+                 "%d) %s - Puntos: %d - Partidas: %d\n",
+                 count + 1, top.nombre, top.total_puntos, top.partidas_jugadas);
+
+        strncat(response, temp, TAM_BUFFER - strlen(response) - 1);
+        count++;
+    }
+
+    vaciarLista(&lista);
+    return 1;
+
+}
 
     if (strcmp(cmd, "SALIR") == 0)
     {
@@ -238,7 +251,6 @@ int process_request(const char *request, char *response)
     snprintf(response, TAM_BUFFER, "Comando invalido");
     return 1;
 }
-
 
 void run_server()
 {
