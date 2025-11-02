@@ -1,6 +1,6 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
-
+#include "../estructuras/Arbol.h"
 #include <stdlib.h>
 #include "mapa.h"
 #include "../red/cliente.h"
@@ -34,12 +34,17 @@ typedef struct {
     SDL_Texture *premio;
     SDL_Texture *entrada;
     SDL_Texture *salida;
-    SDL_Texture *piso;
-    SDL_Texture *pared;
     Mix_Chunk *sonidomenu;
     Mix_Music *musica;
     Mix_Music *musicajuego;
 } tGame;
+
+typedef struct {
+    int idPartida;
+    int idJugador;
+    int puntaje;
+    int movimientos;
+} tPartida;
 int game_new(tGame *game);
 void game_free(tGame *game);
 void game_run(tGame *game);
@@ -47,9 +52,13 @@ void game_update(tGame *g);
 void game_events(tGame *g);
 void game_draw(tGame *g);
 void moverFantasmas(tGame *g);
-char* crearConexion(tGame* g, int);
+int crearConexion(tGame *g);
 void iniciarJuego(tGame* g);
 void game_start(tGame *g);
 void asignarConfig(char*,int *parametro);
 void desencolarMovs(tCola *cola, char ** mat, tJugador *p);
+void mostrarPartidas();
+void guardarPartida(tGame *g);
+
 #endif // GAME_H_INCLUDED
+
