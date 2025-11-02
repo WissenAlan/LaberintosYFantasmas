@@ -55,7 +55,6 @@ void moverJugador(tCola *colamov, char **mat, tJugador *pJug, int tecla)
         pJug->roundBuff--;
     }
 }
-
 void ai(tCola *colamov,tMapa *mapa, tJugador *pJug, tFantasma *pFant)
 {
     int try_w = state(mapa, ARRIBA, pJug, pFant);

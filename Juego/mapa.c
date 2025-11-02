@@ -182,10 +182,9 @@ void guardarMapaEnArchivo(tMapa m, int filMod, int colMod, char* nombreArchivo) 
         for (j = 0; j < colMod; j++) {
             char c = '?';
             switch (m.mat[i][j]) {
-                case JUGADOR:      c = 'J'; break;
                 case FANTASMA:     c = 'F'; break;
                 case CELDA:        c = ' '; break;
-                case BONIFICACION: c = 'B'; break;
+                case BONIFICACION: c = 'P'; break;
                 case ENTRADA:      c = 'E'; break;
                 case SALIDA:       c = 'S'; break;
                 case PARED:        c = '#';

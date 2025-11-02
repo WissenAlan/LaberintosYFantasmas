@@ -102,7 +102,7 @@ void game_run(tGame *g)
 {
 
     menuIngresarNombre(g);
-     crearConexion(g);
+    //crearConexion(g);
     while (g->is_running)
     {
         if (g->inicio)
@@ -230,7 +230,7 @@ void intercambiar(void *a, void*b, unsigned tam)
 void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
 {
     tMovimiento movi;
-    int x, y;
+    int x, y,checkeoDobleMovimiento=0;
     while (colaVacia(cola) != COLA_VACIA)
     {
         x = 0;
@@ -251,11 +251,19 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             {
                 mat[movi.posx + x][movi.posy + y] = CELDA;
                 pJug->vidas--;
+                mat[pJug->posx][pJug->posy]=CELDA;
+                pJug->posx=1;
+                pJug->posy=1;
+                mat[pJug->posx][pJug->posy]=JUGADOR;
             }
             if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == FANTASMA)
             {
-                mat[movi.posx][movi.posy] = CELDA;
                 pJug->vidas--;
+                mat[movi.posx][movi.posy] = CELDA;
+                mat[pJug->posx +x][pJug->posy+ y]=CELDA;
+                pJug->posx=1;
+                pJug->posy=1;
+                mat[pJug->posx][pJug->posy]=JUGADOR;
             }
             if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == BONIFICACION)
             {
@@ -268,18 +276,28 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
         }
     }
 }
-
-int crearConexion(tGame *g) {
+void mandarJugadorAEntrada(tJugador *jugador,char **mat)
+{
+    jugador->vidas--;
+    mat[jugador->posx][jugador->posy]=CELDA;
+    jugador->posx=1;
+    jugador->posy=1;
+    mat[jugador->posx][jugador->posy]=JUGADOR;
+}
+int crearConexion(tGame *g)
+{
     SOCKET soc;
     char buffer[TAM_BUFFER], response[TAM_BUFFER];
 
-    if (init_winsock() != 0) {
+    if (init_winsock() != 0)
+    {
         printf("Error al inicializar Winsock.\n");
         return 0;
     }
 
     soc = connect_to_server(SERVER_IP, PUERTO);
-    if (soc == INVALID_SOCKET) {
+    if (soc == INVALID_SOCKET)
+    {
         printf("No se pudo conectar al servidor. Modo local.\n");
         WSACleanup();
         return 0;
@@ -312,17 +330,20 @@ void iniciarJuego(tGame* g)
     }
 }
 
-void guardarPartida(tGame *g) {
+void guardarPartida(tGame *g)
+{
     // Buscar jugador real
     tJugadorDatos jugadorReal;
 
-    if (!buscarJugadorPorNombre("..\\Servidor\\bin\\Debug\\jugadores.dat", g->p.nombre, &jugadorReal)) {
+    if (!buscarJugadorPorNombre("..\\Servidor\\bin\\Debug\\jugadores.dat", g->p.nombre, &jugadorReal))
+    {
         printf("Jugador '%s' no encontrado, no se guarda la partida.\n", g->p.nombre);
         return;
     }
 
     FILE *pf = fopen("partidas.dat", "ab+");
-    if (!pf) {
+    if (!pf)
+    {
         printf("Error al abrir partidas.dat\n");
         return;
     }
@@ -354,14 +375,16 @@ void guardarPartida(tGame *g) {
 void mostrarPartidas()
 {
     FILE *pf = fopen(ARCH_PARTIDAS, "rb");
-    if (!pf) {
+    if (!pf)
+    {
         printf(" No hay partidas guardadas.\n");
         return;
     }
 
     tPartida p;
     printf("\n=== PARTIDAS GUARDADAS ===\n");
-    while (fread(&p, sizeof(tPartida), 1, pf) == 1) {
+    while (fread(&p, sizeof(tPartida), 1, pf) == 1)
+    {
         printf("ID Partida: %-3d | Jugador: %-3d | Puntaje: %-5d | Movimientos: %-3d\n",
                p.idPartida, p.idJugador, p.puntaje, p.movimientos);
     }

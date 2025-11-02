@@ -224,6 +224,36 @@ void menuIngresarNombre(tGame *g)
 }
 void submenuranking(tGame *g)
 {
+    int i,cont;
+    tArbol arbolRanking;
+    crearArbol(&arbolRanking); // inicializa a NULL
+    tRanking r;
+    tPartidaDatos p;
+    tJugadorDatos j;
+    FILE* fpPartidas = fopen("partidas.dat","rb");
+    FILE* fpJug = fopen("..\\Servidor\\bin\\Debug\\jugadores.dat","rb");
+    if(!fpPartidas || !fpJug) {
+        if(fpPartidas) fclose(fpPartidas);
+        if(fpJug) fclose(fpJug);
+        return;
+    }
+    while(fread(&p,sizeof(tPartidaDatos),1,fpPartidas) == 1){
+        fseek(fpJug,0,SEEK_SET);
+        while(fread(&j,sizeof(tJugadorDatos),1,fpJug) == 1){
+            if(j.id == p.id_jugador){
+                memset(&r, 0, sizeof(tRanking));
+                strncpy(r.nombre, j.nombre, MAX_NOMBRE - 1);
+                r.nombre[MAX_NOMBRE - 1] = '\0';
+                r.puntaje = p.puntaje;
+
+                // insertar nodo con copia de datos
+                insertarnodoiterativo(&arbolRanking, &r, sizeof(tRanking), compararRanking);
+                break;
+            }
+        }
+    }
+    fclose(fpPartidas);
+    fclose(fpJug);
     SDL_Color dorado ={ 220, 200, 150, 255 };
     SDL_Texture* textura;
     SDL_Surface * superficie;
@@ -251,59 +281,6 @@ void submenuranking(tGame *g)
     crearBoton(TOP1name_rect, g->titulo_f,dorado,"1.JDPHA", g->renderer, 0);
     crearBoton(TOP1point_rect, g->titulo_f,dorado, "100", g->renderer, 1);
     SDL_RenderPresent(g->renderer);
-
-// --- Construir el árbol con partidas ---
-    tArbol arbolRanking;
-    crearArbol(&arbolRanking); // inicializa a NULL
-    tRanking r;
-
-    FILE* fpPartidas = fopen("partidas.dat","rb");
-    FILE* fpJug = fopen("..\\Servidor\\bin\\Debug\\jugadores.dat","rb");
-    if(!fpPartidas || !fpJug) {
-        if(fpPartidas) fclose(fpPartidas);
-        if(fpJug) fclose(fpJug);
-        return;
-    }
-
-    tPartidaDatos p;
-    tJugadorDatos j;
-
-    while(fread(&p,sizeof(tPartidaDatos),1,fpPartidas) == 1){
-        fseek(fpJug,0,SEEK_SET);
-        while(fread(&j,sizeof(tJugadorDatos),1,fpJug) == 1){
-            if(j.id == p.id_jugador){
-                memset(&r, 0, sizeof(tRanking));
-                strncpy(r.nombre, j.nombre, MAX_NOMBRE - 1);
-                r.nombre[MAX_NOMBRE - 1] = '\0';
-                r.puntaje = p.puntaje;
-
-                // insertar nodo con copia de datos
-                insertarnodoiterativo(&arbolRanking, &r, sizeof(tRanking), compararRanking);
-                break;
-            }
-        }
-    }
-    fclose(fpPartidas);
-    fclose(fpJug);
-
-   
-
-    // Si no hay partidas, dibujar filas vacías
-    for(int i = cont; i < 10; i++) {
-        rank_rect.y = 160 + 35*(i+1);
-        name_rect.y = 160 + 35*(i+1);
-        score_rect.y = 160 + 35*(i+1);
-
-        char buf[50];
-        sprintf(buf, "%d.", i+1);
-        crearBoton(rank_rect, g->titulo_f, white, buf, g->renderer, 0);
-        crearBoton(name_rect, g->titulo_f, white, "---", g->renderer, 0);
-        crearBoton(score_rect, g->titulo_f, white, "0", g->renderer, 0);
-    }
-
-    SDL_RenderPresent(g->renderer);
-
-    
     while (g->ranking)
     {
         while (SDL_PollEvent(&g->eventos))

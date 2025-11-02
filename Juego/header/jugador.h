@@ -41,6 +41,7 @@ void move_down(char**mat, tJugador *pJug);
 void move_left(char**mat, tJugador *pJug);
 void move_right(char**mat, tJugador *p);
 int abs(int numero);
+void mandarJugadorAEntrada(tJugador *jugador,char **mat);
 void CoordenadasesquinaMasLejosJugador(tJugador *jugador,int* filas,int* columnas);
 int contarMovs(tCola* colaMovsJugador);
 void encolarMov(tCola *cola, tMovimiento *movimiento, int mov);

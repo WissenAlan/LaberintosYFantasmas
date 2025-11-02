@@ -3,7 +3,7 @@
 #define FALSE 0
 #define VERDADERO 1
 
-#define JUGADOR 'P'
+#define JUGADOR 'J'
 #define FANTASMA 'F'
 #define PARED '#'
 #define ENTRADA 'E'

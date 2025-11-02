@@ -6,7 +6,7 @@
 #define VISITADO '.'
 #define CAMINO '.'
 #define CELDA ' '
-#define BONIFICACION 'B'
+#define BONIFICACION 'P'
 #define VIDAEXT 'V'
 typedef struct {
     int fil;

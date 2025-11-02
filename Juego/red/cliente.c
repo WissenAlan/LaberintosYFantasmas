@@ -33,10 +33,6 @@ int send_request(SOCKET soc, const char *request, char *response) {
     return TODO_OK;
 }
 
-
-
-
-
 void close_connection(SOCKET soc) {
      if (soc != INVALID_SOCKET) {
         closesocket(soc);
@@ -56,7 +52,3 @@ void enviarPeticionCliente(const char *mensaje) {
     }
 }
 
-void close_connection(SOCKET soc) {
-    closesocket(soc);
-    WSACleanup();
-}
