@@ -286,43 +286,7 @@ void submenuranking(tGame *g)
     fclose(fpPartidas);
     fclose(fpJug);
 
-   // --- Mostrar top 10 directamente ---
-int cont = 0;
-int startY = 200;
-rank_rect.y = startY;
-name_rect.y = startY;
-score_rect.y = startY;
-
-if(arbolRanking != NULL) {
-    tNodoA *stack[100];
-    int top = 0;
-    tNodoA *curr = arbolRanking;
-
-    while(curr || top > 0) {
-        while(curr) {
-            stack[top++] = curr;
-            curr = curr->der;
-        }
-        curr = stack[--top];
-
-        if(cont >= 10) break;
-
-        tRanking *dato = (tRanking*)curr->dato;
-        char buf[50];
-        sprintf(buf, "%d.", cont+1);
-        crearBoton(rank_rect, g->titulo_f, white, buf, g->renderer, 0);
-        crearBoton(name_rect, g->titulo_f, white, dato->nombre, g->renderer, 0);
-        sprintf(buf, "%d", dato->puntaje);
-        crearBoton(score_rect, g->titulo_f, white, buf, g->renderer, 0);
-
-        rank_rect.y += 35;
-        name_rect.y += 35;
-        score_rect.y += 35;
-        cont++;
-
-        curr = curr->izq;
-    }
-}
+   
 
     // Si no hay partidas, dibujar filas vacías
     for(int i = cont; i < 10; i++) {
