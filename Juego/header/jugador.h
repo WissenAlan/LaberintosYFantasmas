@@ -19,6 +19,7 @@ typedef struct {
     char nombre[bufferNombreSize];
     char email[bufferEmailSize];
     int roundBuff;
+    int movimientos;
 } tJugador;
 typedef struct {
     int posx;
