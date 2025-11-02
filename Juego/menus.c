@@ -1,5 +1,6 @@
 #include "header/SDL_INIT.h"
 #include "header/menus.h"
+#define MAX_NOMBRE 7
 void crearBoton(SDL_Rect cuadrado, TTF_Font* fuente, SDL_Color color, char *texto, SDL_Renderer* render, int ajustar)
 {
     SDL_Texture *textura = NULL;
@@ -32,6 +33,7 @@ void menu_pausa(tGame *g)
     sprintf(puntaje, "Puntaje :   [%d]", getPuntosJugador(&g->p));
     crearBoton(textoPuntaje, g->text_f, white, puntaje, g->renderer, 1);
     sprintf(puntaje,"Movimientos: [%d]",contarMovs(&g->colaMovsJugador));
+     g->p.movimientos = contarMovs(&g->colaMovsJugador);
     crearBoton(textoCantMov,g->text_f,white,puntaje,g->renderer,1);
     crearBoton(textoReset, g->text_f, white, "Presiona R : Jugar", g->renderer, 1);
     crearBoton(textoMenu, g->text_f, white, "Presiona M : Menu", g->renderer, 1);
@@ -138,18 +140,18 @@ void menu_inicio(tGame *g)
                 click.x = g->eventos.button.x;
                 click.y = g->eventos.button.y;
                 if (SDL_PointInRect(&click, &botonS))
-                {
+                {    enviarPeticionCliente("SALIR_JUEGO");  // 👈 notifica al servidor
                     g->inicio = false;
                     g->is_running = false;
                 }
                 if (SDL_PointInRect(&click, &botonP))
-                {
+                {    enviarPeticionCliente("INICIO_PARTIDA");  // 👈 notifica al servidor
                     g->inicio = false;
                     g->is_running = true;
                     Mix_PlayChannel(-1, g->sonidomenu, 0);
                 }
                 if (SDL_PointInRect(&click, &botonR))
-                {
+                {    enviarPeticionCliente("MOSTRAR_RANKING");  // 👈 notifica al servidor
                     g->ranking = true;
                     submenuranking(g);
                 }
@@ -249,6 +251,95 @@ void submenuranking(tGame *g)
     crearBoton(TOP1name_rect, g->titulo_f,dorado,"1.JDPHA", g->renderer, 0);
     crearBoton(TOP1point_rect, g->titulo_f,dorado, "100", g->renderer, 1);
     SDL_RenderPresent(g->renderer);
+
+// --- Construir el árbol con partidas ---
+    tArbol arbolRanking;
+    crearArbol(&arbolRanking); // inicializa a NULL
+    tRanking r;
+
+    FILE* fpPartidas = fopen("partidas.dat","rb");
+    FILE* fpJug = fopen("..\\Servidor\\bin\\Debug\\jugadores.dat","rb");
+    if(!fpPartidas || !fpJug) {
+        if(fpPartidas) fclose(fpPartidas);
+        if(fpJug) fclose(fpJug);
+        return;
+    }
+
+    tPartidaDatos p;
+    tJugadorDatos j;
+
+    while(fread(&p,sizeof(tPartidaDatos),1,fpPartidas) == 1){
+        fseek(fpJug,0,SEEK_SET);
+        while(fread(&j,sizeof(tJugadorDatos),1,fpJug) == 1){
+            if(j.id == p.id_jugador){
+                memset(&r, 0, sizeof(tRanking));
+                strncpy(r.nombre, j.nombre, MAX_NOMBRE - 1);
+                r.nombre[MAX_NOMBRE - 1] = '\0';
+                r.puntaje = p.puntaje;
+
+                // insertar nodo con copia de datos
+                insertarnodoiterativo(&arbolRanking, &r, sizeof(tRanking), compararRanking);
+                break;
+            }
+        }
+    }
+    fclose(fpPartidas);
+    fclose(fpJug);
+
+   // --- Mostrar top 10 directamente ---
+int cont = 0;
+int startY = 200;
+rank_rect.y = startY;
+name_rect.y = startY;
+score_rect.y = startY;
+
+if(arbolRanking != NULL) {
+    tNodoA *stack[100];
+    int top = 0;
+    tNodoA *curr = arbolRanking;
+
+    while(curr || top > 0) {
+        while(curr) {
+            stack[top++] = curr;
+            curr = curr->der;
+        }
+        curr = stack[--top];
+
+        if(cont >= 10) break;
+
+        tRanking *dato = (tRanking*)curr->dato;
+        char buf[50];
+        sprintf(buf, "%d.", cont+1);
+        crearBoton(rank_rect, g->titulo_f, white, buf, g->renderer, 0);
+        crearBoton(name_rect, g->titulo_f, white, dato->nombre, g->renderer, 0);
+        sprintf(buf, "%d", dato->puntaje);
+        crearBoton(score_rect, g->titulo_f, white, buf, g->renderer, 0);
+
+        rank_rect.y += 35;
+        name_rect.y += 35;
+        score_rect.y += 35;
+        cont++;
+
+        curr = curr->izq;
+    }
+}
+
+    // Si no hay partidas, dibujar filas vacías
+    for(int i = cont; i < 10; i++) {
+        rank_rect.y = 160 + 35*(i+1);
+        name_rect.y = 160 + 35*(i+1);
+        score_rect.y = 160 + 35*(i+1);
+
+        char buf[50];
+        sprintf(buf, "%d.", i+1);
+        crearBoton(rank_rect, g->titulo_f, white, buf, g->renderer, 0);
+        crearBoton(name_rect, g->titulo_f, white, "---", g->renderer, 0);
+        crearBoton(score_rect, g->titulo_f, white, "0", g->renderer, 0);
+    }
+
+    SDL_RenderPresent(g->renderer);
+
+    
     while (g->ranking)
     {
         while (SDL_PollEvent(&g->eventos))

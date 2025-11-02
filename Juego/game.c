@@ -1,6 +1,10 @@
 #include "header/game.h"
 #include "header/SDL_INIT.h"
 #include "header/menus.h"
+#define ARCH_JUG "jugadores.dat"
+#define ARCH_IDX "jugadores.idx"
+#define ARCH_PARTIDAS "partidas.dat"
+
 int game_new(tGame *g)
 {
     char linea[TAM_BUFFER];
@@ -56,7 +60,7 @@ void asignarConfig(char* linea, int* parametro)
     if (valor)
     {
         valor++; // avanzar para saltar los dos puntos ':'
-        valor[strcspn(valor, "\n")] = '\0';// eliminar salto de l�nea
+        valor[strcspn(valor, "\n")] = '\0';// eliminar salto de línea
         *parametro = atoi(valor);
     }
 }
@@ -96,8 +100,9 @@ void game_free(tGame *g)
 }
 void game_run(tGame *g)
 {
-    //crearConexion(g);
- menuIngresarNombre(g);
+
+    menuIngresarNombre(g);
+     crearConexion(g);
     while (g->is_running)
     {
         if (g->inicio)
@@ -264,58 +269,35 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
     }
 }
 
-char* crearConexion(tGame* g, int mensaje)
-{
-    if (init_winsock() != 0)
-    {
-        printf("Error con WINSOCK\n");
-        return NULL;
+int crearConexion(tGame *g) {
+    SOCKET soc;
+    char buffer[TAM_BUFFER], response[TAM_BUFFER];
+
+    if (init_winsock() != 0) {
+        printf("Error al inicializar Winsock.\n");
+        return 0;
     }
-    SOCKET soc = connect_to_server(SERVER_IP, PUERTO);
-    if (soc == INVALID_SOCKET)
-    {
-        printf("Error de conexion\n");
-//        iniciarJuego(g);
+
+    soc = connect_to_server(SERVER_IP, PUERTO);
+    if (soc == INVALID_SOCKET) {
+        printf("No se pudo conectar al servidor. Modo local.\n");
         WSACleanup();
-        return NULL;
+        return 0;
     }
-    printf("Conectado al servidor\n");
-    char nombre[TAM_NOMBRE], buffer[TAM_BUFFER], response[TAM_BUFFER];
-    printf("> ");
-    switch (mensaje)
-    {
-    case 1:
-        printf("Ingrese su nombre:\n");
-        scanf("%s", nombre);
-        nombre[strcspn(nombre, "\n")] = '\0'; //quitar salto de linea
-        strcpy(buffer, "NOMBRE|");
-        buffer[strcspn(buffer, "\n")] = '\0'; //quitar salto de linea
-        strcat(buffer, nombre);
-        printf("Enviado: %s\n", buffer);
-        if (send_request(soc, buffer, response) == 0)
-            iniciarJuego(g);
-//                printf("Respuesta: %s\n", response);
-        else
-        {
-            printf("Error al enviar o recibir datos\n");
-            break;
-        }
-        break;
-    case 2:
-        strcpy(buffer, "RANKING|");
-        buffer[strcspn(buffer, "\n")] = '\0'; //quitar salto de linea
-        printf("Enviado: %s\n", buffer);
-        if (send_request(soc, buffer, response) == 0)
-            printf("Respuesta: %s\n", response);
-        else
-            printf("Error al enviar o recibir datos\n");
-        break;
-    default:
-        printf("Opcion invalida\n");
-        break;
-    }
-    close_connection(soc);
-    return response;
+
+    // guarda el socket global
+    setSocketCliente(soc);
+
+    // manda el nombre del jugador al servidor
+    snprintf(buffer, sizeof(buffer), "NOMBRE|%s", g->p.nombre);
+
+    if (send_request(soc, buffer, response) == TODO_OK)
+        printf("[Servidor] %s\n", response);
+    else
+        printf("No se pudo registrar el nombre.\n");
+
+    printf("[DEBUG] Conexion establecida y mantenida abierta.\n");
+    return 1;
 }
 
 void iniciarJuego(tGame* g)
@@ -328,4 +310,60 @@ void iniciarJuego(tGame* g)
         checkend(&g->m, &g->p);
         system("cls");
     }
+}
+
+void guardarPartida(tGame *g) {
+    // Buscar jugador real
+    tJugadorDatos jugadorReal;
+
+    if (!buscarJugadorPorNombre("..\\Servidor\\bin\\Debug\\jugadores.dat", g->p.nombre, &jugadorReal)) {
+        printf("Jugador '%s' no encontrado, no se guarda la partida.\n", g->p.nombre);
+        return;
+    }
+
+    FILE *pf = fopen("partidas.dat", "ab+");
+    if (!pf) {
+        printf("Error al abrir partidas.dat\n");
+        return;
+    }
+
+    tPartidaDatos partida;
+    memset(&partida, 0, sizeof(partida));
+
+    // Asignar id de partida
+    fseek(pf, 0, SEEK_END);
+    long tam = ftell(pf);
+    int cant = tam / sizeof(tPartidaDatos);
+    partida.id_partida = cant + 1;
+
+    // Usar datos correctos
+    partida.id_jugador = jugadorReal.id;
+    partida.puntaje = g->p.puntos;
+    partida.movimientos = g->p.movimientos;
+
+    fwrite(&partida, sizeof(tPartidaDatos), 1, pf);
+    fclose(pf);
+
+    printf("✅ Partida guardada correctamente:\n");
+    printf("Jugador: %s (ID: %d)\n", jugadorReal.nombre, jugadorReal.id);
+    printf("Partida: %d | Puntos: %d | Movimientos: %d\n",
+           partida.id_partida, partida.puntaje, partida.movimientos);
+}
+
+
+void mostrarPartidas()
+{
+    FILE *pf = fopen(ARCH_PARTIDAS, "rb");
+    if (!pf) {
+        printf(" No hay partidas guardadas.\n");
+        return;
+    }
+
+    tPartida p;
+    printf("\n=== PARTIDAS GUARDADAS ===\n");
+    while (fread(&p, sizeof(tPartida), 1, pf) == 1) {
+        printf("ID Partida: %-3d | Jugador: %-3d | Puntaje: %-5d | Movimientos: %-3d\n",
+               p.idPartida, p.idJugador, p.puntaje, p.movimientos);
+    }
+    fclose(pf);
 }

@@ -573,6 +573,28 @@ int buscarJugadorPorId(tArbol *arbol, const char *nombreArchivo, int idBuscado)
     return 1;
 }
 
+int buscarJugadorPorNombre(const char *nombreArchivo, const char *nombreBuscado, tJugadorDatos *jugadorEncontrado) {
+    FILE *pf = fopen(nombreArchivo, "rb");
+    if (!pf) {
+        printf("Error al abrir %s\n", nombreArchivo);
+        return 0;
+    }
+
+    tJugadorDatos j;
+    fread(&j, sizeof(tJugadorDatos), 1, pf);
+
+    while ( !feof(pf)) {
+        if (strcmp(j.nombre, nombreBuscado) == 0) {
+            *jugadorEncontrado = j;
+            fclose(pf);
+            return 1;
+        }
+         fread(&j, sizeof(tJugadorDatos), 1, pf);
+    }
+
+    fclose(pf);
+    return 0; // no encontrado
+}
 
 int cmp_clave(const void *a, const void *b) {
     const tClave *pa = a;
@@ -581,3 +603,21 @@ int cmp_clave(const void *a, const void *b) {
     if (pa->clave > pb->clave) return 1;
     return 0;
 }
+
+
+
+int compararRanking(const void *a, const void *b)
+{
+    const tRanking *ra = (const tRanking*)a;
+    const tRanking *rb = (const tRanking*)b;
+
+    // 🔹 Queremos mayor puntaje primero
+    if (ra->puntaje > rb->puntaje)
+        return -1; // va a la izquierda (más grande)
+    if (ra->puntaje < rb->puntaje)
+        return 1;  // va a la derecha (más chico)
+
+    // 🔹 Desempatar por nombre alfabéticamente
+    return strcmp(ra->nombre, rb->nombre);
+}
+
