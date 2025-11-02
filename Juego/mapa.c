@@ -167,9 +167,42 @@ int crearLaberinto(tMapa *m, int filMod, int colMod, tJugador *pJug, int fant, i
     m->exit= FALSE;
     pJug->roundBuff=0;
     vaciarPila(&p);
+    guardarMapaEnArchivo(*m,m->filMapa,m->colMapa,"Laberinto.txt");
     return VERDADERO;
 }
+void guardarMapaEnArchivo(tMapa m, int filMod, int colMod, char* nombreArchivo) {
+    FILE*f = fopen(nombreArchivo, "w");
+    if (f == NULL) {
+        perror("Error al abrir el archivo del mapa");
+        return;
+    }
 
+    for (int i = 0; i < filMod; i++) {
+        for (int j = 0; j < colMod; j++) {
+            char c = '?'; // Caracter por defecto si algo falla
+            switch (m.mat[i][j]) {
+                case JUGADOR:      c = 'J'; break;
+                case FANTASMA:     c = 'F'; break;
+                case CELDA:        c = ' '; break;
+                case BONIFICACION: c = 'B'; break;
+                case ENTRADA:      c = 'E'; break;
+                case SALIDA:       c = 'S'; break;
+
+                //  ATENCION AQUI
+                // Asumo que 'PARED' es el valor de las celdas no visitadas.
+                // Si tu enum/define se llama diferente, AJUSTA ESTE CASE.
+                case PARED:        c = '#'; break;
+
+                // Si PARED es 0, puedes borrar el case PARED y usar el default:
+                default:           c = '#'; break;
+            }
+            fprintf(f, "%c", c);
+        }
+        fprintf(f, "\n");
+    }
+
+    fclose(f);
+}
 int buscarVecinos(char**mat, int fil, int col, Celdas*act, Celdas*vecinos) {
     int posx[] = { -2, 0, 2, 0 }; /// Posiciones validas que se pueden dar    ##############
     int posy[] = { 0, 2, 0, -2 }; /// solo se pueden ver considerar aquellas  ##v ##ac##  ##
