@@ -2,6 +2,8 @@
 #include "../Juego/estructuras/Arbol.c"
 #include "../Juego/estructuras/colaDin.h"
 #include "../Juego/estructuras/colaDin.c"
+#include "../Juego/estructuras/Lista.c"
+#include "../Juego/estructuras/Lista.h"
 #include "servidor.h"
 
 tArbol arbolJugadores;   // árbol de jugadores en memoria
@@ -134,12 +136,13 @@ int process_request(const char *request, char *response)
     }
 
     /// ---- NUEVAS PETICIONES DESDE EL CLIENTE SDL ----
-    if (strcmp(cmd, "INICIO_PARTIDA") == 0)
-    {
-        printf("[SERVIDOR] El cliente inició una partida.\n");
-        snprintf(response, TAM_BUFFER, "Inicio de partida recibido correctamente");
-        return 1;
-    }
+   if (cmd && strcmp(cmd, "INICIO_PARTIDA") == 0)
+{
+    printf("[SERVIDOR] El cliente inició una partida.\n");
+    snprintf(response, TAM_BUFFER, "Inicio de partida recibido correctamente");
+    return 1;
+}
+
 
     if (strcmp(cmd, "MOSTRAR_RANKING") == 0)
     {
@@ -220,25 +223,23 @@ int process_request(const char *request, char *response)
     fclose(pfJug);
 
     snprintf(response, TAM_BUFFER, "🏆 Top 5 Jugadores:\n");
+    // 1.NOMBRE-1000|
+    // RANKING|nombre1-1000|nombre2-500
+    char nombre[1024];
 
-    int count = 0;
-    while (!listaVacia(&lista) && count < 5)
+
+    while(!listaVacia(&lista))
     {
-        tJugadorDatos top;
-        sacarPrimero(&lista, &top, sizeof(tJugadorDatos));
+        sacarPrimero(&lista,&jug,sizeof(tJugadorDatos));
+        strcat(nombre,jug.nombre);
+        strcat(nombre,"-");
+        strcat(nombre,jug.total_puntos);
+        strcat(nombre,"|");
 
-        char temp[128];
-        snprintf(temp, sizeof(temp),
-                 "%d) %s - Puntos: %d - Partidas: %d\n",
-                 count + 1, top.nombre, top.total_puntos, top.partidas_jugadas);
-
-        strncat(response, temp, TAM_BUFFER - strlen(response) - 1);
-        count++;
     }
-
+    strcpy(response,nombre);
     vaciarLista(&lista);
     return 1;
-
 }
 
     if (strcmp(cmd, "SALIR") == 0)
@@ -365,5 +366,4 @@ void run_server()
     closesocket(server_socket);
     WSACleanup();
 }
-
 
