@@ -197,14 +197,14 @@ int process_request(const char *request, char *response)
         while (!listaVacia(&lista) && i < 5)
         {
             sacarPrimero(&lista, &jug, sizeof(tJugadorDatos));
-            sprintf(response, "%s|%s+%d", response, jug.nombre, jug.total_puntos);
+            sprintf(response, "%s%s+%d|", response, jug.nombre, jug.total_puntos);
             i++;
         }
 //        printf("\nRESPONSE: %s\n",response);
         vaciarLista(&lista);
         char vacios[20] = "";
         for(j = i; j < 5; j++)
-            strcat(vacios, "|-+-");
+            strcat(vacios, "-+-|");
         strcat(response, vacios);
     }
     else if (strcmp(cmd, "SALIR") == 0)

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "estructuras.h"
 typedef struct sNodoA
 {
     unsigned tamInfo;
@@ -13,47 +14,6 @@ typedef struct sNodoA
 } tNodoA;
 
 typedef tNodoA *tArbol;
-
-typedef struct
-{
-    char nombre[7];
-    int puntaje;
-} tRanking;
-
-typedef struct
-{
-
-    unsigned clave;
-    unsigned numRegistro;
-
-} tClave;
-
-typedef struct
-{
-
-    int id;
-    char nombre[40];
-    int total_puntos;
-    int partidas_jugadas;
-
-} tJugadorDatos;
-
-typedef struct
-{
-    int id_partida;         // ID autoincremental
-    int id_jugador;         // ID del jugador
-    int puntaje;            // Puntos obtenidos
-    int movimientos;        // Movimientos realizados
-} tPartidaDatos;
-
-typedef struct
-{
-    int clave;
-    long pos;
-
-} tIndice;
-
-
 
 void crearArbol(tArbol *);
 
