@@ -225,6 +225,8 @@ void menuIngresarNombre(tGame *g)
 }
 void trozarTop5(char *linea,char*nombre,char*puntos,char**finlinea)
 {
+    sprintf(nombre,"");
+    sprintf(puntos,"");
     while(*linea != '\0' && *linea != '+')
     {
         *nombre=*linea;
@@ -251,8 +253,19 @@ void submenuranking(tGame *g)
     SDL_Texture* textura;
     SDL_Surface * superficie;
     SDL_Point click;
+    SDL_Rect TOP4name_rect = {POSWTOP4,NAMEHEIGHT,LARGONOMBRERANK,ALTONOMBRERANK};
+    SDL_Rect TOP4point_rect = {POSWTOP4,POINTSHEIGHT,LARGONOMBRERANK,ALTOPUNTOS};
+    SDL_Rect TOP2name_rect = {POSWTOP2,NAMEHEIGHT,LARGONOMBRERANK,ALTONOMBRERANK};
+    SDL_Rect TOP2point_rect = {POSWTOP2,POINTSHEIGHT,LARGONOMBRERANK,ALTOPUNTOS};
+    SDL_Rect TOP1name_rect = {POSWTOP1,NAMEHEIGHT,LARGONOMBRERANK,ALTONOMBRERANK};
+    SDL_Rect TOP1point_rect = {POSWTOP1,POINTSHEIGHT,LARGONOMBRERANK,ALTOPUNTOS};
+    SDL_Rect TOP3name_rect = {POSWTOP3,NAMEHEIGHT,LARGONOMBRERANK,ALTONOMBRERANK};
+    SDL_Rect TOP3point_rect = {POSWTOP3,POINTSHEIGHT,LARGONOMBRERANK,ALTOPUNTOS};
+    SDL_Rect TOP5name_rect = {POSWTOP5,NAMEHEIGHT,LARGONOMBRERANK,ALTONOMBRERANK};
+    SDL_Rect TOP5point_rect = {POSWTOP5,POINTSHEIGHT,LARGONOMBRERANK,ALTOPUNTOS};
+
     enviarMensaje("RANKING", rankingJugadores);
-    if(*rankingJugadores == ':')
+    if(*rankingJugadores == '\0')
     {
         g->ranking = false;
         return;
@@ -260,16 +273,6 @@ void submenuranking(tGame *g)
 
     SDL_RenderCopy(g->renderer, g->rank, NULL, NULL); // se carga la imagen
     SDL_RenderPresent(g->renderer);
-    SDL_Rect TOP4name_rect = {WINDOW_WIDTH-1160,WINDOW_HEIGHT-280,130,30};
-    SDL_Rect TOP4point_rect = {WINDOW_WIDTH-1160,WINDOW_HEIGHT-250,130,20};
-    SDL_Rect TOP2name_rect = {WINDOW_WIDTH-930,WINDOW_HEIGHT-280,130,30};
-    SDL_Rect TOP2point_rect = {WINDOW_WIDTH-930,WINDOW_HEIGHT-250,130,20};
-    SDL_Rect TOP1name_rect = {WINDOW_WIDTH-695,WINDOW_HEIGHT-280,130,30};
-    SDL_Rect TOP1point_rect = {WINDOW_WIDTH-695,WINDOW_HEIGHT-250,130,20};
-    SDL_Rect TOP3name_rect = {WINDOW_WIDTH-455,WINDOW_HEIGHT-280,130,30};
-    SDL_Rect TOP3point_rect = {WINDOW_WIDTH-455,WINDOW_HEIGHT-250,130,20};
-    SDL_Rect TOP5name_rect = {WINDOW_WIDTH-230,WINDOW_HEIGHT-280,130,30};
-    SDL_Rect TOP5point_rect = {WINDOW_WIDTH-230,WINDOW_HEIGHT-250,130,20};
 
     trozarTop5(aux,nombre,puntaje,&aux);
     sprintf(posicionYNombre,"1.%s",nombre);
