@@ -36,7 +36,9 @@ SOCKET create_server_socket()
 
 // Reescribe el archivo índice completo en base a jugadores.dat
 void generarIndice()
-{
+{    long pos = 0;
+    tJugadorDatos jug;
+    tIndice idx;
     FILE *pfJug = fopen(ARCH_JUG, "rb");
     FILE *pfIdx = fopen(ARCH_IDX, "wb");
     if (!pfIdx)
@@ -46,13 +48,12 @@ void generarIndice()
     }
     if (!pfJug)
     {
-        // si no existe jugadores, simplemente cerramos idx y salimos (idx queda vacío)
+        // si no existe jugadores, cerramos idx y salimos (idx queda vacío).
         fclose(pfIdx);
         return;
     }
-    tJugadorDatos jug;
-    tIndice idx;
-    long pos = 0;
+
+
     while (fread(&jug, sizeof(tJugadorDatos), 1, pfJug) == 1)
     {
         idx.clave = jug.id;
@@ -66,12 +67,12 @@ void generarIndice()
 
 // Busca jugador por nombre, devuelve posición si existe o -1 si no
 long buscarJugador(const char *nombre, tJugadorDatos *outJugador)
-{
+{   long pos = 0;
     FILE *pf = fopen(ARCH_JUG, "rb");
     if (!pf)
         return -1;
     tJugadorDatos j;
-    long pos = 0;
+
     while (fread(&j, sizeof(tJugadorDatos), 1, pf) == 1)
     {
         if (strcmp(j.nombre, nombre) == 0)
@@ -115,6 +116,7 @@ int process_request(const char *request, char *response)
     char nombre_clean[30];
     strncpy(comando, request, sizeof(comando) - 1);
     comando[sizeof(comando) - 1] = '\0';
+
     // separar comando
     char *cmd = strtok(comando, "|");
 
