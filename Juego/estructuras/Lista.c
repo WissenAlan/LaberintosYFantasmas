@@ -126,7 +126,7 @@ int insertarOrdenado(tLista *lista, const void *dato, unsigned cantBytes, int (*
         free(nue);
         return -1;
     }
-    while(*lista && cmp((*lista)->dato, dato)>0)
+    while(*lista && cmp((*lista)->dato, dato)<0)
     {
         lista = &(*lista)->sig;
     }

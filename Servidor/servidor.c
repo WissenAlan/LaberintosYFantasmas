@@ -288,6 +288,7 @@ void run_server()
         // Procesamos la cola
         while (!colaVacia(&cola))
         {
+            buffer[0] = '\0';
             response[0] = '\0';
             memset(peticion, 0, TAM_BUFFER);
             sacarDeCola(&cola, peticion, TAM_BUFFER);

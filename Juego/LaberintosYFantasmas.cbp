@@ -87,6 +87,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="estructuras/Arbol.h" />
+		<Unit filename="estructuras/Lista.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="estructuras/Lista.h" />
 		<Unit filename="estructuras/colaDin.c">
 			<Option compilerVar="CC" />
 		</Unit>
