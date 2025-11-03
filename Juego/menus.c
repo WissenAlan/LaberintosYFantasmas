@@ -116,7 +116,7 @@ void menu_inicio(tGame *g)
     SDL_Rect botonR = {(WINDOW_WIDTH - 240) / 2, 330, 240, 60};
     SDL_Rect botonS  = {(WINDOW_WIDTH - 240) / 2, 410, 240, 60};
     SDL_Point click;
-    char* rank, response[TAM_BUFFER];
+    char* rank;
     Mix_HaltMusic();
     Mix_PlayMusic(g->musica, -1);
     while (g->inicio)
@@ -140,21 +140,19 @@ void menu_inicio(tGame *g)
                 click.x = g->eventos.button.x;
                 click.y = g->eventos.button.y;
                 if (SDL_PointInRect(&click, &botonS))
-                {
-                    enviarMensaje("SALIR_JUEGO", response);
+                {    enviarPeticionCliente("SALIR_JUEGO");  // 👈 notifica al servidor
                     g->inicio = false;
                     g->is_running = false;
                 }
                 if (SDL_PointInRect(&click, &botonP))
-                {
-                    enviarMensaje("INICIO_PARTIDA", response);
+                {    enviarPeticionCliente("INICIO_PARTIDA");  // 👈 notifica al servidor
                     g->inicio = false;
                     g->is_running = true;
                     Mix_PlayChannel(-1, g->sonidomenu, 0);
                 }
                 if (SDL_PointInRect(&click, &botonR))
                 {
-                   //enviarPeticionCliente("MOSTRAR_RANKING");
+                   //enviarPeticionCliente("MOSTRAR_RANKING");  // 👈 notifica al servidor
                     g->ranking = true;
                     submenuranking(g);
                 }
@@ -225,34 +223,32 @@ void menuIngresarNombre(tGame *g)
     }
     SDL_StopTextInput();
 }
-void trozarTop5(char *linea, char*nombre, char*puntos, char**finlinea)
+void trozarTop5(char *linea,char*nombre,char*puntos,char**finlinea)
 {
-    sprintf(nombre, "");
-    sprintf(puntos, "");
+    sprintf(nombre,"");
+    sprintf(puntos,"");
     while(*linea != '\0' && *linea != '+')
     {
-        *nombre = *linea;
+        *nombre=*linea;
         linea++;
         *nombre++;
     }
-    *nombre = '\0';
     linea++;
     while(*linea != '\0' && *linea != '|')
     {
-        *puntos = *linea;
+        *puntos=*linea;
         puntos++;
         linea++;
     }
-    *puntos = '\0';
     linea++;
-    *finlinea = linea;
+    *finlinea=linea;
 }
 
 void submenuranking(tGame *g)
 {
     int i,cont;
     char rankingJugadores[TAM_BUFFER], nombre[TAM_NOMBRE], puntaje[TAM_NOMBRE],posicionYNombre[TAM_BUFFER];
-    char* aux = rankingJugadores;
+    char* aux=rankingJugadores;
     SDL_Color dorado ={ 220, 200, 150, 255 };
     SDL_Texture* textura;
     SDL_Surface * superficie;

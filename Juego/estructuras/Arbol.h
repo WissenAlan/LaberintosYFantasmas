@@ -1,6 +1,9 @@
 #ifndef ARBOL_H_INCLUDED
 #define ARBOL_H_INCLUDED
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "estructuras.h"
 typedef struct sNodoA
 {
@@ -51,5 +54,14 @@ void mostrar_indice(void *a);
 int Eliminarelem(tArbol *arbol, void *dato, int (*cmp)(const void*a, const void*b));
 int Eliminarraiz(tArbol *arbol, void *dato, int (*cmp)(const void*a, const void*b));
 
+
+int cmp_clave(const void *a, const void *b);
+
+int insertarArchaArbol(tArbol *arbol, const char *arch);
+int buscarJugadorPorNombre(const char *nombreArchivo, const char *nombreBuscado, tJugadorDatos *jugadorEncontrado);
+int crearIndice(tArbol *arbol, const char *arch);
+void guardarInorden(tArbol *arbol, FILE *pf);
+int buscarJugadorPorId(tArbol *arbol, const char *nombreArchivo, int idBuscado);
+int compararRanking(const void *a, const void *b);
 
 #endif // ARBOL_H_INCLUDED
