@@ -264,6 +264,7 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
         {
             if(movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == SALIDA)
             {
+                pJug->puntos+=300;
                 return;
             }
             if (movi.entidad == FANTASMA && mat[movi.posx][movi.posy] == JUGADOR)
@@ -289,6 +290,11 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
                 mat[movi.posx][movi.posy] = CELDA;
                 pJug->puntos += 100;
                 pJug->roundBuff+=6;
+            }
+            if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == VIDAEXT)
+            {
+                mat[movi.posx][movi.posy] = CELDA;
+                pJug->vidas++;
             }
             if (mat[movi.posx][movi.posy] == CELDA)
                 intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));

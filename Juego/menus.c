@@ -152,7 +152,7 @@ void menu_inicio(tGame *g)
                 }
                 if (SDL_PointInRect(&click, &botonR))
                 {
-//                    enviarPeticionCliente("MOSTRAR_RANKING");  // 👈 notifica al servidor
+                   //enviarPeticionCliente("MOSTRAR_RANKING");  // 👈 notifica al servidor
                     g->ranking = true;
                     submenuranking(g);
                 }
@@ -223,28 +223,41 @@ void menuIngresarNombre(tGame *g)
     }
     SDL_StopTextInput();
 }
+void trozarTop5(char *linea,char*nombre,char*puntos,char**finlinea)
+{
+    while(*linea != '\0' && *linea != '+')
+    {
+        *nombre=*linea;
+        linea++;
+        *nombre++;
+    }
+    linea++;
+    while(*linea != '\0' && *linea != '|')
+    {
+        *puntos=*linea;
+        puntos++;
+        linea++;
+    }
+    linea++;
+    *finlinea=linea;
+}
+
 void submenuranking(tGame *g)
 {
     int i,cont;
-    char rankingJugadores[TAM_BUFFER], nombre[TAM_NOMBRE], puntaje[TAM_NOMBRE];
-    char* cmd;
-
-    enviarMensaje("RANKING", rankingJugadores);
-
-    if(rankingJugadores == ':')
-        return;
-//    while(*cmd != '\n'){
-//        cmd = strtok(rankingJugadores,'\n');
-//        cmd = strtok(rankingJugadores)
-//        strcpy(nombre,cmd);
-//    }
-
-
-
+    char rankingJugadores[TAM_BUFFER], nombre[TAM_NOMBRE], puntaje[TAM_NOMBRE],posicionYNombre[TAM_BUFFER];
+    char* aux=rankingJugadores;
     SDL_Color dorado ={ 220, 200, 150, 255 };
     SDL_Texture* textura;
     SDL_Surface * superficie;
     SDL_Point click;
+    enviarMensaje("RANKING", rankingJugadores);
+    if(*rankingJugadores == ':')
+    {
+        g->ranking = false;
+        return;
+    }
+
     SDL_RenderCopy(g->renderer, g->rank, NULL, NULL); // se carga la imagen
     SDL_RenderPresent(g->renderer);
     SDL_Rect TOP4name_rect = {WINDOW_WIDTH-1160,WINDOW_HEIGHT-280,130,30};
@@ -257,17 +270,34 @@ void submenuranking(tGame *g)
     SDL_Rect TOP3point_rect = {WINDOW_WIDTH-455,WINDOW_HEIGHT-250,130,20};
     SDL_Rect TOP5name_rect = {WINDOW_WIDTH-230,WINDOW_HEIGHT-280,130,30};
     SDL_Rect TOP5point_rect = {WINDOW_WIDTH-230,WINDOW_HEIGHT-250,130,20};
-    crearBoton(TOP5name_rect, g->titulo_f, dorado,"5.JDPHA", g->renderer, 0);
-    crearBoton(TOP5point_rect, g->titulo_f, dorado, "100", g->renderer, 1);
-    crearBoton(TOP4name_rect, g->titulo_f, dorado,"4.JDPHA", g->renderer, 0);
-    crearBoton(TOP4point_rect, g->titulo_f, dorado, "100", g->renderer, 1);
-    crearBoton(TOP3name_rect, g->titulo_f,dorado,"3.JDPHA", g->renderer, 0);
-    crearBoton(TOP3point_rect, g->titulo_f,dorado, "100", g->renderer, 1);
-    crearBoton(TOP2name_rect, g->titulo_f, dorado,"2.JDPHA", g->renderer, 0);
-    crearBoton(TOP2point_rect, g->titulo_f,dorado, "100", g->renderer, 1);
-    crearBoton(TOP1name_rect, g->titulo_f,dorado,"1.JDPHA", g->renderer, 0);
-    crearBoton(TOP1point_rect, g->titulo_f,dorado, "100", g->renderer, 1);
+
+    trozarTop5(aux,nombre,puntaje,&aux);
+    sprintf(posicionYNombre,"1.%s",nombre);
+    crearBoton(TOP1name_rect, g->titulo_f,dorado,posicionYNombre, g->renderer, 0);
+    crearBoton(TOP1point_rect, g->titulo_f,dorado,puntaje, g->renderer, 1);
+
+    trozarTop5(aux,nombre,puntaje,&aux);
+    sprintf(posicionYNombre,"2.%s",nombre);
+    crearBoton(TOP2name_rect, g->titulo_f, dorado,posicionYNombre, g->renderer, 0);
+    crearBoton(TOP2point_rect, g->titulo_f,dorado,puntaje, g->renderer, 1);
+
+
+    trozarTop5(aux,nombre,puntaje,&aux);
+    sprintf(posicionYNombre,"3.%s",nombre);
+    crearBoton(TOP3name_rect, g->titulo_f,dorado,posicionYNombre, g->renderer, 0);
+    crearBoton(TOP3point_rect, g->titulo_f,dorado,puntaje, g->renderer, 1);
+
+    trozarTop5(aux,nombre,puntaje,&aux);
+    sprintf(posicionYNombre,"4.%s",nombre);
+    crearBoton(TOP4name_rect, g->titulo_f, dorado,posicionYNombre, g->renderer, 0);
+    crearBoton(TOP4point_rect, g->titulo_f, dorado,puntaje, g->renderer, 1);
+
+    trozarTop5(aux,nombre,puntaje,&aux);
+    sprintf(posicionYNombre,"5.%s",nombre);
+    crearBoton(TOP5name_rect, g->titulo_f, dorado,posicionYNombre, g->renderer, 0);
+    crearBoton(TOP5point_rect, g->titulo_f, dorado,puntaje, g->renderer, 1);
     SDL_RenderPresent(g->renderer);
+
     while (g->ranking)
     {
         while (SDL_PollEvent(&g->eventos))
@@ -293,6 +323,7 @@ void submenuranking(tGame *g)
                 break;
             }
         }
+        SDL_Delay(32);
     }
 }
 

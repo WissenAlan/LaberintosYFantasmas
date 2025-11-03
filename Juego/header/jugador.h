@@ -10,7 +10,6 @@
 #define IZQUIERDA 3
 #define DERECHA -2
 #define bufferNombreSize 7
-#define bufferEmailSize 50
 typedef struct {
     int posx;
     int posy;
