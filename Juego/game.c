@@ -303,72 +303,21 @@ void mandarJugadorAEntrada(tJugador *jugador,char **mat)
     jugador->posy=1;
     mat[jugador->posx][jugador->posy]=JUGADOR;
 }
-DWORD WINAPI hiloConexion(void *param)
-{
-    tGame *g = (tGame *)param;
-    SOCKET soc = connect_to_server(SERVER_IP, PUERTO);
-
-    if (soc == INVALID_SOCKET)
-    {
-        printf("[CLIENTE] No se pudo conectar al servidor. Jugando localmente.\n");
-        return 0;
-    }
-
-    printf("[CLIENTE] Conectado al servidor.\n");
-    setSocketCliente(soc);
-
-    // Modo no bloqueante
-    u_long modoNoBloqueante = 1;
-    ioctlsocket(soc, FIONBIO, &modoNoBloqueante);
-
-    char buffer[TAM_BUFFER], response[TAM_BUFFER];
-    snprintf(buffer, sizeof(buffer), "NOMBRE|%s", g->p.nombre);
-
-    if (send_request(soc, buffer, response) == TODO_OK)
-        printf("[Servidor] %s\n", response);
-    else
-        printf("[CLIENTE] No se pudo registrar el nombre.\n");
-
-    while (g->is_running)
-    {
-        int bytes = recv(soc, response, TAM_BUFFER - 1, 0);
-
-        if (bytes > 0)
-        {
-            response[bytes] = '\0';
-            printf("[RX SERVIDOR] %s\n", response);
-        }
-        else if (bytes == SOCKET_ERROR)
-        {
-            int err = WSAGetLastError();
-            if (err != WSAEWOULDBLOCK && err != 0)
-            {
-                printf("[CLIENTE] Conexión perdida con el servidor.\n");
-                closesocket(soc);
-                break;
-            }
-        }
-
-        Sleep(50); // evita sobrecarga de CPU
-    }
-
-    closesocket(soc);
-    return 0;
-}
-
-
 int crearConexion(tGame *g)
 {
+    SOCKET soc;
+    char buffer[TAM_BUFFER], response[TAM_BUFFER];
+
     if (init_winsock() != 0)
     {
         printf("Error al inicializar Winsock.\n");
         return 0;
     }
 
-    HANDLE hThread = CreateThread(NULL, 0, hiloConexion, g, 0, NULL);
-    if (hThread == NULL)
+    soc = connect_to_server(SERVER_IP, PUERTO);
+    if (soc == INVALID_SOCKET)
     {
-        printf("Error al crear hilo de conexión.\n");
+        printf("No se pudo conectar al servidor. Modo local.\n");
         WSACleanup();
         return 0;
     }
@@ -379,7 +328,6 @@ int crearConexion(tGame *g)
     // manda el nombre del jugador al servidor
 //    snprintf(buffer, sizeof(buffer), "NOMBRE|%s", g->p.nombre);
     printf("[DEBUG] Conexion establecida y mantenida abierta.\n");
-    CloseHandle(hThread);
     return 1;
 }
 

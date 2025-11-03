@@ -1,3 +1,5 @@
+#include "cliente.h"
+
 int init_winsock() {
     WSADATA wsa;
     return WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -45,26 +47,9 @@ void setSocketCliente(SOCKET s) {
     socketGlobal = s;
 }
 
-void enviarPeticionCliente(const char *mensaje)
-{
-    if (socketGlobal != INVALID_SOCKET)
-    {
-        char buffer[TAM_BUFFER];
-        snprintf(buffer, sizeof(buffer), "%s\n", mensaje);  // <-- agrega \n
-        send(socketGlobal, buffer, strlen(buffer), 0);
-    }
-}
-
-
-void cerrarConexionCliente()
-{
-    if (socketGlobal != INVALID_SOCKET)
-    {
-        enviarPeticionCliente("SALIR_JUEGO");
-        closesocket(socketGlobal);
-        socketGlobal = INVALID_SOCKET;
-        WSACleanup();
-        printf("[CLIENTE] Conexión cerrada correctamente.\n");
+void enviarPeticionCliente(const char *mensaje) {
+    if (socketGlobal != INVALID_SOCKET) {
+        send(socketGlobal, mensaje, strlen(mensaje), 0);
     }
 }
 void enviarMensaje(char* buffer, char* response){

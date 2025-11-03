@@ -28,5 +28,6 @@ void close_connection(SOCKET soc);
 void setSocketCliente(SOCKET s);
 void enviarPeticionCliente(const char *mensaje);
 void enviarMensaje(char* buffer, char* response);
-void cerrarConexionCliente();
+
 #endif // CLIENTE_H_INCLUDED
+
