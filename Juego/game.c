@@ -52,6 +52,7 @@ int game_new(tGame *g)
         return FALSE;
     crearCola(&(g->colaMov));
     crearCola(&(g->colaMovsJugador));
+    crearConexion(g);
     return VERDADERO;
 }
 void asignarConfig(char* linea, int* parametro)
@@ -100,7 +101,6 @@ void game_free(tGame *g)
 }
 void game_run(tGame *g)
 {
-
     menuIngresarNombre(g);
     //crearConexion(g);
     while (g->is_running)
@@ -111,15 +111,30 @@ void game_run(tGame *g)
             Mix_HaltMusic();
             Mix_PlayMusic(g->musicajuego, -1);
         }
-        game_events(g);
-        game_draw(g);
+        if(g->is_running)
+        {//parche
+            game_events(g);
+            game_draw(g);
+
+        }
         SDL_Delay(32);
-        if (g->m.exit || g->m.jugadorMuerto)
+        if (g->m.exit == VERDADERO || g->m.jugadorMuerto)
         {
             g->is_pausing = true;
+            if(g->m.exit == VERDADERO){
+                procesarGuardarPartida(g);
+            }
             menu_pausa(g);
+
         }
     }
+
+}
+void procesarGuardarPartida(tGame*g){
+    char buffer[TAM_BUFFER], response[TAM_BUFFER];
+    sprintf(buffer, "|NOMBRE|%s|%d", g->p.nombre,g->p.puntos);
+    enviarMensaje(buffer, response);
+    printf("Respuesta: %s", response);
 }
 void game_draw(tGame *g)
 {
@@ -157,9 +172,9 @@ void game_draw(tGame *g)
 void game_update(tGame *g)
 {
     moverFantasmas(g);
-    desencolarMovs(&(g->colaMov), g->m.mat, &g->p);
-    checkend(&g->m, &g->p);
-    checklifes(&g->m, &g->p);
+    desencolarMovs(&(g->colaMov), g->m.mat, &(g->p));
+    checkend(&(g->m), &(g->p));
+    checklifes(&(g->m), &(g->p));
 }
 void moverFantasmas(tGame *g)
 {
@@ -311,13 +326,7 @@ int crearConexion(tGame *g)
     setSocketCliente(soc);
 
     // manda el nombre del jugador al servidor
-    snprintf(buffer, sizeof(buffer), "NOMBRE|%s", g->p.nombre);
-
-    if (send_request(soc, buffer, response) == TODO_OK)
-        printf("[Servidor] %s\n", response);
-    else
-        printf("No se pudo registrar el nombre.\n");
-
+//    snprintf(buffer, sizeof(buffer), "NOMBRE|%s", g->p.nombre);
     printf("[DEBUG] Conexion establecida y mantenida abierta.\n");
     return 1;
 }

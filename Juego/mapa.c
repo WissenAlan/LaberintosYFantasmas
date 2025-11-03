@@ -299,7 +299,7 @@ void checklifes(tMapa *m, tJugador *pJug)
 {
     if(pJug->vidas == 0)
     {
-        m->jugadorMuerto= VERDADERO;
+        m->jugadorMuerto = VERDADERO;
     }
 }
 int llenarMapa(tJugador *p, tMapa* m, int fant, int prem, int ext) {

@@ -27,7 +27,8 @@ int send_request(SOCKET soc, const char *request, char *response) {
         return MENSAJE_INVALIDO;
 
     int bytesRecib = recv(soc, response, TAM_BUFFER - 1, 0);
-    if (bytesRecib <= 0) return MENSAJE_INVALIDO;
+    if (bytesRecib <= 0)
+        return MENSAJE_INVALIDO;
 
     response[bytesRecib] = '\0';
     return TODO_OK;
@@ -51,4 +52,7 @@ void enviarPeticionCliente(const char *mensaje) {
         send(socketGlobal, mensaje, strlen(mensaje), 0);
     }
 }
-
+void enviarMensaje(char* buffer, char* response){
+    if (send_request(socketGlobal, buffer, response) == TODO_OK)
+        printf("[Servidor] %s\n", response);
+}

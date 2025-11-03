@@ -61,6 +61,7 @@ void asignarConfig(char*,int *parametro);
 void desencolarMovs(tCola *cola, char ** mat, tJugador *p);
 void mostrarPartidas();
 void guardarPartida(tGame *g);
-
+void enviarMensaje(char* buffer, char* response);
+void procesarGuardarPartida(tGame*g);
 #endif // GAME_H_INCLUDED
 

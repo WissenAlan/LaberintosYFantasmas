@@ -151,7 +151,8 @@ void menu_inicio(tGame *g)
                     Mix_PlayChannel(-1, g->sonidomenu, 0);
                 }
                 if (SDL_PointInRect(&click, &botonR))
-                {    enviarPeticionCliente("MOSTRAR_RANKING");  // 👈 notifica al servidor
+                {
+//                    enviarPeticionCliente("MOSTRAR_RANKING");  // 👈 notifica al servidor
                     g->ranking = true;
                     submenuranking(g);
                 }
@@ -225,35 +226,21 @@ void menuIngresarNombre(tGame *g)
 void submenuranking(tGame *g)
 {
     int i,cont;
-    tArbol arbolRanking;
-    crearArbol(&arbolRanking); // inicializa a NULL
-    tRanking r;
-    tPartidaDatos p;
-    tJugadorDatos j;
-    FILE* fpPartidas = fopen("partidas.dat","rb");
-    FILE* fpJug = fopen("..\\Servidor\\bin\\Debug\\jugadores.dat","rb");
-    if(!fpPartidas || !fpJug) {
-        if(fpPartidas) fclose(fpPartidas);
-        if(fpJug) fclose(fpJug);
-        return;
-    }
-    while(fread(&p,sizeof(tPartidaDatos),1,fpPartidas) == 1){
-        fseek(fpJug,0,SEEK_SET);
-        while(fread(&j,sizeof(tJugadorDatos),1,fpJug) == 1){
-            if(j.id == p.id_jugador){
-                memset(&r, 0, sizeof(tRanking));
-                strncpy(r.nombre, j.nombre, MAX_NOMBRE - 1);
-                r.nombre[MAX_NOMBRE - 1] = '\0';
-                r.puntaje = p.puntaje;
+    char rankingJugadores[TAM_BUFFER], nombre[TAM_NOMBRE], puntaje[TAM_NOMBRE];
+    char* cmd;
 
-                // insertar nodo con copia de datos
-                insertarnodoiterativo(&arbolRanking, &r, sizeof(tRanking), compararRanking);
-                break;
-            }
-        }
-    }
-    fclose(fpPartidas);
-    fclose(fpJug);
+    enviarMensaje("RANKING", rankingJugadores);
+
+    if(rankingJugadores == ':')
+        return;
+//    while(*cmd != '\n'){
+//        cmd = strtok(rankingJugadores,'\n');
+//        cmd = strtok(rankingJugadores)
+//        strcpy(nombre,cmd);
+//    }
+
+
+
     SDL_Color dorado ={ 220, 200, 150, 255 };
     SDL_Texture* textura;
     SDL_Surface * superficie;
