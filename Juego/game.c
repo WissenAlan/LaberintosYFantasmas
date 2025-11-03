@@ -289,7 +289,7 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             {
                 mat[movi.posx][movi.posy] = CELDA;
                 pJug->puntos += 100;
-                pJug->roundBuff+=6;
+                pJug->roundBuff+=10;
             }
             if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == VIDAEXT)
             {
@@ -336,7 +336,7 @@ int crearConexion(tGame *g)
     printf("[DEBUG] Conexion establecida y mantenida abierta.\n");
     return 1;
 }
-
+//Funcion de cuando no estaba el SDL
 void iniciarJuego(tGame* g)
 {
     while (g->m.exit == FALSE && getVidasJugador(&g->p) > 0)
