@@ -165,6 +165,8 @@ void game_draw(tGame *g)
                 SDL_RenderCopy(g->renderer, g->pared, NULL, &rect);
             if (g->m.mat[i][j] == CELDA)
                 SDL_RenderCopy(g->renderer, g->piso, NULL, &rect);
+            if(g->m.mat[i][j] == VIDAEXT)
+                SDL_RenderCopy(g->renderer, g->vidaextra, NULL, &rect);
         }
     }
     SDL_RenderPresent(g->renderer);

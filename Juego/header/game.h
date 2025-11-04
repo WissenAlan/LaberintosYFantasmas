@@ -36,6 +36,7 @@ typedef struct {
     SDL_Texture *salida;
     SDL_Texture *piso;
     SDL_Texture *pared;
+    SDL_Texture *vidaextra;
     Mix_Chunk *sonidomenu;
     Mix_Music *musica;
     Mix_Music *musicajuego;
