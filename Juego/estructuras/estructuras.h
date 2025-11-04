@@ -8,7 +8,7 @@
 #define PILA_VACIA 2
 #define SIN_MEM 3
 #define MIN(X,Y) ((X)>(Y)?(X):(Y))
-
+#define TAM 7
 typedef struct sNodo
 {
     void*dato;
@@ -17,23 +17,17 @@ typedef struct sNodo
 }tNodo;
 typedef struct
 {
-    char nombre[7];
+    char nombre[TAM];
     int puntaje;
 } tRanking;
 
-typedef struct
-{
 
-    unsigned clave;
-    unsigned numRegistro;
-
-} tClave;
 
 typedef struct
 {
 
     int id;
-    char nombre[40];
+    char nombre[TAM];
     int total_puntos;
     int partidas_jugadas;
 
@@ -49,7 +43,7 @@ typedef struct
 
 typedef struct
 {
-    int clave;
+   char clave[TAM];
     long pos;
 
 } tIndice;

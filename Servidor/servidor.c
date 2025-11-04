@@ -36,7 +36,8 @@ SOCKET create_server_socket()
 
 // Reescribe el archivo índice completo en base a jugadores.dat
 void generarIndice()
-{    long pos = 0;
+{
+    long pos = 0;
     tJugadorDatos jug;
     tIndice idx;
     FILE *pfJug = fopen(ARCH_JUG, "rb");
@@ -55,8 +56,7 @@ void generarIndice()
 
 
     while (fread(&jug, sizeof(tJugadorDatos), 1, pfJug) == 1)
-    {
-        idx.clave = jug.id;
+    {   strcpy(idx.clave,jug.nombre);
         idx.pos = pos;
         fwrite(&idx, sizeof(tIndice), 1, pfIdx);
         pos += sizeof(tJugadorDatos);
@@ -67,7 +67,8 @@ void generarIndice()
 
 // Busca jugador por nombre, devuelve posición si existe o -1 si no
 long buscarJugador(const char *nombre, tJugadorDatos *outJugador)
-{   long pos = 0;
+{
+    long pos = 0;
     FILE *pf = fopen(ARCH_JUG, "rb");
     if (!pf)
         return -1;
@@ -109,19 +110,22 @@ int inicializarNextIdDesdeArchivo()
 
 int process_request(const char *request, char *response)
 {
-//    char nombre[1024];
-    int i = 0, j;
+    tArbol arbol;
+
+    int i = 0,pos,j;
     tLista lista;
+    tIndice idx;
     char comando[TAM_BUFFER];
-    char nombre_clean[30];
+    FILE *pf,*indice;
+    tJugadorDatos jugador,jugadoraux;
+
     strncpy(comando, request, sizeof(comando) - 1);
     comando[sizeof(comando) - 1] = '\0';
 
     // separar comando
     char *cmd = strtok(comando, "|");
 
-    FILE *pf;
-    tJugadorDatos jugador;
+
     if (cmd == NULL)
     {
         snprintf(response, TAM_BUFFER, "Comando invalido");
@@ -133,11 +137,7 @@ int process_request(const char *request, char *response)
         printf("[SERVIDOR] El cliente inició una partida.\n");
         snprintf(response, TAM_BUFFER, "Inicio de partida recibido correctamente");
     }
-    else if (strcmp(cmd, "MOSTRAR_RANKING") == 0)
-    {
-        printf("[SERVIDOR] El cliente solicitó el ranking.\n");
-        snprintf(response, TAM_BUFFER, "Solicitud de ranking recibida");
-    }
+
     else if (strcmp(cmd, "SALIR_JUEGO") == 0)
     {
         printf("[SERVIDOR] El cliente salió del juego.\n");
@@ -147,12 +147,22 @@ int process_request(const char *request, char *response)
     /// ---- RESTO DE COMANDOS EXISTENTES ----
     else if (strcmp(cmd, "NOMBRE") == 0)
     {
+        crearArbol(&arbol);
         cmd = strtok(NULL, "|");  // continuar
-//        strncpy(nombre_clean, cmd, sizeof(nombre_clean) - 1);
-//        nombre_clean[sizeof(nombre_clean) - 1] = '\0';
-//        nombre_clean[strcspn(nombre_clean, "\r\n")] = '\0';
+
+        if(cargarIndiceDesdeArchivo(&arbol,ARCH_IDX)==0)
+        {
+                indexarArchivoPersonasOrdenado(ARCH_JUG,&arbol);
+                guardarIndiceEnArchivo(&arbol,ARCH_IDX);
+
+        }
+        strcpy(idx.clave,cmd);
+        //strcpy(idx.clave,jugador.nombre);
+
         printf("Procesando Nombre: %s", cmd);
-        long pos = buscarJugador(cmd, &jugador);
+
+
+
         pf = fopen(ARCH_JUG, "rb+");
         if (!pf)
             pf = fopen(ARCH_JUG, "wb+");
@@ -161,8 +171,17 @@ int process_request(const char *request, char *response)
             snprintf(response, TAM_BUFFER, "Error al abrir archivo de jugadores");
             return CONECTADO;
         }
-        if (pos >= 0)
-            snprintf(response, TAM_BUFFER, "Jugador existente: %s (ID %d)", jugador.nombre, jugador.id);
+        if (buscarEnArbol(&arbol,&idx,sizeof(tIndice),cmp_clave)==1)
+        {
+            snprintf(response, TAM_BUFFER, "Jugador existente: %s", jugador.nombre);
+            fseek(pf,idx.pos*sizeof(tJugadorDatos),SEEK_SET);
+            fread(&jugadoraux,sizeof(tJugadorDatos),1,pf);
+            if(jugadoraux.total_puntos<jugador.total_puntos)
+            {
+                fseek(pf,idx.pos*sizeof(tJugadorDatos),SEEK_SET);
+                fwrite(&jugador,sizeof(tJugadorDatos),1,pf);
+            }
+        }
         else
         {
             jugador.id = inicializarNextIdDesdeArchivo();
@@ -174,9 +193,17 @@ int process_request(const char *request, char *response)
             fseek(pf, 0, SEEK_END);
             fwrite(&jugador, sizeof(tJugadorDatos), 1, pf);
             snprintf(response, TAM_BUFFER, "Jugador creado: %s (ID %d)", jugador.nombre, jugador.id);
+            eliminarArbol(&arbol);
+            indexarArchivoPersonasOrdenado(ARCH_JUG,&arbol);
+            guardarIndiceEnArchivo(&arbol,ARCH_IDX);
+
+
+
         }
         fclose(pf);
-        generarIndice();
+
+
+
     }
     else if (strcmp(cmd, "RANKING") == 0)
     {
@@ -189,11 +216,12 @@ int process_request(const char *request, char *response)
         }
         crearLista(&lista);
         tJugadorDatos jug;
-        while (fread(&jug, sizeof(tJugadorDatos), 1, pf)){
+        while (fread(&jug, sizeof(tJugadorDatos), 1, pf))
+        {
             insertarOrdenado(&lista, &jug, sizeof(tJugadorDatos), cmp_jugador_puntos_desc);
         }
         fclose(pf);
-//        snprintf(response, TAM_BUFFER, "🏆 Top 5 Jugadores:\n");
+//        snprintf(response, TAM_BUFFER, "Top 5 Jugadores:\n");
         // 1.NOMBRE-1000|
         // RANKING|nombre1-1000|nombre2-500
         while (!listaVacia(&lista) && i < 5)
@@ -214,7 +242,8 @@ int process_request(const char *request, char *response)
         printf("[SERVIDOR] Cliente pidió salir.\n");
         snprintf(response, TAM_BUFFER, "Desconectando del servidor...");
         return DESCONECTADO;
-    }else
+    }
+    else
         snprintf(response, TAM_BUFFER, "Comando invalido");
 
     response = NULL;
@@ -318,4 +347,6 @@ void run_server()
     closesocket(server_socket);
     WSACleanup();
 }
+
+
 

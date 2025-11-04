@@ -37,7 +37,6 @@ tArbol *menorvalor(tArbol *arbol);
 int altura_arbol(tArbol *);
 int contar_hojas(tArbol *);
 int contar_nodos(tArbol*);
-void eliminarArbol(tArbol*);
 
 void mostrar_clave(void *a);
 int cmp_dni(const void *a, const void *b);
@@ -68,7 +67,7 @@ int crearIndice(tArbol *arbol, const char *arch);
 void guardarInorden(tArbol *arbol, FILE *pf);
 int buscarJugadorPorId(tArbol *arbol, const char *nombreArchivo, int idBuscado);
 int compararRanking(const void *a, const void *b);
-
+void eliminarArbol(tArbol *pa);
 //Funciones de indice.
 int buscarEnArchivoConIndice(FILE *fp, const tArbol *pa, tJugadorDatos *datos);
 int buscarEnArbol(const tArbol* pa, void *d, unsigned tam,int (*cmp)(const void *, const void *));
@@ -78,4 +77,6 @@ int cargarIndiceDesdeArchivo(tArbol *pa, const char *nombreArchivoIndice);
 void recorrerArbolPreOrder(const tArbol *pa, unsigned n, void *params, void (*accion)(void *, unsigned, unsigned, void *));
 void guardarNodoEnArchivo(void *info, unsigned tam, unsigned n, void *params);
 void cargarArchivoOrdenadoEnIndiceBalanceado(tArbol *pa, FILE *fp,int inicio,int fin);
+int indexarArchivoPersonasOrdenado(const char *nombreArchivoPersonas,tArbol *p);
+
 #endif // ARBOL_H_INCLUDED

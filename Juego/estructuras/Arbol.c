@@ -8,83 +8,85 @@ void crearArbol(tArbol *arbol)
 
 }
 int insertarnodoiterativo(tArbol *arbol,void *dato, unsigned cantBytes, int (*cmp)(const void*a,const void*b))
-{   tNodoA *nue;
+{
+    tNodoA *nue;
 
-       while(*arbol != NULL)
-       {
+    while(*arbol != NULL)
+    {
 
-          if(cmp((*arbol)->dato,dato)==0)
-          {
-              return 0; //no quiero duplicados
-          }
+        if(cmp((*arbol)->dato,dato)==0)
+        {
+            return 0; //no quiero duplicados
+        }
 
         else if(cmp((*arbol)->dato,dato)>0)
-         {
+        {
 
-             arbol = &(*arbol)->der;
-         }
+            arbol = &(*arbol)->der;
+        }
 
-         else if(cmp((*arbol)->dato,dato)<0)
-          {
-              arbol=&(*arbol)->izq;
-          }
+        else if(cmp((*arbol)->dato,dato)<0)
+        {
+            arbol=&(*arbol)->izq;
+        }
 
-       }
-        if( (nue=(tNodoA*)malloc(sizeof(tNodoA))) ==NULL || (nue->dato=malloc(cantBytes))==NULL )
-            {
-                free(nue);
-                return 0;
-                }
-                memcpy(nue->dato,dato,cantBytes);
-                nue->tamInfo = cantBytes;
-                nue->izq = NULL;
-                nue->der = NULL;
-                *arbol = nue;
+    }
+    if( (nue=(tNodoA*)malloc(sizeof(tNodoA))) ==NULL || (nue->dato=malloc(cantBytes))==NULL )
+    {
+        free(nue);
+        return 0;
+    }
+    memcpy(nue->dato,dato,cantBytes);
+    nue->tamInfo = cantBytes;
+    nue->izq = NULL;
+    nue->der = NULL;
+    *arbol = nue;
 
 
     return 1;
 }
 
 int insertarnodorecursivo(tArbol *arbol,void *dato,unsigned cantBytes,int (*cmp)(const void*a,const void*b))
-{   tNodoA *nue;
+{
+    tNodoA *nue;
     if(*arbol != NULL)
-  {
-
-   if(cmp((*arbol)->dato,dato)==0)
     {
+
+        if(cmp((*arbol)->dato,dato)==0)
+        {
+            return 0;
+        }
+        if(cmp((*arbol)->dato,dato)<0)
+        {
+            arbol = &(*arbol)->izq;
+            return insertarnodorecursivo(arbol,dato,cantBytes,cmp);
+        }
+        if(cmp((*arbol)->dato,dato)>0)
+        {
+            arbol = &(*arbol)->der;
+            return insertarnodorecursivo(arbol,dato,cantBytes,cmp);
+        }
+
+    }
+
+
+    if( (nue=(tNodoA*)malloc(sizeof(tNodoA))) ==NULL || (nue->dato=malloc(cantBytes))==NULL )
+    {
+        free(nue);
         return 0;
     }
-    if(cmp((*arbol)->dato,dato)<0)
-    {
-        arbol = &(*arbol)->izq;
-        return insertarnodorecursivo(arbol,dato,cantBytes,cmp);
-    }
-    if(cmp((*arbol)->dato,dato)>0)
-    {
-        arbol = &(*arbol)->der;
-        return insertarnodorecursivo(arbol,dato,cantBytes,cmp);
-    }
-
-  }
-
-
-        if( (nue=(tNodoA*)malloc(sizeof(tNodoA))) ==NULL || (nue->dato=malloc(cantBytes))==NULL )
-            {
-                free(nue);
-                return 0;
-                }
-                memcpy(nue->dato,dato,cantBytes);
-                nue->tamInfo = cantBytes;
-                nue->izq = NULL;
-                nue->der = NULL;
-                *arbol = nue;
+    memcpy(nue->dato,dato,cantBytes);
+    nue->tamInfo = cantBytes;
+    nue->izq = NULL;
+    nue->der = NULL;
+    *arbol = nue;
 
 
 
 
 
 
-        return 1;
+    return 1;
 }
 
 
@@ -98,33 +100,35 @@ int cmp_int(const void *a,const void*b)
 }
 void Preorden(tArbol *arbol, void accion(void*a))
 {
-if(!*arbol )
-  { return;
-  }
+    if(!*arbol )
+    {
+        return;
+    }
 
-        accion((*arbol)->dato);
-        Preorden(&(*arbol)->izq,accion);
-        Preorden(&(*arbol)->der,accion);
+    accion((*arbol)->dato);
+    Preorden(&(*arbol)->izq,accion);
+    Preorden(&(*arbol)->der,accion);
 
 }
 
 void Inorden(tArbol *arbol, void accion(void *))
 {
-        if(!*arbol)
-        {
-            return;
-        }
+    if(!*arbol)
+    {
+        return;
+    }
 
-        Inorden(&(*arbol)->izq,accion);
-        accion((*arbol)->dato);
-        Inorden(&(*arbol)->der,accion);
+    Inorden(&(*arbol)->izq,accion);
+    accion((*arbol)->dato);
+    Inorden(&(*arbol)->der,accion);
 
 }
 void Posorden(tArbol *arbol,void accion(void*))
-{       if(!*arbol)
 {
-    return;
-}
+    if(!*arbol)
+    {
+        return;
+    }
 
     Posorden(&(*arbol)->izq,accion);
     Posorden(&(*arbol)->der,accion);
@@ -158,7 +162,7 @@ int contar_hojas(tArbol *arbol)
     {
         return 1;
     }
-return contar_hojas(&(*arbol)->izq) + contar_hojas(&(*arbol)->der);
+    return contar_hojas(&(*arbol)->izq) + contar_hojas(&(*arbol)->der);
 
 }
 
@@ -169,22 +173,23 @@ void mostrar(void*a)
 }
 
 int altura_arbol(tArbol *arbol)
-{ int izq, der;
+{
+    int izq, der;
     if(!*arbol)
     {
         return 0;
     }
-izq = altura_arbol(&(*arbol)->izq);
-der = altura_arbol(&(*arbol)->der);
+    izq = altura_arbol(&(*arbol)->izq);
+    der = altura_arbol(&(*arbol)->der);
 
-return ((izq > der ? izq :der) +1);
+    return ((izq > der ? izq :der) +1);
 
 }
 
 tArbol* mayorvalor(tArbol *arbol)
 {
 
-     if((*arbol)->der == NULL)
+    if((*arbol)->der == NULL)
     {
         return arbol;
     }
@@ -192,7 +197,7 @@ tArbol* mayorvalor(tArbol *arbol)
 
     if(!*arbol)
     {
-    return NULL;
+        return NULL;
     }
 
     return mayorvalor(&(*arbol)->der);
@@ -221,39 +226,6 @@ void eliminarhojas(tArbol *arbol)
 
 
 }
-
-void eliminarArbol(tArbol *arbol)
-{
-        if(!*arbol)
-        {
-            return;
-        }
-
-    eliminarArbol(&(*arbol)->izq);
-    eliminarArbol(&(*arbol)->der);
-    if(!(*arbol)->izq && !(*arbol)->der)
-    {free((*arbol)->dato);
-    free(*arbol);
-
-    *arbol = NULL;
-    }
-}
-int cmp_dni(const void *a,const void *b)
-{
-    const tClave *pa =  (const tClave*)a;
-    const tClave *pb = (const tClave*)b;
-
-    return pb->clave - pa->clave;
-}
-
-void mostrar_clave( void *a)
-{
-    tClave *pa = (tClave*)a;
-    printf("%u %u\n",pa->clave,pa->numRegistro);
-
-}
-
-
 
 
 void insertarenarboldesdearch(tArbol *arbol, FILE *arch)
@@ -285,7 +257,7 @@ int escompleto(tArbol *arbol)
 
     altura = altura_arbol(arbol);
     nodos = contar_nodos(arbol);
-    for(i=0;i<altura;i++)
+    for(i=0; i<altura; i++)
     {
         completo*=2;
     }
@@ -317,7 +289,7 @@ void _insertarEnArboldesdeArch(tArbol* arbol, FILE* arch, int li, int ls)
 
     /// ahora vamos a insertar en el arbol
 
-  insertarnodoiterativo(arbol, &dato, sizeof(dato), cmp_int);
+    insertarnodoiterativo(arbol, &dato, sizeof(dato), cmp_int);
 
     _insertarEnArboldesdeArch(&(*arbol)->izq, arch, li, med - 1);
     _insertarEnArboldesdeArch(&(*arbol)->der, arch, med + 1, ls);
@@ -338,11 +310,12 @@ tArbol *buscarnodo(tArbol *arbol,const void *dato,int(*cmp)(const void *a,const 
         return arbol;
     }
 
-     if(cmp((*arbol)->dato,dato)<0)
-     {
+    if(cmp((*arbol)->dato,dato)<0)
+    {
         return  buscarnodo(&(*arbol)->izq,dato,cmp);
 
-     }else return  buscarnodo(&(*arbol)->der,dato,cmp);
+    }
+    else return  buscarnodo(&(*arbol)->der,dato,cmp);
 
 
 }
@@ -414,6 +387,20 @@ int Eliminarelem(tArbol *arbol, void *dato,int (*cmp)(const void*a,const void*b)
 
 }
 
+
+void eliminarArbol(tArbol *pa)
+{
+    if(*pa)
+    {
+        eliminarArbol(&(*pa)->izq);
+        eliminarArbol(&(*pa)->der);
+        free((*pa)->dato);
+        free(*pa);
+        *pa = NULL;
+    }
+}
+
+
 int Eliminarraiz(tArbol *arbol, void *dato,int (*cmp)(const void*a,const void*b))
 {
     tArbol *remp;
@@ -455,43 +442,6 @@ void mostrar_indice(void *a)
     printf("%d %ld\n",idx->clave,idx->pos);
 }
 
-int insertarArchaArbol(tArbol *arbol,const char *arch)
-{   long pos=0;
-    tJugadorDatos jugador;
-    tIndice idx;
-
-    FILE *pf;
-    pf = fopen(arch,"rb");
-
-if(!pf)
-{
-    printf("Error al abrir el archivo.");
-    return -1;
-}
-
-fread(&jugador,sizeof(tJugadorDatos),1,pf);
-while(!feof(pf))
-{
-
-
-
-   idx.clave = jugador.id;
-   idx.pos = pos;
-
-   insertarnodoiterativo(arbol,&idx,sizeof(tIndice),cmp_int);
-
-   pos++;
-   fread(&jugador,sizeof(tJugadorDatos),1,pf);
-
-}
-
-
-
-
-   fclose(pf);
-   return 1;
-
-}
 
 
 int crearIndice(tArbol *arbol, const char *arch)
@@ -524,59 +474,11 @@ void guardarInorden(tArbol *arbol, FILE *pf)
 }
 
 
-
-int buscarJugadorPorId(tArbol *arbol, const char *nombreArchivo, int idBuscado)
+int buscarJugadorPorNombre(const char *nombreArchivo, const char *nombreBuscado, tJugadorDatos *jugadorEncontrado)
 {
-    if(!arbol || !*arbol) {
-        printf("Arbol vacio\n");
-        return 0;
-    }
-
-    tIndice buscado;
-    buscado.clave = idBuscado;
-
-    tNodoA **nodo = buscarnodo(arbol, &buscado, cmp_int);
-    if(!nodo){
-        printf("Jugador con ID %d no encontrado.\n", idBuscado);
-        return 0;
-    }
-
-    tIndice *encontrado = (tIndice*) (*nodo)->dato;
-    if(!encontrado){
-        printf("Indice corrupto.\n");
-        return 0;
-    }
-
     FILE *pf = fopen(nombreArchivo, "rb");
-    if(!pf){
-        printf("Error al abrir el archivo de jugadores.\n");
-        return 0;
-    }
-
-    tJugadorDatos jugador;
-    if(fseek(pf, (long)encontrado->pos * sizeof(tJugadorDatos), SEEK_SET) != 0){
-        fclose(pf);
-        printf("Error al posicionarse en archivo.\n");
-        return 0;
-    }
-
-    if(fread(&jugador, sizeof(tJugadorDatos), 1, pf) != 1){
-        fclose(pf);
-        printf("Error leyendo jugador.\n");
-        return 0;
-    }
-    fclose(pf);
-
-    printf("Jugador encontrado:\n");
-    printf("ID: %d\nNombre: %s\nPuntaje: %d\nPartidas: %d\n",
-           jugador.id, jugador.nombre, jugador.total_puntos, jugador.partidas_jugadas);
-
-    return 1;
-}
-
-int buscarJugadorPorNombre(const char *nombreArchivo, const char *nombreBuscado, tJugadorDatos *jugadorEncontrado) {
-    FILE *pf = fopen(nombreArchivo, "rb");
-    if (!pf) {
+    if (!pf)
+    {
         printf("Error al abrir %s\n", nombreArchivo);
         return 0;
     }
@@ -584,23 +486,26 @@ int buscarJugadorPorNombre(const char *nombreArchivo, const char *nombreBuscado,
     tJugadorDatos j;
     fread(&j, sizeof(tJugadorDatos), 1, pf);
 
-    while ( !feof(pf)) {
-        if (strcmp(j.nombre, nombreBuscado) == 0) {
+    while ( !feof(pf))
+    {
+        if (strcmp(j.nombre, nombreBuscado) == 0)
+        {
             *jugadorEncontrado = j;
             fclose(pf);
             return 1;
         }
-         fread(&j, sizeof(tJugadorDatos), 1, pf);
+        fread(&j, sizeof(tJugadorDatos), 1, pf);
     }
 
     fclose(pf);
     return 0; // no encontrado
 }
 
-int cmp_clave(const void *a, const void *b) {
-     tClave *pa =(tClave*) a;
-     tClave *pb = (tClave*) b;
-   return pb->clave-pa->clave;
+int cmp_clave(const void *a, const void *b)
+{
+    tIndice *pa =(tIndice*) a;
+    tIndice *pb = (tIndice*) b;
+    return strcmp(pb->clave,pa->clave);
 }
 
 
@@ -620,176 +525,211 @@ int compararRanking(const void *a, const void *b)
     return strcmp(ra->nombre, rb->nombre);
 }
 int buscarEnArbol(const tArbol* pa, void *d,unsigned tam,int (*cmp)(const void *a, const void *b))
- {
- if(!*pa)
-  return 0;
- int comp = cmp(d, (*pa)->dato);
- if(comp == 0)
- {
- memcpy(d, (*pa)->dato, tam);
- return 1;
- }
+{
+    if(!*pa)
+        return 0;
+    int comp = cmp(d, (*pa)->dato);
+    if(comp == 0)
+    {
+        memcpy(d, (*pa)->dato, tam);
+        return 1;
+    }
 
- if(comp < 0)
- return buscarEnArbol(&(*pa)->izq, d, tam, cmp);
- else
- return buscarEnArbol(&(*pa)->der, d, tam, cmp);
- }
+    if(comp > 0)
+        return buscarEnArbol(&(*pa)->izq, d, tam, cmp);
+    else
+        return buscarEnArbol(&(*pa)->der, d, tam, cmp);
+}
 
 
 int buscarEnArchivoConIndice(FILE *fp, const tArbol *pa, tJugadorDatos *datos)
- {
- int claveEncontrada;
-    tIndice idx;
- idx.clave= datos->id;
-
- claveEncontrada = buscarEnArbol(pa,&idx,sizeof(tIndice),cmp_clave);
-
-if(claveEncontrada)
- {
- fseek(fp, idx.pos * sizeof(tJugadorDatos), SEEK_SET);
-fread(datos, sizeof(tJugadorDatos), 1, fp);
- return CLAVE_ENCONTRADA;
- }
- else
- {
- return CLAVE_NO_ENCONTRADA;
- }
-
- }
-
-
- int indexarArchivoPersonas(const char *nombreArchivoPersonas, tArbol *pa)
- {
- FILE *fp;
-tJugadorDatos datos;
- tIndice idx;
- unsigned long numeroRegistro;
-
- // Abrir el archivo
- fp = fopen(nombreArchivoPersonas, "rb");
- if(!fp)
- {
- printf("No se ha encontrado el archivo \"%s\" para indexarlo\n",
- nombreArchivoPersonas);
- return ARCHIVO_NO_INDEXADO;
- }
-
- fread(&datos, sizeof(tJugadorDatos), 1, fp);
- numeroRegistro = 0L;
- while(!feof(fp))
- {
- idx.clave = datos.id;
- idx.pos = numeroRegistro;
- insertarnodoiterativo(pa, &idx, sizeof(tIndice), cmp_clave);
- fread(&datos, sizeof(tJugadorDatos), 1, fp);
- numeroRegistro ++;
- }
-
- fclose(fp);
- return ARCHIVO_INDEXADO;
- }
-
-
- int guardarIndiceEnArchivo(const tArbol *p, const char *nombreArchivoIndice)
- {
- FILE *fp = fopen(nombreArchivoIndice, "wb");
-
- if (!fp)
- {
- printf("Error: No se pudo abrir el archivo %s para escritura.\n",
- nombreArchivoIndice);
- return 0; // Fallo
- }
-
- // Recorre el arbol en PreOrden y usa 'guardarNodoEnArchivo' como accion
- recorrerArbolPreOrder(p, 0, fp, guardarNodoEnArchivo);
-
- fclose(fp);
- return 1; // Éxito
- }
-
- void recorrerArbolPreOrder(const tArbol *pa,
-unsigned n, void *params,void (*accion)(void *, unsigned, unsigned, void *))
 {
- if(!*pa)
- return;
+    int claveEncontrada;
+    tIndice idx;
+    strcpy(idx.clave,datos->nombre);
 
- accion((*pa)->dato, (*pa)->tamInfo, n, params);
- recorrerArbolPreOrder(&(*pa)->izq, n, params, accion);
- recorrerArbolPreOrder(&(*pa)->der, n, params, accion);
+    claveEncontrada = buscarEnArbol(pa,&idx,sizeof(tIndice),cmp_clave);
+
+    if(claveEncontrada)
+    {
+        fseek(fp, idx.pos * sizeof(tJugadorDatos), SEEK_SET);
+        fread(datos, sizeof(tJugadorDatos), 1, fp);
+        return CLAVE_ENCONTRADA;
+    }
+    else
+    {
+        return CLAVE_NO_ENCONTRADA;
+    }
+
+}
+
+
+int indexarArchivoPersonas(const char *nombreArchivoPersonas, tArbol *pa)
+{
+    FILE *fp;
+    tJugadorDatos datos;
+    tIndice idx;
+    unsigned long numeroRegistro;
+
+// Abrir el archivo
+    fp = fopen(nombreArchivoPersonas, "rb");
+    if(!fp)
+    {
+        printf("No se ha encontrado el archivo \"%s\" para indexarlo\n",
+               nombreArchivoPersonas);
+        return ARCHIVO_NO_INDEXADO;
+    }
+
+    fread(&datos, sizeof(tJugadorDatos), 1, fp);
+    numeroRegistro = 0L;
+    while(!feof(fp))
+    {
+        strcpy(idx.clave,datos.nombre);
+        idx.pos = numeroRegistro;
+        insertarnodoiterativo(pa, &idx, sizeof(tIndice), cmp_clave);
+        fread(&datos, sizeof(tJugadorDatos), 1, fp);
+        numeroRegistro ++;
+    }
+
+    fclose(fp);
+    return ARCHIVO_INDEXADO;
+}
+
+
+int guardarIndiceEnArchivo(const tArbol *p, const char *nombreArchivoIndice)
+{
+    FILE *fp = fopen(nombreArchivoIndice, "wb");
+
+    if (!fp)
+    {
+        printf("Error: No se pudo abrir el archivo %s para escritura.\n",
+               nombreArchivoIndice);
+        return 0; // Fallo
+    }
+
+// Recorre el arbol en PreOrden y usa 'guardarNodoEnArchivo' como accion
+    recorrerArbolPreOrder(p, 0, fp, guardarNodoEnArchivo);
+
+    fclose(fp);
+    return 1; // Éxito
 }
 
 void guardarNodoEnArchivo(void *info, unsigned tam, unsigned n, void *params)
- {
- FILE *fp = (FILE *)params;
- // La informacion del nodo es de tipo tIndice
- fwrite(info, tam, 1, fp);
- }
-
- int cargarIndiceDesdeArchivo(tArbol *pa, const char *nombreArchivoIndice)
 {
- FILE *fp;
- tIndice indice;
- int res;
-
- // Abrir el archivo
- fp = fopen(nombreArchivoIndice, "rb");
- if (!fp)
- {
- printf("Error: No se ha encontrado el archivo \"%s\" para cargarlo\n",
- nombreArchivoIndice);
- return 0; // Fallo
- }
-
- // Inicializar el arbol antes de cargar
- crearArbol(pa); // Es fundamental inicializar el puntero a NULL
-
- // Leer y cargar cada tIndice
- while (fread(&indice, sizeof(tIndice), 1, fp) == 1)
- {
- // Insertar el elemento leido en el nuevo arbol
- res = insertarnodoiterativo(pa,
- &indice,
- sizeof(tIndice),
- cmp_clave);
- if (res == SIN_MEM)
- {
- printf("Error: Memoria insuficiente al cargar el indice.\n");
- eliminarArbol(pa); // Limpiar recursos
- fclose(fp);
- return 0; // Fallo
- }
- // Se ignora CLA_DUP (clave duplicada) en este contexto ya que se asume
- // que el archivo de índice es válido.
- }
-
- fclose(fp);
-return 1; // Éxito
- }
-
- void cargarArchivoOrdenadoEnIndiceBalanceado(tArbol *pa, FILE *fp,int inicio,int fin)
- {
- size_t medio = (fin+inicio)/2;
- tIndice idx;
- tJugadorDatos datos;
-
- if (inicio > fin)
-    return;
-
- // Posicionarse y leer el registro del archivo
- fseek(fp, medio*sizeof(tJugadorDatos), SEEK_SET);
- fread(&datos, 1, sizeof(tJugadorDatos), fp);
- // Armar el tIndice con los datos leídos del archivo
-idx.clave = datos.id;
- idx.clave = medio;
-
- // Insertar el registro en el índice
- insertarnodoiterativo(pa, &idx, sizeof(tIndice), cmp_clave);
- // Llamadas recursivas por izquierda y por derecha
-cargarArchivoOrdenadoEnIndiceBalanceado(pa, fp, inicio, medio-1);
- cargarArchivoOrdenadoEnIndiceBalanceado(pa, fp, medio+1, fin);
+    FILE *fp = (FILE *)params;
+// La informacion del nodo es de tipo tIndice
+    fwrite(info, tam, 1, fp);
 }
+
+void recorrerArbolPreOrder(const tArbol *pa,
+                           unsigned n, void *params,void (*accion)(void *, unsigned, unsigned, void *))
+{
+    if(!*pa)
+        return;
+
+    accion((*pa)->dato, (*pa)->tamInfo, n, params);
+    recorrerArbolPreOrder(&(*pa)->izq, n, params, accion);
+    recorrerArbolPreOrder(&(*pa)->der, n, params, accion);
+}
+
+
+
+int cargarIndiceDesdeArchivo(tArbol *pa, const char *nombreArchivoIndice)
+{
+    FILE *fp;
+    tIndice indice;
+    int res;
+
+// Abrir el archivo
+    fp = fopen(nombreArchivoIndice, "rb");
+    if (!fp)
+    {
+        printf("Error: No se ha encontrado el archivo \"%s\" para cargarlo\n",
+               nombreArchivoIndice);
+        return 0; // Fallo
+    }
+
+// Inicializar el arbol antes de cargar
+    crearArbol(pa); // Es fundamental inicializar el puntero a NULL
+
+// Leer y cargar cada tIndice
+    while (fread(&indice, sizeof(tIndice), 1, fp) == 1)
+    {
+// Insertar el elemento leido en el nuevo arbol
+        res = insertarnodoiterativo(pa,
+                                    &indice,
+                                    sizeof(tIndice),
+                                    cmp_clave);
+        if (res == SIN_MEM)
+        {
+            printf("Error: Memoria insuficiente al cargar el indice.\n");
+            eliminarArbol(pa); // Limpiar recursos
+            fclose(fp);
+            return 0; // Fallo
+        }
+// Se ignora CLA_DUP (clave duplicada) en este contexto ya que se asume
+// que el archivo de índice es válido.
+    }
+
+    fclose(fp);
+    return 1; // Éxito
+}
+
+void cargarArchivoOrdenadoEnIndiceBalanceado(tArbol *pa, FILE *fp,int inicio,int fin)
+{
+    if (inicio > fin)
+        return;
+
+    int medio = (inicio + fin) / 2;
+    tIndice idx;
+    tJugadorDatos datos;
+
+    // Posicionarse en el registro medio
+    fseek(fp, medio * sizeof(tJugadorDatos), SEEK_SET);
+    fread(&datos, sizeof(tJugadorDatos), 1, fp);
+
+    // Copiar clave y número de registro
+    strcpy(idx.clave, datos.nombre);
+    idx.pos = medio;
+
+    // Insertar en el árbol
+    insertarnodoiterativo(pa, &idx, sizeof(tIndice), cmp_clave);
+
+    // Recursión izquierda y derecha
+    cargarArchivoOrdenadoEnIndiceBalanceado(pa, fp, inicio, medio - 1);
+    cargarArchivoOrdenadoEnIndiceBalanceado(pa, fp, medio + 1, fin);
+}
+
+int indexarArchivoPersonasOrdenado(const char *nombreArchivoPersonas,
+                                   tArbol *p)
+{
+    FILE *fp;
+    size_t cantidadRegistros;
+
+// Abrir el archivo
+    fp = fopen(nombreArchivoPersonas, "rb");
+    if(!fp)
+    {
+        printf("No se ha encontrado el archivo \"%s\" para indexarlo\n",
+               nombreArchivoPersonas);
+        return ARCHIVO_NO_INDEXADO;
+    }
+
+// Determinar la cantidad de registros contenidos en el archivo.
+    fseek(fp, 0, SEEK_END);
+    cantidadRegistros = ftell(fp) / sizeof(tJugadorDatos);
+
+// cargar indice en arbol
+    cargarArchivoOrdenadoEnIndiceBalanceado(p, fp, 0, cantidadRegistros-1);
+
+// Cerrar archivo
+    fclose(fp);
+    return ARCHIVO_INDEXADO;
+}
+
+
+
+
 
 
 
