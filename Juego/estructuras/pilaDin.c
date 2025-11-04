@@ -14,7 +14,7 @@ int pilaVacia(const tPila*pila)
         return PILA_VACIA;
     return TODO_OK;
 }
-int apilar(tPila*pila,const void* dato,unsigned tamDato)
+int apilar(tPila*pila, const void* dato, unsigned tamDato)
 {
     tNodo*nue;
     nue = (tNodo*)malloc(sizeof(tNodo));
@@ -26,32 +26,31 @@ int apilar(tPila*pila,const void* dato,unsigned tamDato)
         free(nue);
         return SIN_MEM;
     }
-
-    memcpy(nue->dato,dato,tamDato);
+    memcpy(nue->dato, dato, tamDato);
     nue->tamInfo = tamDato;
     nue->sig = *pila;
     *pila = nue;
     return TODO_OK;
 }
 
-int desapilar(tPila*pila,void* dato,unsigned tamDato)
+int desapilar(tPila*pila, void* dato, unsigned tamDato)
 {
     tNodo*elim = *pila;
     if(!elim)
         return PILA_VACIA;
-    memcpy(dato,elim->dato,MIN(tamDato,elim->tamInfo));
+    memcpy(dato, elim->dato, MIN(tamDato, elim->tamInfo));
     *pila = elim->sig;
     free(elim->dato);
     free(elim);
     return TODO_OK;
 }
 
-int verTope(tPila*pila,void* dato,unsigned tamDato)
+int verTope(tPila*pila, void* dato, unsigned tamDato)
 {
     tNodo*elim = *pila;
     if(!elim)
         return PILA_VACIA;
-    memcpy(dato,elim->dato,MIN(tamDato,elim->tamInfo));
+    memcpy(dato, elim->dato, MIN(tamDato, elim->tamInfo));
     return TODO_OK;
 }
 

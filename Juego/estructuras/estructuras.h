@@ -7,6 +7,7 @@
 #define PILA_LLENA 1
 #define PILA_VACIA 2
 #define SIN_MEM 3
+#define TAM 7
 #define MIN(X,Y) ((X)>(Y)?(X):(Y))
 
 typedef struct sNodo
@@ -14,26 +15,18 @@ typedef struct sNodo
     void*dato;
     unsigned tamInfo;
     struct sNodo * sig;
-}tNodo;
+} tNodo;
 typedef struct
 {
-    char nombre[7];
+    char nombre[TAM];
     int puntaje;
 } tRanking;
 
 typedef struct
 {
 
-    unsigned clave;
-    unsigned numRegistro;
-
-} tClave;
-
-typedef struct
-{
-
     int id;
-    char nombre[40];
+    char nombre[TAM];
     int total_puntos;
     int partidas_jugadas;
 
@@ -41,16 +34,8 @@ typedef struct
 
 typedef struct
 {
-    int id_partida;         // ID autoincremental
-    int id_jugador;         // ID del jugador
-    int puntaje;            // Puntos obtenidos
-    int movimientos;        // Movimientos realizados
-} tPartidaDatos;
-
-typedef struct
-{
-    int clave;
-    long pos;
+    char clave[TAM];
+    int pos;
 
 } tIndice;
 

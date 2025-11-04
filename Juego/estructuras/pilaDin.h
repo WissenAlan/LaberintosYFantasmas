@@ -6,9 +6,9 @@ typedef tNodo* tPila;
 
 void crearPila(tPila*pila);
 int pilaVacia(const tPila*pila);
-int apilar(tPila*pila,const void* dato,unsigned tamDato);
-int desapilar(tPila*pila,void* dato,unsigned tamDato);
-int verTope(tPila*pila,void* dato,unsigned tamDato);
+int apilar(tPila*pila, const void* dato, unsigned tamDato);
+int desapilar(tPila*pila, void* dato, unsigned tamDato);
+int verTope(tPila*pila, void* dato, unsigned tamDato);
 void vaciarPila(tPila*pila);
 
 

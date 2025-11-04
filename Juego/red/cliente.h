@@ -25,9 +25,8 @@ int send_request(SOCKET soc, const char *request, char *response);
 // Cierra la conexión y limpia Winsock
 void close_connection(SOCKET soc);
 
-void setSocketCliente(SOCKET s);
 void enviarPeticionCliente(const char *mensaje);
-void enviarMensaje(char* buffer, char* response);
+void enviarMensaje(SOCKET, char* buffer, char* response);
 
 #endif // CLIENTE_H_INCLUDED
 

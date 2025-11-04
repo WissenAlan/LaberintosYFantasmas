@@ -9,6 +9,7 @@
 #define ABAJO 2
 #define IZQUIERDA 3
 #define DERECHA -2
+#define ABS(X)(X < 0) ? -X : X
 #define bufferNombreSize 7
 typedef struct {
     int posx;
@@ -34,13 +35,7 @@ void crearJugador(tJugador *pJug, int);
 unsigned getVidasJugador(tJugador *pJug);
 unsigned getPuntosJugador(tJugador *pJug);
 void moverJugador(tCola *colamov, char **mat, tJugador *pJug, int);
-void move_up(char**mat, tJugador *pJug);
-void move_down(char**mat, tJugador *pJug);
-void move_left(char**mat, tJugador *pJug);
-void move_right(char**mat, tJugador *p);
-int abs(int numero);
 void mandarJugadorAEntrada(tJugador *jugador,char **mat);
-void CoordenadaEsquinaMasLejana(tJugador *jugador, int max_filas, int max_columnas, int* esquina_fila_out, int* esquina_columna_out);
+void coordenadaEsquinaMasLejana(tJugador *jugador, int max_filas, int max_columnas, int* esquina_fila_out, int* esquina_columna_out);
 int contarMovs(tCola* colaMovsJugador);
-void encolarMov(tCola *cola, tMovimiento *movimiento, int mov);
 #endif // JUGADOR_H_INCLUDED

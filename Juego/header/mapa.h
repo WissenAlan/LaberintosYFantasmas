@@ -2,12 +2,6 @@
 #define FUNCIONES_H_INCLUDED
 #include "jugador.h"
 #include "../estructuras/constantes.h"
-#define ESPACIADO 2
-#define VISITADO '.'
-#define CAMINO '.'
-#define CELDA ' '
-#define BONIFICACION 'P'
-#define VIDAEXT 'V'
 typedef struct {
     int fil;
     int col;

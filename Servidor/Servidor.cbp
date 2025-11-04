@@ -22,10 +22,6 @@
 		<Linker>
 			<Add library="ws2_32" />
 		</Linker>
-		<Unit filename="funciones.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="funciones.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
