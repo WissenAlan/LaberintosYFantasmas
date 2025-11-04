@@ -35,8 +35,12 @@ int game_new(tGame *g)
     {
         fgets(linea, TAM_BUFFER, config);
         asignarConfig(linea, &(g->m.filMapa));
+        if(g->m.filMapa < 3)
+            g->m.filMapa = 3;
         fgets(linea, TAM_BUFFER, config);
         asignarConfig(linea, &g->m.colMapa);
+        if(g->m.filMapa < 3)
+            g->m.filMapa = 3;
         fgets(linea, TAM_BUFFER, config);
         asignarConfig(linea, &g->cantVidas);
         fgets(linea, TAM_BUFFER, config);
@@ -62,7 +66,7 @@ void asignarConfig(char* linea, int* parametro)
     {
         valor++; // avanzar para saltar los dos puntos ':'
         valor[strcspn(valor, "\n")] = '\0';// eliminar salto de línea
-        *parametro = atoi(valor);
+        *parametro = abs(atoi(valor));
     }
 }
 void game_free(tGame *g)
@@ -134,7 +138,6 @@ void procesarGuardarPartida(tGame*g){
     char buffer[TAM_BUFFER], response[TAM_BUFFER];
     sprintf(buffer, "|NOMBRE|%s|%d", g->p.nombre,g->p.puntos);
     enviarMensaje(buffer, response);
-    printf("Respuesta: %s", response);
 }
 void game_draw(tGame *g)
 {
@@ -347,65 +350,4 @@ void iniciarJuego(tGame* g)
         checkend(&g->m, &g->p);
         system("cls");
     }
-}
-
-void guardarPartida(tGame *g)
-{
-    // Buscar jugador real
-    tJugadorDatos jugadorReal;
-
-    if (!buscarJugadorPorNombre("..\\Servidor\\bin\\Debug\\jugadores.dat", g->p.nombre, &jugadorReal))
-    {
-        printf("Jugador '%s' no encontrado, no se guarda la partida.\n", g->p.nombre);
-        return;
-    }
-
-    FILE *pf = fopen("partidas.dat", "ab+");
-    if (!pf)
-    {
-        printf("Error al abrir partidas.dat\n");
-        return;
-    }
-
-    tPartidaDatos partida;
-    memset(&partida, 0, sizeof(partida));
-
-    // Asignar id de partida
-    fseek(pf, 0, SEEK_END);
-    long tam = ftell(pf);
-    int cant = tam / sizeof(tPartidaDatos);
-    partida.id_partida = cant + 1;
-
-    // Usar datos correctos
-    partida.id_jugador = jugadorReal.id;
-    partida.puntaje = g->p.puntos;
-    partida.movimientos = g->p.movimientos;
-
-    fwrite(&partida, sizeof(tPartidaDatos), 1, pf);
-    fclose(pf);
-
-    printf("✅ Partida guardada correctamente:\n");
-    printf("Jugador: %s (ID: %d)\n", jugadorReal.nombre, jugadorReal.id);
-    printf("Partida: %d | Puntos: %d | Movimientos: %d\n",
-           partida.id_partida, partida.puntaje, partida.movimientos);
-}
-
-
-void mostrarPartidas()
-{
-    FILE *pf = fopen(ARCH_PARTIDAS, "rb");
-    if (!pf)
-    {
-        printf(" No hay partidas guardadas.\n");
-        return;
-    }
-
-    tPartida p;
-    printf("\n=== PARTIDAS GUARDADAS ===\n");
-    while (fread(&p, sizeof(tPartida), 1, pf) == 1)
-    {
-        printf("ID Partida: %-3d | Jugador: %-3d | Puntaje: %-5d | Movimientos: %-3d\n",
-               p.idPartida, p.idJugador, p.puntaje, p.movimientos);
-    }
-    fclose(pf);
 }
