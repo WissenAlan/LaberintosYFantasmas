@@ -168,6 +168,8 @@ void game_draw(tGame *g)
                 SDL_RenderCopy(g->renderer, g->pared, NULL, &rect);
             if (g->m.mat[i][j] == CELDA)
                 SDL_RenderCopy(g->renderer, g->piso, NULL, &rect);
+            if(g->m.mat[i][j] == VIDAEXT)
+                SDL_RenderCopy(g->renderer, g->vidaextra, NULL, &rect);
         }
     }
     SDL_RenderPresent(g->renderer);
@@ -292,7 +294,7 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             {
                 mat[movi.posx][movi.posy] = CELDA;
                 pJug->puntos += 100;
-                pJug->roundBuff+=10;
+                pJug->roundBuff+=6;
             }
             if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == VIDAEXT)
             {

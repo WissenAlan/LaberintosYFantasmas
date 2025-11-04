@@ -104,17 +104,17 @@ void cargarTexturasMenu(tGame *g, SDL_Rect botonP, SDL_Rect botonR, SDL_Rect bot
     SDL_RenderFillRect(g->renderer, &botonP);
     SDL_RenderFillRect(g->renderer, &botonR);
     SDL_RenderFillRect(g->renderer, &botonS);
-    crearBotonTextCentrado(botonP, g->titulo_f, textura, NEGRO, "Jugar", g->renderer);
-    crearBotonTextCentrado(botonR, g->titulo_f, textura, NEGRO, "Ranking", g->renderer);
-    crearBotonTextCentrado(botonS, g->titulo_f, textura, NEGRO, "Salir", g->renderer);
+    crearBotonTextCentrado(botonP, g->titulo_f, textura,BLANCO, "Jugar", g->renderer);
+    crearBotonTextCentrado(botonR, g->titulo_f, textura,BLANCO, "Ranking", g->renderer);
+    crearBotonTextCentrado(botonS, g->titulo_f, textura,BLANCO, "Salir", g->renderer);
     //musica menu
     SDL_RenderPresent(g->renderer);
 }
 void menu_inicio(tGame *g)
 {
-    SDL_Rect botonP = {(WINDOW_WIDTH - 240) / 2, 250, 240, 60};
-    SDL_Rect botonR = {(WINDOW_WIDTH - 240) / 2, 330, 240, 60};
-    SDL_Rect botonS  = {(WINDOW_WIDTH - 240) / 2, 410, 240, 60};
+    SDL_Rect botonP = {(WINDOW_WIDTH - 240) / 2,340,240,60};  //80 //90
+    SDL_Rect botonR = {(WINDOW_WIDTH - 240) / 2, 430,240, 60};
+    SDL_Rect botonS  = {(WINDOW_WIDTH - 240) / 2, 520,240,60};
     SDL_Point click;
     char* rank, response[TAM_BUFFER];
     Mix_HaltMusic();

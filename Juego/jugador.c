@@ -112,7 +112,7 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
     if(pJug->roundBuff > 0)
     {
         int auxcolumna=mapa->colMapa-1,auxfila=mapa->filMapa-1;
-        CoordenadasesquinaMasLejosJugador(pJug,&auxfila,&auxcolumna);
+        CoordenadaEsquinaMasLejana(pJug,auxfila,auxcolumna,&auxfila,&auxcolumna);
         diff_x = abs(pFant->posx - (auxfila));
         diff_y = abs(pFant->posy - (auxcolumna));
         try_diff_x = abs(try_x - auxfila);
@@ -122,7 +122,7 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
     }
     else
     {
-        if(rand() % 2)
+        if(rand() % 5 == 2)
         {
             diff_x = abs(pFant->posx - (pJug->posx+4));
             diff_y = abs(pFant->posy - (pJug->posy+4));
@@ -150,30 +150,20 @@ int state(tMapa *mapa, int trypos,tJugador *pJug, const tFantasma *pFant)
         reward -= 20;
     return reward;
 }
-void CoordenadasesquinaMasLejosJugador(tJugador *jugador,int* filas,int* columnas)
+void CoordenadaEsquinaMasLejana(tJugador *jugador, int max_filas, int max_columnas, int* esquina_fila_out, int* esquina_columna_out)
 {
-    int esquina1 = abs(jugador->posx);
-    int esquina2 = abs(jugador->posy - *columnas);
-    int esquina3 = abs(jugador->posx - *filas);
-    int esquina4 = abs(jugador->posy);
-    if (esquina1 >= esquina2 && esquina1 >= esquina3 && esquina1 >= esquina4)
-    {
-        *filas=esquina1;
-        *columnas=0;
+    double centro_fila = (max_filas - 1) / 2.0;
+    double centro_columna = (max_columnas - 1) / 2.0;
+
+    if (jugador->posx < centro_fila) {
+        *esquina_fila_out = max_filas - 1;
+    } else {
+        *esquina_fila_out = 0;
     }
-    else if (esquina2 >= esquina3 && esquina2 >= esquina4)
-    {
-        *filas=0;
-        *columnas=esquina2;
-    }
-    else if (esquina3 >= esquina4)
-    {
-        *filas=esquina3;
-    }
-    else
-    {
-        *columnas=0;
-        *filas=esquina4;
+    if (jugador->posy < centro_columna) {
+        *esquina_columna_out = max_columnas - 1;
+    } else {
+        *esquina_columna_out = 0;
     }
 }
 int contarMovs(tCola* colaMovsJugador)
