@@ -40,7 +40,7 @@ void move_left(char**mat, tJugador *pJug);
 void move_right(char**mat, tJugador *p);
 int abs(int numero);
 void mandarJugadorAEntrada(tJugador *jugador,char **mat);
-void CoordenadasesquinaMasLejosJugador(tJugador *jugador,int* filas,int* columnas);
+void CoordenadaEsquinaMasLejana(tJugador *jugador, int max_filas, int max_columnas, int* esquina_fila_out, int* esquina_columna_out);
 int contarMovs(tCola* colaMovsJugador);
 void encolarMov(tCola *cola, tMovimiento *movimiento, int mov);
 #endif // JUGADOR_H_INCLUDED

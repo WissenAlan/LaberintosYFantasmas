@@ -1,6 +1,6 @@
-filas:10
-columnas:7
+filas:40
+columnas:40
+:2
+:5
 :3
-:1
-:1
 :2
