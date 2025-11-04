@@ -11,17 +11,17 @@ int game_new(tGame *g)
     char *valor;
     crearMapa(&g->m);
     FILE*config = fopen(ARCHIVO_CONFIG, "r");
-    g->is_running = true;
-    g->is_pausing = false;
-    g->inicio = true;
-    g->ranking = false;
-    g->is_writing = false;
-    if (!game_init_sdl(g))
+    g->is_running = VERDADERO;
+    g->is_pausing = INCORRECTO;
+    g->inicio = VERDADERO;
+    g->ranking = INCORRECTO;
+    g->is_writing = INCORRECTO;
+    if(!game_init_sdl(g))
     {
         return 0;
         printf("error");
     }
-    if (!config)
+    if(!config)
     {
         printf("No hay archivo de configuracion de mapa.\nSe genera el juego en predeterminado.\n");
         g->cantFant = 3;
@@ -52,8 +52,8 @@ int game_new(tGame *g)
         fclose(config);
     }
     crearJugador(&g->p, g->cantVidas);
-    if (llenarMapa(&g->p, &g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == FALSE)
-        return FALSE;
+    if(llenarMapa(&g->p, &g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == INCORRECTO)
+        return INCORRECTO;
     crearCola(&(g->colaMov));
     crearCola(&(g->colaMovsJugador));
     crearConexion(g);
@@ -62,24 +62,24 @@ int game_new(tGame *g)
 void asignarConfig(char* linea, int* parametro)
 {
     char*valor = strchr(linea, ':');
-    if (valor)
+    if(valor)
     {
         valor++; // avanzar para saltar los dos puntos ':'
         valor[strcspn(valor, "\n")] = '\0';// eliminar salto de línea
-        *parametro = abs(atoi(valor));
+        *parametro = ABS(atoi(valor));
     }
 }
 void game_free(tGame *g)
 {
     eliminarMatriz(g->m.mat, g->m.filMapa, g->m.colMapa);
-    if (colaVacia(&(g->colaMov)) != COLA_VACIA)
+    if(colaVacia(&(g->colaMov)) != COLA_VACIA)
         vaciarCola(&(g->colaMov));
-    if (g->renderer)
+    if(g->renderer)
     {
         SDL_DestroyRenderer(g->renderer);
         g->renderer = NULL;
     }
-    if (g->window)
+    if(g->window)
     {
         SDL_DestroyWindow(g->window);
         g->window = NULL;
@@ -106,38 +106,35 @@ void game_free(tGame *g)
 void game_run(tGame *g)
 {
     menuIngresarNombre(g);
-    //crearConexion(g);
-    while (g->is_running)
+    while(g->is_running)
     {
-        if (g->inicio)
+        if(g->inicio)
         {
             menu_inicio(g);
             Mix_HaltMusic();
             Mix_PlayMusic(g->musicajuego, -1);
         }
         if(g->is_running)
-        {//parche
+        {
+            //parche
             game_events(g);
             game_draw(g);
-
         }
         SDL_Delay(32);
-        if (g->m.exit == VERDADERO || g->m.jugadorMuerto)
+        if(g->m.exit == VERDADERO || g->m.jugadorMuerto)
         {
-            g->is_pausing = true;
-            if(g->m.exit == VERDADERO){
+            g->is_pausing = VERDADERO;
+            if(g->m.exit == VERDADERO)
                 procesarGuardarPartida(g);
-            }
             menu_pausa(g);
-
         }
     }
-
 }
-void procesarGuardarPartida(tGame*g){
+void procesarGuardarPartida(tGame*g)
+{
     char buffer[TAM_BUFFER], response[TAM_BUFFER];
-    sprintf(buffer, "|NOMBRE|%s|%d", g->p.nombre,g->p.puntos);
-    enviarMensaje(buffer, response);
+    sprintf(buffer, "|NOMBRE|%s|%d", g->p.nombre, g->p.puntos);
+    enviarMensaje(g->soc, buffer, response);
 }
 void game_draw(tGame *g)
 {
@@ -148,25 +145,25 @@ void game_draw(tGame *g)
     SDL_SetRenderDrawColor(g->renderer, 0, 0, 0, 255);
     SDL_RenderClear(g->renderer);
     SDL_SetRenderDrawColor(g->renderer, CUADRADO_COLOR);
-    for (i = 0; i < g->m.filMapa; i++)
+    for(i = 0; i < g->m.filMapa; i++)
     {
         rect.y = sizef * i;
-        for (j = 0; j < g->m.colMapa; j++)
+        for(j = 0; j < g->m.colMapa; j++)
         {
             rect.x = sizec * j;
-            if (g->m.mat[i][j] == JUGADOR)
+            if(g->m.mat[i][j] == JUGADOR)
                 SDL_RenderCopy(g->renderer, g->personaje, NULL, &rect);
-            if (g->m.mat[i][j] == FANTASMA)
+            if(g->m.mat[i][j] == FANTASMA)
                 SDL_RenderCopy(g->renderer, g->fantasmas, NULL, &rect);
-            if (g->m.mat[i][j] == BONIFICACION)
+            if(g->m.mat[i][j] == BONIFICACION)
                 SDL_RenderCopy(g->renderer, g->premio, NULL, &rect);
-            if (g->m.mat[i][j] == ENTRADA)
+            if(g->m.mat[i][j] == ENTRADA)
                 SDL_RenderCopy(g->renderer, g->entrada, NULL, &rect);
-            if (g->m.mat[i][j] == SALIDA)
+            if(g->m.mat[i][j] == SALIDA)
                 SDL_RenderCopy(g->renderer, g->salida, NULL, &rect);
-            if (g->m.mat[i][j] == PARED)
+            if(g->m.mat[i][j] == PARED)
                 SDL_RenderCopy(g->renderer, g->pared, NULL, &rect);
-            if (g->m.mat[i][j] == CELDA)
+            if(g->m.mat[i][j] == CELDA)
                 SDL_RenderCopy(g->renderer, g->piso, NULL, &rect);
             if(g->m.mat[i][j] == VIDAEXT)
                 SDL_RenderCopy(g->renderer, g->vidaextra, NULL, &rect);
@@ -185,15 +182,15 @@ void moverFantasmas(tGame *g)
 {
     int i, j;
     tFantasma fant;
-    for (i = 0; i < g->m.filMapa; i++)
+    for(i = 0; i < g->m.filMapa; i++)
     {
-        for (j = 0; j < g->m.colMapa; j++)
+        for(j = 0; j < g->m.colMapa; j++)
         {
-            if (g->m.mat[i][j] == FANTASMA)
+            if(g->m.mat[i][j] == FANTASMA)
             {
                 fant.posx = i;
                 fant.posy = j;
-                ai(&(g->colaMov),&g->m, &g->p, &fant);
+                ai(&(g->colaMov), &g->m, &g->p, &fant);
             }
         }
     }
@@ -201,15 +198,15 @@ void moverFantasmas(tGame *g)
 void game_events(tGame *g)
 {
     tMovimiento tMov;
-    while (SDL_PollEvent(&g->eventos))
+    while(SDL_PollEvent(&g->eventos))
     {
-        switch (g->eventos.type)
+        switch(g->eventos.type)
         {
         case SDL_QUIT:
-            g->is_running = false;
+            g->is_running = INCORRECTO;
             break;
         case SDL_KEYDOWN:
-            switch (g->eventos.key.keysym.scancode)
+            switch(g->eventos.key.keysym.scancode)
             {
             case SDL_SCANCODE_M:
                 Mix_HaltMusic();
@@ -238,7 +235,7 @@ void intercambiar(void *a, void*b, unsigned tam)
     char aux;
     char *e1 = (char*)a;
     char *e2 = (char*)b;
-    for (i = 0; i < tam; i++)
+    for(i = 0; i < tam; i++)
     {
         aux = *e1;
         *e1 = *e2;
@@ -250,106 +247,86 @@ void intercambiar(void *a, void*b, unsigned tam)
 void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
 {
     tMovimiento movi;
-    int x, y,checkeoDobleMovimiento=0;
-    while (colaVacia(cola) != COLA_VACIA)
+    int x, y, checkeoDobleMovimiento = 0;
+    while(colaVacia(cola) != COLA_VACIA)
     {
         x = 0;
         y = 0;
         /* sacarDeCola rellena 'movimientos' */
         sacarDeCola(cola, &movi, sizeof(tMovimiento));
-        if (movi.movimiento == SDL_SCANCODE_W)
+        if(movi.movimiento == SDL_SCANCODE_W)
             x++;
-        else if (movi.movimiento == SDL_SCANCODE_S)
+        else if(movi.movimiento == SDL_SCANCODE_S)
             x--;
-        else if (movi.movimiento == SDL_SCANCODE_A)
+        else if(movi.movimiento == SDL_SCANCODE_A)
             y++;
         else
             y--;
-        if (!(movi.entidad == FANTASMA && mat[movi.posx + x][movi.posy + y] == JUGADOR)) //FANTASMA PISADO
+        if(!(movi.entidad == FANTASMA && mat[movi.posx + x][movi.posy + y] == JUGADOR))  //FANTASMA PISADO
         {
             if(movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == SALIDA)
             {
-                pJug->puntos+=300;
+                pJug->puntos += 300;
                 return;
             }
-            if (movi.entidad == FANTASMA && mat[movi.posx][movi.posy] == JUGADOR)
+            if(movi.entidad == FANTASMA && mat[movi.posx][movi.posy] == JUGADOR)
             {
                 mat[movi.posx + x][movi.posy + y] = CELDA;
                 pJug->vidas--;
-                mat[pJug->posx][pJug->posy]=CELDA;
-                pJug->posx=1;
-                pJug->posy=1;
-                mat[pJug->posx][pJug->posy]=JUGADOR;
+                mat[pJug->posx][pJug->posy] = CELDA;
+                pJug->posx = 1;
+                pJug->posy = 1;
+                mat[pJug->posx][pJug->posy] = JUGADOR;
             }
-            if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == FANTASMA)
+            if(movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == FANTASMA)
             {
                 pJug->vidas--;
                 mat[movi.posx][movi.posy] = CELDA;
-                mat[pJug->posx +x][pJug->posy+ y]=CELDA;
-                pJug->posx=1;
-                pJug->posy=1;
-                mat[pJug->posx][pJug->posy]=JUGADOR;
+                mat[pJug->posx + x][pJug->posy + y] = CELDA;
+                pJug->posx = 1;
+                pJug->posy = 1;
+                mat[pJug->posx][pJug->posy] = JUGADOR;
             }
-            if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == BONIFICACION)
+            if(movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == BONIFICACION)
             {
                 mat[movi.posx][movi.posy] = CELDA;
                 pJug->puntos += 100;
-                pJug->roundBuff+=6;
+                pJug->roundBuff += 6;
             }
-            if (movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == VIDAEXT)
+            if(movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == VIDAEXT)
             {
                 mat[movi.posx][movi.posy] = CELDA;
                 pJug->vidas++;
             }
-            if (mat[movi.posx][movi.posy] == CELDA)
+            if(mat[movi.posx][movi.posy] == CELDA)
                 intercambiar(&mat[movi.posx][movi.posy], &mat[movi.posx + x][movi.posy + y], sizeof(char));
         }
     }
 }
-void mandarJugadorAEntrada(tJugador *jugador,char **mat)
+void mandarJugadorAEntrada(tJugador *jugador, char **mat)
 {
     jugador->vidas--;
-    mat[jugador->posx][jugador->posy]=CELDA;
-    jugador->posx=1;
-    jugador->posy=1;
-    mat[jugador->posx][jugador->posy]=JUGADOR;
+    mat[jugador->posx][jugador->posy] = CELDA;
+    jugador->posx = 1;
+    jugador->posy = 1;
+    mat[jugador->posx][jugador->posy] = JUGADOR;
 }
 int crearConexion(tGame *g)
 {
-    SOCKET soc;
-    char buffer[TAM_BUFFER], response[TAM_BUFFER];
-
-    if (init_winsock() != 0)
+    if(init_winsock() != 0)
     {
         printf("Error al inicializar Winsock.\n");
-        return 0;
+        printf("No se pudo conectar al servidor. Jugando en Modo local.\n");
+        return INCORRECTO;
     }
-
-    soc = connect_to_server(SERVER_IP, PUERTO);
-    if (soc == INVALID_SOCKET)
+    g->soc = connect_to_server(SERVER_IP, PUERTO);
+    if(g->soc == INVALID_SOCKET)
     {
-        printf("No se pudo conectar al servidor. Modo local.\n");
+        printf("No se pudo conectar al servidor. Jugando en Modo local.\n");
         WSACleanup();
-        return 0;
+        return INCORRECTO;
     }
-
-    // guarda el socket global
-    setSocketCliente(soc);
-
-    // manda el nombre del jugador al servidor
-//    snprintf(buffer, sizeof(buffer), "NOMBRE|%s", g->p.nombre);
     printf("[DEBUG] Conexion establecida y mantenida abierta.\n");
-    return 1;
+    return VERDADERO;
 }
-//Funcion de cuando no estaba el SDL
-void iniciarJuego(tGame* g)
-{
-    while (g->m.exit == FALSE && getVidasJugador(&g->p) > 0)
-    {
-        printf("Cantidad de vidas: %d \tCantidad de puntos %d\n", getVidasJugador(&g->p), getPuntosJugador(&g->p));
-        mostrarMat(g->m.mat, g->m.filMapa, g->m.colMapa);
-        game_update(g);
-        checkend(&g->m, &g->p);
-        system("cls");
-    }
-}
+

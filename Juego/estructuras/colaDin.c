@@ -3,13 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-void crearCola(tCola*cola) {
+void crearCola(tCola*cola)
+{
     cola->pri = cola->ult = NULL;
 }
 
-int colaInsertar(tCola*p, const void*d, unsigned cantBytes) {
+int colaInsertar(tCola*p, const void*d, unsigned cantBytes)
+{
     tNodo *nue = (tNodo *) malloc(sizeof(tNodo));
-    if (!nue)
+    if(!nue)
         return SIN_MEM;
     nue->dato = malloc(cantBytes);
     if(!nue->dato)
@@ -20,17 +22,18 @@ int colaInsertar(tCola*p, const void*d, unsigned cantBytes) {
     memcpy(nue->dato, d, cantBytes);
     nue->tamInfo = cantBytes;
     nue->sig = NULL;
-    if (!p->pri)
-        p->pri= nue;
+    if(!p->pri)
+        p->pri = nue;
     else
         p->ult->sig = nue;
     p->ult = nue;
     return TODO_OK;
 }
 
-int sacarDeCola(tCola*cola, void*dato, unsigned tam) {
+int sacarDeCola(tCola*cola, void*dato, unsigned tam)
+{
     tNodo*elim = cola->pri;
-    if (!elim)
+    if(!elim)
         return COLA_VACIA;
     memcpy(dato, elim->dato, MIN(tam, elim->tamInfo));
     cola->pri = elim->sig;
@@ -41,9 +44,11 @@ int sacarDeCola(tCola*cola, void*dato, unsigned tam) {
     return TODO_OK;
 }
 
-void vaciarCola(tCola*cola) {
+void vaciarCola(tCola*cola)
+{
     tNodo*elim;
-    while (cola->pri) {
+    while(cola->pri)
+    {
         elim = cola->pri;
         cola->pri = elim->sig;
         free(elim->dato);
@@ -51,15 +56,17 @@ void vaciarCola(tCola*cola) {
     }
 }
 
-int verPrimero(tCola*cola, void*dato, unsigned tam) {
+int verPrimero(tCola*cola, void*dato, unsigned tam)
+{
     tNodo*elim = cola->pri;
-    if (!elim)
+    if(!elim)
         return COLA_VACIA;
     memcpy(dato, elim->dato, MIN(tam, elim->tamInfo));
     return TODO_OK;
 }
-int colaVacia(tCola *cola) {
-    if (cola->pri == NULL)
+int colaVacia(tCola *cola)
+{
+    if(cola->pri == NULL)
         return COLA_VACIA;
     return TODO_OK;
 }

@@ -46,23 +46,23 @@ void menu_pausa(tGame *g)
         {
             if(g->eventos.type == SDL_QUIT)
             {
-                g->inicio = false;
-                g->is_running = false;
-                g->is_pausing = false;
+                g->inicio = INCORRECTO;
+                g->is_running = INCORRECTO;
+                g->is_pausing = INCORRECTO;
             }
             if(g->eventos.type == SDL_KEYDOWN)
             {
                 if(g->eventos.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
-                    g->is_pausing = false;
+                    g->is_pausing = INCORRECTO;
                 if(g->eventos.key.keysym.scancode == SDL_SCANCODE_M)
                 {
-                    g->is_pausing = false;
-                    g->inicio = true;
+                    g->is_pausing = INCORRECTO;
+                    g->inicio = VERDADERO;
                     reiniciarJuego(g);
                 }
                 if(g->eventos.key.keysym.scancode == SDL_SCANCODE_R)
                 {
-                    g->is_pausing = false;
+                    g->is_pausing = INCORRECTO;
                     reiniciarJuego(g);
                 }
             }
@@ -74,12 +74,12 @@ int reiniciarJuego(tGame *g)
     eliminarMatriz(g->m.mat, g->m.filMapa, g->m.colMapa);
     if(colaVacia(&(g->colaMov)) != COLA_VACIA)
         vaciarCola(&(g->colaMov));
-    g->is_running = true;
-    g->is_pausing = false;
-    g->ranking = false;
+    g->is_running = VERDADERO;
+    g->is_pausing = INCORRECTO;
+    g->ranking = INCORRECTO;
     crearJugador(&g->p, g->cantVidas);
-    if(llenarMapa(&g->p, &g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == FALSE)
-        return FALSE;
+    if(llenarMapa(&g->p, &g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == INCORRECTO)
+        return INCORRECTO;
     return VERDADERO;
 }
 void crearBotonTextCentrado(SDL_Rect cuadrado, TTF_Font* fuente, SDL_Texture* textura, SDL_Color colorLetra, char *nombre, SDL_Renderer* render)
@@ -104,17 +104,17 @@ void cargarTexturasMenu(tGame *g, SDL_Rect botonP, SDL_Rect botonR, SDL_Rect bot
     SDL_RenderFillRect(g->renderer, &botonP);
     SDL_RenderFillRect(g->renderer, &botonR);
     SDL_RenderFillRect(g->renderer, &botonS);
-    crearBotonTextCentrado(botonP, g->titulo_f, textura,BLANCO, "Jugar", g->renderer);
-    crearBotonTextCentrado(botonR, g->titulo_f, textura,BLANCO, "Ranking", g->renderer);
-    crearBotonTextCentrado(botonS, g->titulo_f, textura,BLANCO, "Salir", g->renderer);
+    crearBotonTextCentrado(botonP, g->titulo_f, textura, BLANCO, "Jugar", g->renderer);
+    crearBotonTextCentrado(botonR, g->titulo_f, textura, BLANCO, "Ranking", g->renderer);
+    crearBotonTextCentrado(botonS, g->titulo_f, textura, BLANCO, "Salir", g->renderer);
     //musica menu
     SDL_RenderPresent(g->renderer);
 }
 void menu_inicio(tGame *g)
 {
-    SDL_Rect botonP = {(WINDOW_WIDTH - 240) / 2,340,240,60};  //80 //90
-    SDL_Rect botonR = {(WINDOW_WIDTH - 240) / 2, 430,240, 60};
-    SDL_Rect botonS  = {(WINDOW_WIDTH - 240) / 2, 520,240,60};
+    SDL_Rect botonP = {(WINDOW_WIDTH - 240) / 2, 340, 240, 60}; //80 //90
+    SDL_Rect botonR = {(WINDOW_WIDTH - 240) / 2, 430, 240, 60};
+    SDL_Rect botonS  = {(WINDOW_WIDTH - 240) / 2, 520, 240, 60};
     SDL_Point click;
     char* rank, response[TAM_BUFFER];
     Mix_HaltMusic();
@@ -127,8 +127,8 @@ void menu_inicio(tGame *g)
         {
             if(g->eventos.type == SDL_QUIT)
             {
-                g->inicio = false;
-                g->is_running = false;
+                g->inicio = INCORRECTO;
+                g->is_running = INCORRECTO;
             }
             if(g->eventos.type == SDL_KEYDOWN)
             {
@@ -141,20 +141,20 @@ void menu_inicio(tGame *g)
                 click.y = g->eventos.button.y;
                 if(SDL_PointInRect(&click, &botonS))
                 {
-                    enviarMensaje("SALIR_JUEGO", response);
-                    g->inicio = false;
-                    g->is_running = false;
+                    enviarMensaje(g->soc, "SALIR_JUEGO", response);
+                    g->inicio = INCORRECTO;
+                    g->is_running = INCORRECTO;
                 }
                 if(SDL_PointInRect(&click, &botonP))
                 {
-                    enviarMensaje("INICIO_PARTIDA", response);
-                    g->inicio = false;
-                    g->is_running = true;
+                    enviarMensaje(g->soc, "INICIO_PARTIDA", response);
+                    g->inicio = INCORRECTO;
+                    g->is_running = VERDADERO;
                     Mix_PlayChannel(-1, g->sonidomenu, 0);
                 }
                 if(SDL_PointInRect(&click, &botonR))
                 {
-                    g->ranking = true;
+                    g->ranking = VERDADERO;
                     submenuranking(g);
                 }
             }
@@ -165,7 +165,6 @@ void menu_inicio(tGame *g)
 void menuIngresarNombre(tGame *g)
 {
     int anchoTexto, text_w, text_h, dest_y;
-    SDL_Color white = {255, 255, 255, 255};
     SDL_Texture* textura;
     SDL_Surface * superficie;
     SDL_RenderClear(g->renderer);
@@ -174,21 +173,21 @@ void menuIngresarNombre(tGame *g)
     SDL_Rect cuadradoText = {(WINDOW_WIDTH - 700) / 2, (WINDOW_HEIGHT - 50) / 3, 700, 60};
     strncpy(g->p.nombre, "", bufferNombreSize);
     SDL_StartTextInput();
-    g->is_writing = true;
+    g->is_writing = VERDADERO;
     while(g->is_writing)
     {
         while(SDL_PollEvent(&g->eventos))
         {
             if(g->eventos.type == SDL_QUIT)
             {
-                g->is_writing = false;
-                g->is_running = false;
-                g->inicio = false;
+                g->is_writing = INCORRECTO;
+                g->is_running = INCORRECTO;
+                g->inicio = INCORRECTO;
             }
             if(g->eventos.type == SDL_KEYDOWN)
             {
                 if(g->eventos.key.keysym.sym == SDLK_RETURN && strlen(g->p.nombre) >= 1)
-                    g->is_writing = false;
+                    g->is_writing = INCORRECTO;
                 if(g->eventos.key.keysym.sym == SDLK_BACKSPACE && strlen(g->p.nombre) > 0)
                     *(g->p.nombre + strlen(g->p.nombre) - 1) = '\0';
             }
@@ -200,7 +199,7 @@ void menuIngresarNombre(tGame *g)
         }
         SDL_RenderClear(g->renderer);
         SDL_RenderCopy(g->renderer, g->fondonombre, NULL, NULL);
-        crearBoton(textointerfaz, g->text_f, white, "Ingrese Su Nombre (MAX 6)", g->renderer, 1);
+        crearBoton(textointerfaz, g->text_f, BLANCO, "Ingrese Su Nombre (MAX 6)", g->renderer, 1);
         SDL_SetRenderDrawColor(g->renderer, 169, 169, 169, 255);
         SDL_RenderFillRect(g->renderer, &cuadradoText);
         TTF_SizeText(g->text_f, g->p.nombre, &text_w, &text_h);
@@ -210,7 +209,7 @@ void menuIngresarNombre(tGame *g)
         textDestRect.y = dest_y;
         textDestRect.w = text_w;
         textDestRect.h = text_h;
-        crearBoton(textDestRect, g->titulo_f, white, g->p.nombre, g->renderer, 1);
+        crearBoton(textDestRect, g->titulo_f, BLANCO, g->p.nombre, g->renderer, 1);
         TTF_SizeText(g->text_f, g->p.nombre, &anchoTexto, NULL);
         if(SDL_GetTicks() % 1000 < 500)
         {
@@ -265,10 +264,10 @@ void submenuranking(tGame *g)
     SDL_Rect TOP3point_rect = {POSWTOP3, POINTSHEIGHT, LARGONOMBRERANK, ALTOPUNTOS};
     SDL_Rect TOP5name_rect = {POSWTOP5, NAMEHEIGHT, LARGONOMBRERANK, ALTONOMBRERANK};
     SDL_Rect TOP5point_rect = {POSWTOP5, POINTSHEIGHT, LARGONOMBRERANK, ALTOPUNTOS};
-    enviarMensaje("RANKING", rankingJugadores);
+    enviarMensaje(g->soc, "RANKING", rankingJugadores);
     if(*rankingJugadores == '\0')
     {
-        g->ranking = false;
+        g->ranking = INCORRECTO;
         return;
     }
     SDL_RenderCopy(g->renderer, g->rank, NULL, NULL); // se carga la imagen
@@ -301,15 +300,15 @@ void submenuranking(tGame *g)
             switch(g->eventos.type)
             {
             case SDL_QUIT:
-                g->is_running = false;
-                g->inicio = false;
-                g->ranking = false;
+                g->is_running = INCORRECTO;
+                g->inicio = INCORRECTO;
+                g->ranking = INCORRECTO;
                 break;
             case SDL_KEYDOWN:
                 switch(g->eventos.key.keysym.scancode)
                 {
                 case SDL_SCANCODE_ESCAPE:
-                    g->ranking = false;
+                    g->ranking = INCORRECTO;
                     break;
                 default:
                     break;

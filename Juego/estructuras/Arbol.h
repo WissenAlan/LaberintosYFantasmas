@@ -30,13 +30,13 @@ int compararRanking(const void *a, const void *b);
 void eliminarArbol(tArbol *pa);
 //Funciones de indice.
 int buscarEnArchivoConIndice(FILE *fp, const tArbol *pa, tJugadorDatos *datos);
-int buscarEnArbol(const tArbol* pa, void *d, unsigned tam,int (*cmp)(const void *, const void *));
+int buscarEnArbol(const tArbol* pa, void *d, unsigned tam, int (*cmp)(const void *, const void *));
 int indexarArchivoPersonas(const char *nombreArchivoPersonas, tArbol *p);
 int guardarIndiceEnArchivo(const tArbol *p, const char *nombreArchivoIndice);
 int cargarIndiceDesdeArchivo(tArbol *pa, const char *nombreArchivoIndice);
 void recorrerArbolPreOrder(const tArbol *pa, unsigned n, void *params, void (*accion)(void *, unsigned, unsigned, void *));
 void guardarNodoEnArchivo(void *info, unsigned tam, unsigned n, void *params);
-void cargarArchivoOrdenadoEnIndiceBalanceado(tArbol *pa, FILE *fp,int inicio,int fin);
-int indexarArchivoPersonasOrdenado(const char *nombreArchivoPersonas,tArbol *p);
+void cargarArchivoOrdenadoEnIndiceBalanceado(tArbol *pa, FILE *fp, int inicio, int fin);
+int indexarArchivoPersonasOrdenado(const char *nombreArchivoPersonas, tArbol *p);
 
 #endif // ARBOL_H_INCLUDED
