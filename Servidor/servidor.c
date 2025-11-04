@@ -60,12 +60,14 @@ int process_request(const char *request, char *response)
     tArbol arbol;
     tLista lista;
     tIndice idx;
-    char comando[TAM_BUFFER], *cmd = strtok(comando, "|"), vacios[20] = "";
+    char comando[TAM_BUFFER], *cmd, vacios[20] = "";
     FILE *pf;
     tJugadorDatos jugador, jugadoraux;
     strncpy(comando, request, sizeof(comando) - 1);
     comando[sizeof(comando) - 1] = '\0';
     // separar comando
+    cmd = strtok(comando, "|");
+    printf("[FUNC] Funcion: %s\n", cmd);
     if(cmd == NULL)
     {
         snprintf(response, TAM_BUFFER, "Comando invalido");
