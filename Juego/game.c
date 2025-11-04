@@ -35,12 +35,8 @@ int game_new(tGame *g)
     {
         fgets(linea, TAM_BUFFER, config);
         asignarConfig(linea, &(g->m.filMapa));
-        if(g->m.filMapa < 3)
-            g->m.filMapa = 3;
         fgets(linea, TAM_BUFFER, config);
         asignarConfig(linea, &g->m.colMapa);
-        if(g->m.filMapa < 3)
-            g->m.filMapa = 3;
         fgets(linea, TAM_BUFFER, config);
         asignarConfig(linea, &g->cantVidas);
         fgets(linea, TAM_BUFFER, config);
@@ -64,38 +60,22 @@ void balancearConfig(tGame *g)
 {
     int totalCasillas;
     if(g->m.filMapa < 10)
-    {
-        g->m.filMapa=10;
-    }
+        g->m.filMapa = 10;
     if(g->m.colMapa < 10)
-    {
-        g->m.colMapa=10;
-    }
+        g->m.colMapa = 10;
     if(g->m.filMapa > 40)
-    {
-        g->m.filMapa=40;
-    }
-    if(g->m.colMapa < 40)
-    {
-        g->m.colMapa=40;
-    }
-    totalCasillas=g->m.filMapa*g->m.filMapa;
+        g->m.filMapa = 40;
+    if(g->m.colMapa > 40)
+        g->m.colMapa = 40;
+    totalCasillas = g->m.filMapa * g->m.filMapa;
     if(g->cantPremios > totalCasillas / 100)
-    {
-        g->cantPremios=totalCasillas / 100 - 1;
-    }
-    if((g->cantFant - 1 )> totalCasillas / 100)
-    {
-        g->cantFant=totalCasillas / 100;
-    }
+        g->cantPremios = totalCasillas / 100 - 1;
+    if((g->cantFant - 1) > totalCasillas / 100)
+        g->cantFant = totalCasillas / 100;
     if(g->cantVidasExt > totalCasillas / 100)
-    {
-        g->cantVidasExt=totalCasillas / 200;
-    }
+        g->cantVidasExt = totalCasillas / 200;
     if(g->cantVidas > 3)
-    {
-        g->cantVidas=3;
-    }
+        g->cantVidas = 3;
 }
 void asignarConfig(char* linea, int* parametro)
 {
