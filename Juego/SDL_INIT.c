@@ -31,7 +31,7 @@ int game_init_sdl(tGame *g)
         printf("ERROR al crear el renderer %s",SDL_GetError());
         return 0;
     }
-    SDL_Surface* icon_surface=IMG_Load("logo.png");
+    SDL_Surface* icon_surface=IMG_Load("assets/logo.png");
     if(!icon_surface)
     {
         printf("ERROR al crear la superficie de el icono %s",IMG_GetError());
@@ -59,64 +59,64 @@ int game_init_sdl(tGame *g)
 void load_media(tGame *g)
 {
     SDL_Surface * superficie=NULL;
-    g->sonidomenu=Mix_LoadWAV("sonidomenu.ogg");
-    g->musicajuego= Mix_LoadMUS("musicajuego.ogg");
-    g->musica= Mix_LoadMUS("musicamenu.ogg");
+    g->sonidomenu=Mix_LoadWAV("assets/sonidomenu.ogg");
+    g->musicajuego= Mix_LoadMUS("assets/musicajuego.ogg");
+    g->musica= Mix_LoadMUS("assets/musicamenu.ogg");
     Mix_VolumeMusic(25);
     Mix_VolumeChunk(g->sonidomenu,45);
-    g->fondo=IMG_LoadTexture(g->renderer,"fondo.png");
+    g->fondo=IMG_LoadTexture(g->renderer,"assets/fondo.png");
     if(!g->fondo)
     {
         printf("ERROR creacion textura %s\n",IMG_GetError());
     }
-    g->fantasmas=IMG_LoadTexture(g->renderer,"fantasma.png");
+    g->fantasmas=IMG_LoadTexture(g->renderer,"assets/fantasma.png");
     if(!g->fantasmas)
     {
          printf("ERROR creacion textura %s\n",IMG_GetError());
     }
-    g->fondonombre=IMG_LoadTexture(g->renderer,"fondonombre.png");
+    g->fondonombre=IMG_LoadTexture(g->renderer,"assets/fondonombre.png");
     if(!g->fondonombre)
     {
         printf("ERROR creacion textura %s\n",IMG_GetError());
     }
-    g->premio=IMG_LoadTexture(g->renderer,"premio.png");
+    g->premio=IMG_LoadTexture(g->renderer,"assets/premio.png");
     if(!g->premio)
     {
          printf("ERROR creacion textura %s\n",IMG_GetError());
     }
-    g->entrada=IMG_LoadTexture(g->renderer,"entrada.png");
+    g->entrada=IMG_LoadTexture(g->renderer,"assets/entrada.png");
     if(!g->entrada)
     {
          printf("ERROR creacion textura %s\n",IMG_GetError());
     }
-    g->salida=IMG_LoadTexture(g->renderer,"salida.png");
+    g->salida=IMG_LoadTexture(g->renderer,"assets/salida.png");
     if(!g->salida)
     {
          printf("ERROR creacion textura %s\n",IMG_GetError());
     }
-    g->vidaextra=IMG_LoadTexture(g->renderer,"VidaExt.png");
+    g->vidaextra=IMG_LoadTexture(g->renderer,"assets/VidaExt.png");
     if(!g->vidaextra)
     {
          printf("ERROR creacion textura %s\n",IMG_GetError());
     }
-    g->personaje=IMG_LoadTexture(g->renderer,"personaje.png");
+    g->personaje=IMG_LoadTexture(g->renderer,"assets/personaje.png");
     if(!g->personaje)
     {
          printf("ERROR creacion textura %s\n",IMG_GetError());
     }
 
-     g->piso=IMG_LoadTexture(g->renderer,"piso.png");
+     g->piso=IMG_LoadTexture(g->renderer,"assets/piso.png");
     if(!g->piso)
     {
          printf("ERROR creacion textura %s\n",IMG_GetError());
     }
-     g->pared=IMG_LoadTexture(g->renderer,"pared.png");
+     g->pared=IMG_LoadTexture(g->renderer,"assets/pared.png");
     if(!g->pared)
     {
          printf("ERROR creacion textura %s\n",IMG_GetError());
     }
 
-    g->rank=IMG_LoadTexture(g->renderer,"ranking.png");
+    g->rank=IMG_LoadTexture(g->renderer,"assets/ranking.png");
     if(!g->rank)
     {
         printf("ERROR creacion textura %s\n",IMG_GetError());
@@ -126,12 +126,12 @@ void load_media(tGame *g)
     {
         printf("Error creacion de imagen fondo\n");
     }
-    g->text_f=TTF_OpenFont("freesansbold.ttf",24);
+    g->text_f=TTF_OpenFont("assets/freesansbold.ttf",24);
     if(!g->text_f)
     {
         printf("ERROR creacion texto %s\n",TTF_GetError());
     }
-    g->titulo_f=TTF_OpenFont("freesansbold.ttf",23);
+    g->titulo_f=TTF_OpenFont("assets/freesansbold.ttf",23);
     if(!g->titulo_f)
     {
         printf("ERROR creacion texto %s\n",TTF_GetError());

@@ -267,6 +267,7 @@ void submenuranking(tGame *g)
     enviarMensaje(g->soc, "RANKING", rankingJugadores);
     if(*rankingJugadores == '\0')
     {
+        printf("\nNo hay jugadores.dat\n");
         g->ranking = INCORRECTO;
         return;
     }
