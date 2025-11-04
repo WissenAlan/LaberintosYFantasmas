@@ -51,6 +51,7 @@ int game_new(tGame *g)
         asignarConfig(linea, &g->cantVidasExt);
         fclose(config);
     }
+    balancearConfig(g);
     crearJugador(&g->p, g->cantVidas);
     if(llenarMapa(&g->p, &g->m, g->cantFant, g->cantPremios, g->cantVidasExt) == INCORRECTO)
         return INCORRECTO;
@@ -58,6 +59,43 @@ int game_new(tGame *g)
     crearCola(&(g->colaMovsJugador));
     crearConexion(g);
     return VERDADERO;
+}
+void balancearConfig(tGame *g)
+{
+    int totalCasillas;
+    if(g->m.filMapa < 10)
+    {
+        g->m.filMapa=10;
+    }
+    if(g->m.colMapa < 10)
+    {
+        g->m.colMapa=10;
+    }
+    if(g->m.filMapa > 40)
+    {
+        g->m.filMapa=40;
+    }
+    if(g->m.colMapa < 40)
+    {
+        g->m.colMapa=40;
+    }
+    totalCasillas=g->m.filMapa*g->m.filMapa;
+    if(g->cantPremios > totalCasillas / 100)
+    {
+        g->cantPremios=totalCasillas / 100 - 1;
+    }
+    if((g->cantFant - 1 )> totalCasillas / 100)
+    {
+        g->cantFant=totalCasillas / 100;
+    }
+    if(g->cantVidasExt > totalCasillas / 100)
+    {
+        g->cantVidasExt=totalCasillas / 200;
+    }
+    if(g->cantVidas > 3)
+    {
+        g->cantVidas=3;
+    }
 }
 void asignarConfig(char* linea, int* parametro)
 {
@@ -91,6 +129,9 @@ void game_free(tGame *g)
     SDL_DestroyTexture(g->premio);
     SDL_DestroyTexture(g->pared);
     SDL_DestroyTexture(g->piso);
+    SDL_DestroyTexture(g->fondonombre);
+    SDL_DestroyTexture(g->salida);
+    SDL_DestroyTexture(g->vidaextra);
     Mix_HaltChannel(-1);
     Mix_FreeMusic(g->musica);
     Mix_FreeChunk(g->sonidomenu);

@@ -57,6 +57,7 @@ void game_update(tGame *g);
 void game_events(tGame *g);
 void game_draw(tGame *g);
 void moverFantasmas(tGame *g);
+void balancearConfig(tGame *g);
 int crearConexion(tGame *g);
 void asignarConfig(char*, int *parametro);
 void desencolarMovs(tCola *cola, char ** mat, tJugador *p);

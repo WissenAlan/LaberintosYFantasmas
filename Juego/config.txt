@@ -1,6 +1,6 @@
-filas:40
-columnas:40
-:2
-:5
-:3
-:2
+filas:20
+columnas:30
+Vidas:20
+fantasmas:20
+premios:35
+vidasExtra:25
