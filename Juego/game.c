@@ -312,7 +312,7 @@ void desencolarMovs(tCola *cola, char ** mat, tJugador *pJug)
             {
                 mat[movi.posx][movi.posy] = CELDA;
                 pJug->puntos += 100;
-                pJug->roundBuff += 6;
+                pJug->roundBuff += 8;
             }
             if(movi.entidad == JUGADOR && mat[movi.posx][movi.posy] == VIDAEXT)
             {
