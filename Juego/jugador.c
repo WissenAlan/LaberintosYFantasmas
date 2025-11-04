@@ -89,7 +89,7 @@ void ai(tCola *colamov, tMapa *mapa, tJugador *pJug, tFantasma *pFant)
 }
 int state(tMapa *mapa, int trypos, tJugador *pJug, const tFantasma *pFant)
 {
-    int reward = 0, auxCol;
+    int reward = 0, auxCol, auxFil;
     int try_x = pFant->posx;
     int try_y = pFant->posy;
     int diff_x, diff_y, try_diff_x, try_diff_y;
@@ -102,11 +102,11 @@ int state(tMapa *mapa, int trypos, tJugador *pJug, const tFantasma *pFant)
         reward += 100;
     if(pJug->roundBuff > 0)
     {
-        auxCol = mapa->colMapa - 1, auxfila = mapa->filMapa - 1;
-        coordenadaEsquinaMasLejana(pJug, auxfila, auxCol, &auxfila, &auxCol);
-        diff_x = ABS(pFant->posx - (auxfila));
+        auxCol = mapa->colMapa - 1, auxFil = mapa->filMapa - 1;
+        coordenadaEsquinaMasLejana(pJug, auxFil, auxCol, &auxFil, &auxCol);
+        diff_x = ABS(pFant->posx - (auxFil));
         diff_y = ABS(pFant->posy - (auxCol));
-        try_diff_x = ABS(try_x - auxfila);
+        try_diff_x = ABS(try_x - auxFil);
         try_diff_y = ABS(try_y - auxCol);
         if(mapa->mat[try_x][try_y] == JUGADOR)
             reward -= 500;

@@ -2,6 +2,7 @@
 *.depend
 /obj
 /bin
+*.txt
 
 # Prerequisites
 *.d
